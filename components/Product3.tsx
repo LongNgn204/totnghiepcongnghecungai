@@ -96,11 +96,31 @@ const Product3: React.FC = () => {
 📌 PHẦN II: TRẮC NGHIỆM ĐÚNG/SAI (4 câu - Câu 25-28)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
+⚠️⚠️⚠️ QUAN TRỌNG - ĐỌC KỸ FORMAT MỚI:
+
 🔹 Câu 25-26: Công nghệ ĐIỆN (2 câu)
-   Mỗi câu có 4 ý a), b), c), d) cần xác định Đúng/Sai
+   ✅ MỖI CÂU CÓ 4 PHÁT BIỂU a), b), c), d) RIÊNG BIỆT
+   ✅ HỌC SINH XÁC ĐỊNH TỪNG PHÁT BIỂU LÀ ĐÚNG HAY SAI
+   
+   📝 FORMAT BẮT BUỘC:
+      1. Câu hỏi chính: Cho tình huống/dữ kiện cụ thể
+      2. Yêu cầu: "Các phát biểu sau đúng hay sai?"
+      3. Liệt kê 4 phát biểu:
+         a) Phát biểu 1 (câu hoàn chỉnh, có nội dung cụ thể)
+         b) Phát biểu 2 (câu hoàn chỉnh, có nội dung cụ thể)
+         c) Phát biểu 3 (câu hoàn chỉnh, có nội dung cụ thể)
+         d) Phát biểu 4 (câu hoàn chỉnh, có nội dung cụ thể)
+      4. Đáp án: 
+         - a: true/false (ĐÚNG hoặc SAI)
+         - b: true/false
+         - c: true/false
+         - d: true/false
+      5. Giải thích cho MỖI phát biểu (tại sao đúng/sai)
    
 🔹 Câu 27-28: Công nghệ ĐIỆN TỬ (2 câu)
-   Mỗi câu có 4 ý a), b), c), d) cần xác định Đúng/Sai
+   ✅ FORMAT TƯƠNG TỰ: 4 phát biểu a), b), c), d)
+   ✅ Mỗi phát biểu phải độc lập, rõ ràng
+   ✅ Đáp án + Giải thích cho từng phát biểu
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
@@ -127,12 +147,18 @@ B. 2200V
 C. 110V
 D. 440V
 
-**Câu Đúng/Sai:**
-"Cho mạch điện xoay chiều ba pha đối xứng, điện áp pha Up = 220V.
-a) Khi đấu Y, điện áp dây Ud = 220V [SAI - Ud = 380V]
-b) Khi đấu Δ, dòng dây Id = √3 Ipha [ĐÚNG]
-c) Công suất P = 3UpIpcosφ [ĐÚNG]
-d) Tần số của mỗi pha là 100Hz [SAI - f = 50Hz]"
+**Câu Đúng/Sai (QUAN TRỌNG - FORMAT BẮT BUỘC):**
+"Câu 25. Cho mạch điện xoay chiều ba pha đối xứng, điện áp pha Up = 220V. Các phát biểu sau đúng hay sai?
+a) Khi đấu hình sao (Y), điện áp dây Ud = 220V
+b) Khi đấu hình tam giác (Δ), dòng điện dây Id = √3·Ipha
+c) Công suất tổng của mạch ba pha được tính: P = 3·Up·Ip·cosφ
+d) Tần số của mỗi pha trong lưới điện Việt Nam là 100Hz
+
+ĐÁP ÁN:
+a) SAI (Vì Ud = √3·Up = 380V khi đấu Y)
+b) ĐÚNG (Theo công thức dòng dây trong đấu Δ)
+c) ĐÚNG (Công thức công suất ba pha đối xứng)
+d) SAI (Tần số lưới điện VN là f = 50Hz)"
 
 📝 OUTPUT FORMAT (JSON):
 \`\`\`json
@@ -154,6 +180,33 @@ d) Tần số của mỗi pha là 100Hz [SAI - f = 50Hz]"
       "level": "Nhận biết",
       "grade": "10",
       "topic": "Bản vẽ kỹ thuật"
+    },
+    {
+      "id": 25,
+      "type": "tf",
+      "question": "Cho mạch điện xoay chiều RLC mắc nối tiếp, điện áp hiệu dụng U = 200V. Các phát biểu sau đúng hay sai?\\na) Khi xảy ra cộng hưởng, tổng trở Z = R\\nb) Công suất tiêu thụ cực đại khi XL = XC\\nc) Hệ số công suất cosφ = 1 tại tần số cộng hưởng\\nd) Điện áp hiệu dụng trên R luôn nhỏ hơn U",
+      "statements": {
+        "a": "Khi xảy ra cộng hưởng, tổng trở Z = R",
+        "b": "Công suất tiêu thụ cực đại khi XL = XC",
+        "c": "Hệ số công suất cosφ = 1 tại tần số cộng hưởng",
+        "d": "Điện áp hiệu dụng trên R luôn nhỏ hơn U"
+      },
+      "answers": {
+        "a": true,
+        "b": true,
+        "c": true,
+        "d": false
+      },
+      "explanations": {
+        "a": "ĐÚNG - Tại cộng hưởng XL = XC nên Z = √(R² + 0²) = R",
+        "b": "ĐÚNG - Pmax = U²/R đạt được khi Z = R (cộng hưởng)",
+        "c": "ĐÚNG - Tại cộng hưởng φ = 0° nên cosφ = 1",
+        "d": "SAI - Tại cộng hưởng UR = U (vì I = U/R và UR = I·R = U)"
+      },
+      "requirement": "Vận dụng kiến thức về cộng hưởng điện trong mạch RLC",
+      "level": "Thông hiểu",
+      "grade": "12",
+      "topic": "Mạch điện xoay chiều"
     }
   ]
 }

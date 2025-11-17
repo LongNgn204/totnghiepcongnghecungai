@@ -19,6 +19,25 @@ export interface QuestionTF {
   answer: boolean;
   requirement: string;
   level: QuestionLevel;
+  // Format mới: Câu hỏi Đúng/Sai với 4 phát biểu a, b, c, d
+  statements?: {
+    a: string;
+    b: string;
+    c: string;
+    d: string;
+  };
+  answers?: {
+    a: boolean;
+    b: boolean;
+    c: boolean;
+    d: boolean;
+  };
+  explanations?: {
+    a: string;
+    b: string;
+    c: string;
+    d: string;
+  };
 }
 
 export interface MemberAssignment {

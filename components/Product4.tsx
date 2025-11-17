@@ -74,11 +74,31 @@ const Product4: React.FC = () => {
 📌 PHẦN II: TRẮC NGHIỆM ĐÚNG/SAI (4 câu - Câu 25-28)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
+⚠️⚠️⚠️ QUAN TRỌNG - ĐỌC KỸ FORMAT MỚI:
+
 🔹 Câu 25-26: TRỒNG TRỌT (2 câu)
-   Mỗi câu có 4 ý a), b), c), d) cần xác định Đúng/Sai
+   ✅ MỖI CÂU CÓ 4 PHÁT BIỂU a), b), c), d) RIÊNG BIỆT
+   ✅ HỌC SINH XÁC ĐỊNH TỪNG PHÁT BIỂU LÀ ĐÚNG HAY SAI
+   
+   📝 FORMAT BẮT BUỘC:
+      1. Câu hỏi chính: Cho tình huống về cây trồng (lúa, ngô, rau...)
+      2. Yêu cầu: "Các phát biểu sau đúng hay sai?"
+      3. Liệt kê 4 phát biểu:
+         a) Phát biểu về giống/kỹ thuật (câu hoàn chỉnh)
+         b) Phát biểu về phân bón/dinh dưỡng
+         c) Phát biểu về tưới tiêu/chăm sóc
+         d) Phát biểu về sâu bệnh/thu hoạch
+      4. Đáp án: 
+         - a: true/false (ĐÚNG hoặc SAI)
+         - b: true/false
+         - c: true/false
+         - d: true/false
+      5. Giải thích cho MỖI phát biểu (tại sao đúng/sai)
    
 🔹 Câu 27-28: CHĂN NUÔI (2 câu)
-   Mỗi câu có 4 ý a), b), c), d) cần xác định Đúng/Sai
+   ✅ FORMAT TƯƠNG TỰ: 4 phát biểu a), b), c), d)
+   ✅ Nội dung: dinh dưỡng, chuồng trại, vacxin, quản lý đàn
+   ✅ Đáp án + Giải thích cho từng phát biểu
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
@@ -112,19 +132,31 @@ B. 24-26°C
 C. 32-35°C ✓
 D. 38-40°C
 
-**Câu Đúng/Sai trồng trọt:**
-"Cho các phát biểu về kỹ thuật trồng lúa:
-a) Lúa F1 lai có năng suất cao hơn giống thuần ✓ [ĐÚNG]
-b) Nên gieo sạ dày để tăng năng suất ✗ [SAI - làm giảm năng suất]
-c) Thời kỳ đòng nước cần tưới nhiều nhất ✓ [ĐÚNG]
-d) Phân đạm nên bón 1 lần vào đầu vụ ✗ [SAI - bón nhiều lần]"
+**Câu Đúng/Sai trồng trọt (QUAN TRỌNG - FORMAT BẮT BUỘC):**
+"Câu 25. Cho các phát biểu về kỹ thuật trồng lúa trong điều kiện Việt Nam. Các phát biểu sau đúng hay sai?
+a) Giống lúa lai F1 có ưu thế lai nên năng suất cao hơn giống thuần từ 15-20%
+b) Để tăng năng suất, nên gieo sạ với mật độ dày đặc 250-300 hạt/m²
+c) Thời kỳ làm đòng (trổ bông và chín sữa) là giai đoạn cần tưới nước nhiều nhất
+d) Phân đạm nên bón toàn bộ một lần vào lúc bón lót để cây hấp thụ tốt
 
-**Câu Đúng/Sai chăn nuôi:**
-"Về chăn nuôi lợn:
-a) Lợn cần protein 14-18% trong khẩu phần ✓ [ĐÚNG]
-b) Chuồng nuôi nên kín để giữ ấm ✗ [SAI - cần thoáng khí]
-c) Vacxin dịch tả lợn phải tiêm định kỳ ✓ [ĐÚNG]
-d) Lợn nái mang thai cần cho ăn nhiều ✗ [SAI - ăn vừa đủ]"
+ĐÁP ÁN:
+a) ĐÚNG (Lúa F1 lai có ưu thế lai vượt trội về năng suất, theo SGK Kết nối tri thức)
+b) SAI (Mật độ quá dày làm cây chống đổ, sâu bệnh, năng suất thấp. Nên gieo 100-120 hạt/m²)
+c) ĐÚNG (Giai đoạn đòng nước tiêu hao nước nhiều nhất, thiếu nước làm giảm năng suất nghiêm trọng)
+d) SAI (Phân đạm phải chia làm 2-3 lần: lót, trước khi đẻ nhánh, và trước khi trổ)"
+
+**Câu Đúng/Sai chăn nuôi (QUAN TRỌNG - FORMAT BẮT BUỘC):**
+"Câu 27. Về kỹ thuật chăn nuôi lợn thịt theo tiêu chuẩn VietGAP. Các phát biểu sau đúng hay sai?
+a) Hàm lượng protein thô trong khẩu phần cần đạt 14-18% tùy giai đoạn sinh trưởng
+b) Chuồng nuôi nên kín bốn phía để giữ ấm và tránh gió lùa cho lợn
+c) Lợn phải được tiêm phòng vacxin dịch tả lợn, tai xanh định kỳ theo lịch
+d) Lợn nái mang thai nên cho ăn thả ga để tăng số con/lứa
+
+ĐÁP ÁN:
+a) ĐÚNG (Lợn con cần 18%, lợn thịt 14-16% protein theo khuyến cáo)
+b) SAI (Chuồng phải thoáng khí, có cửa sổ thông gió để tránh ẩm ướt, khí độc)
+c) ĐÚNG (Vacxin là biện pháp phòng bệnh bắt buộc trong chăn nuôi an toàn)
+d) SAI (Nái mang thai ăn vừa đủ 2-2.5kg/ngày, ăn nhiều dễ béo, khó đẻ)"
 
 📝 OUTPUT FORMAT (JSON):
 \`\`\`json
@@ -146,6 +178,33 @@ d) Lợn nái mang thai cần cho ăn nhiều ✗ [SAI - ăn vừa đủ]"
       "level": "Nhận biết",
       "grade": "10",
       "topic": "Bản vẽ kỹ thuật"
+    },
+    {
+      "id": 25,
+      "type": "tf",
+      "question": "Cho các phát biểu về kỹ thuật canh tác lúa nước theo quy trình VietGAP. Các phát biểu sau đúng hay sai?\\na) Giống lúa F1 lai có năng suất cao hơn giống thuần 15-20%\\nb) Mật độ gieo sạ nên đạt 250-300 hạt/m² để tăng năng suất\\nc) Giai đoạn đòng nước (trổ-chín sữa) cần tưới nhiều nhất\\nd) Phân đạm nên bón toàn bộ một lần vào lúc bón lót",
+      "statements": {
+        "a": "Giống lúa F1 lai có năng suất cao hơn giống thuần 15-20%",
+        "b": "Mật độ gieo sạ nên đạt 250-300 hạt/m² để tăng năng suất",
+        "c": "Giai đoạn đòng nước (trổ-chín sữa) cần tưới nhiều nhất",
+        "d": "Phân đạm nên bón toàn bộ một lần vào lúc bón lót"
+      },
+      "answers": {
+        "a": true,
+        "b": false,
+        "c": true,
+        "d": false
+      },
+      "explanations": {
+        "a": "ĐÚNG - Lúa F1 lai có ưu thế lai vượt trội về năng suất theo SGK",
+        "b": "SAI - Mật độ quá dày làm cây chống đổ, sâu bệnh. Nên 100-120 hạt/m²",
+        "c": "ĐÚNG - Đòng nước là giai đoạn tiêu hao nước lớn nhất của lúa",
+        "d": "SAI - Phân đạm chia 2-3 lần: lót, trước đẻ nhánh, trước trổ"
+      },
+      "requirement": "Vận dụng kiến thức về kỹ thuật trồng lúa",
+      "level": "Thông hiểu",
+      "grade": "12",
+      "topic": "Trồng trọt"
     }
   ]
 }
