@@ -5,57 +5,87 @@ const Home: React.FC = () => {
   return (
     <div className="max-w-7xl mx-auto">
       {/* Hero Section */}
-      <div className="bg-gradient-to-br from-blue-600 via-purple-600 to-pink-500 rounded-3xl shadow-2xl p-8 md:p-12 mb-8 text-white">
-        <div className="text-center">
-          <div className="flex justify-center mb-6">
-            <div className="bg-white/20 backdrop-blur-sm rounded-full p-6 animate-bounce">
-              <i className="fas fa-graduation-cap text-6xl"></i>
+      <div className="relative bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 rounded-3xl shadow-2xl p-8 md:p-16 mb-12 text-white overflow-hidden">
+        {/* Animated background elements */}
+        <div className="absolute top-0 left-0 w-full h-full opacity-10">
+          <div className="absolute top-10 left-10 w-20 h-20 bg-white rounded-full animate-pulse"></div>
+          <div className="absolute bottom-10 right-10 w-32 h-32 bg-white rounded-full animate-pulse delay-1000"></div>
+          <div className="absolute top-1/2 left-1/4 w-16 h-16 bg-white rounded-full animate-pulse delay-500"></div>
+        </div>
+        
+        <div className="text-center relative z-10">
+          <div className="flex justify-center mb-8">
+            <div className="relative">
+              <div className="absolute inset-0 bg-white/30 rounded-full blur-2xl animate-pulse"></div>
+              <div className="relative bg-white/20 backdrop-blur-sm rounded-full p-8 animate-bounce shadow-2xl">
+                <i className="fas fa-graduation-cap text-7xl"></i>
+              </div>
             </div>
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">
+          
+          <h1 className="text-5xl md:text-6xl font-extrabold mb-6 drop-shadow-2xl animate-fadeIn">
             🎓 Chào Mừng Đến Với Nền Tảng Học Tập Thông Minh
           </h1>
-          <h2 className="text-2xl md:text-3xl font-semibold mb-6">
+          
+          <h2 className="text-3xl md:text-4xl font-bold mb-8 text-blue-100 animate-fadeIn delay-200">
             Luyện Thi Tốt Nghiệp THPT Môn Công Nghệ Cùng AI Gemini
           </h2>
-          <p className="text-xl mb-4 text-blue-100">
-            <i className="fas fa-book mr-2"></i>
-            Dựa trên SGK Kết nối tri thức & Cánh Diều - Chương trình GDPT 2018
-          </p>
-          <p className="text-lg text-blue-50 max-w-3xl mx-auto">
-            Sử dụng công nghệ trí tuệ nhân tạo Google Gemini 2.0 Flash để hỗ trợ học tập, 
-            tạo câu hỏi, và mô phỏng đề thi THPT Quốc Gia một cách chính xác và hiệu quả
-          </p>
+          
+          <div className="max-w-4xl mx-auto space-y-4">
+            <p className="text-xl mb-4 flex items-center justify-center gap-3 font-semibold animate-fadeIn delay-300">
+              <span className="bg-white/20 px-4 py-2 rounded-full backdrop-blur-sm">
+                <i className="fas fa-book mr-2"></i>
+                Dựa trên SGK Kết nối tri thức & Cánh Diều
+              </span>
+            </p>
+            
+            <p className="text-lg text-blue-50 max-w-3xl mx-auto leading-relaxed animate-fadeIn delay-400">
+              Sử dụng công nghệ trí tuệ nhân tạo <span className="font-bold bg-white/20 px-3 py-1 rounded-lg">Google Gemini 2.0 Flash</span> để hỗ trợ học tập, 
+              tạo câu hỏi, và mô phỏng đề thi THPT Quốc Gia một cách chính xác và hiệu quả
+            </p>
+            
+            <div className="flex flex-wrap justify-center gap-4 mt-8 animate-fadeIn delay-500">
+              <Link to="/san-pham-1" className="bg-white text-blue-600 px-8 py-4 rounded-xl font-bold text-lg hover:scale-105 hover:shadow-2xl transition-all">
+                <i className="fas fa-rocket mr-2"></i>
+                Bắt Đầu Ngay
+              </Link>
+              <Link to="/san-pham-3" className="bg-white/20 backdrop-blur-sm text-white px-8 py-4 rounded-xl font-bold text-lg hover:bg-white/30 hover:scale-105 transition-all border-2 border-white/30">
+                <i className="fas fa-file-alt mr-2"></i>
+                Làm Đề Thi
+              </Link>
+            </div>
+          </div>
         </div>
       </div>
 
       {/* Features Section */}
-      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
         <Link to="/san-pham-1" className="group">
-          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 h-full">
-            <div className="text-center">
-              <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
-                <i className="fas fa-sitemap text-3xl text-white"></i>
+          <div className="relative bg-gradient-to-br from-white to-blue-50 dark:from-gray-800 dark:to-gray-700 rounded-2xl shadow-xl p-6 hover:shadow-2xl transition-all duration-300 hover:-translate-y-3 h-full border-2 border-transparent hover:border-blue-300 overflow-hidden">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-blue-400 to-purple-400 rounded-full blur-3xl opacity-20 group-hover:opacity-40 transition-opacity"></div>
+            <div className="text-center relative z-10">
+              <div className="bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl w-24 h-24 flex items-center justify-center mx-auto mb-4 group-hover:scale-110 group-hover:rotate-6 transition-transform shadow-lg">
+                <i className="fas fa-comments text-4xl text-white"></i>
               </div>
-              <h3 className="text-2xl font-bold mb-3 text-blue-600 dark:text-blue-400">
-                Sản Phẩm 1
+              <h3 className="text-2xl font-bold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
+                Chat AI
               </h3>
               <h4 className="text-xl font-semibold mb-3 text-gray-800 dark:text-gray-200">
                 Hệ Thống Hóa Kiến Thức
               </h4>
-              <p className="text-gray-600 dark:text-gray-400 mb-4">
+              <p className="text-gray-600 dark:text-gray-400 mb-4 leading-relaxed">
                 Chat với AI để giải đáp mọi thắc mắc về môn Công nghệ. Hỗ trợ upload file, 
                 phân tích tài liệu, và giải thích chi tiết với sơ đồ minh họa.
               </p>
               <div className="flex flex-wrap gap-2 justify-center">
-                <span className="px-3 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full text-sm">
+                <span className="px-3 py-1.5 bg-gradient-to-r from-blue-100 to-blue-200 dark:from-blue-900 dark:to-blue-800 text-blue-800 dark:text-blue-200 rounded-full text-sm font-semibold shadow-sm">
                   <i className="fas fa-comments mr-1"></i>Chat AI
                 </span>
-                <span className="px-3 py-1 bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 rounded-full text-sm">
+                <span className="px-3 py-1.5 bg-gradient-to-r from-green-100 to-green-200 dark:from-green-900 dark:to-green-800 text-green-800 dark:text-green-200 rounded-full text-sm font-semibold shadow-sm">
                   <i className="fas fa-file-upload mr-1"></i>Upload File
                 </span>
-                <span className="px-3 py-1 bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200 rounded-full text-sm">
-                  <i className="fas fa-history mr-1"></i>Lưu Lịch Sử
+                <span className="px-3 py-1.5 bg-gradient-to-r from-purple-100 to-purple-200 dark:from-purple-900 dark:to-purple-800 text-purple-800 dark:text-purple-200 rounded-full text-sm font-semibold shadow-sm">
+                  <i className="fas fa-history mr-1"></i>Lịch Sử
                 </span>
               </div>
             </div>
@@ -63,29 +93,30 @@ const Home: React.FC = () => {
         </Link>
 
         <Link to="/san-pham-2" className="group">
-          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 h-full">
-            <div className="text-center">
-              <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
-                <i className="fas fa-question-circle text-3xl text-white"></i>
+          <div className="relative bg-gradient-to-br from-white to-green-50 dark:from-gray-800 dark:to-gray-700 rounded-2xl shadow-xl p-6 hover:shadow-2xl transition-all duration-300 hover:-translate-y-3 h-full border-2 border-transparent hover:border-green-300 overflow-hidden">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-green-400 to-blue-400 rounded-full blur-3xl opacity-20 group-hover:opacity-40 transition-opacity"></div>
+            <div className="text-center relative z-10">
+              <div className="bg-gradient-to-br from-green-500 to-teal-600 rounded-2xl w-24 h-24 flex items-center justify-center mx-auto mb-4 group-hover:scale-110 group-hover:rotate-6 transition-transform shadow-lg">
+                <i className="fas fa-question-circle text-4xl text-white"></i>
               </div>
-              <h3 className="text-2xl font-bold mb-3 text-green-600 dark:text-green-400">
-                Sản Phẩm 2
+              <h3 className="text-2xl font-bold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-green-600 to-teal-600">
+                Tạo Câu Hỏi
               </h3>
               <h4 className="text-xl font-semibold mb-3 text-gray-800 dark:text-gray-200">
-                Tạo Câu Hỏi Trắc Nghiệm
+                Trắc Nghiệm Tự Động
               </h4>
-              <p className="text-gray-600 dark:text-gray-400 mb-4">
+              <p className="text-gray-600 dark:text-gray-400 mb-4 leading-relaxed">
                 Tự động tạo bộ câu hỏi trắc nghiệm 4 lựa chọn và Đúng/Sai theo chủ đề. 
                 Phân loại mức độ: Nhận biết, Thông hiểu, Vận dụng.
               </p>
               <div className="flex flex-wrap gap-2 justify-center">
-                <span className="px-3 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full text-sm">
+                <span className="px-3 py-1.5 bg-gradient-to-r from-blue-100 to-blue-200 dark:from-blue-900 dark:to-blue-800 text-blue-800 dark:text-blue-200 rounded-full text-sm font-semibold shadow-sm">
                   <i className="fas fa-check-circle mr-1"></i>4 Lựa Chọn
                 </span>
-                <span className="px-3 py-1 bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 rounded-full text-sm">
+                <span className="px-3 py-1.5 bg-gradient-to-r from-green-100 to-green-200 dark:from-green-900 dark:to-green-800 text-green-800 dark:text-green-200 rounded-full text-sm font-semibold shadow-sm">
                   <i className="fas fa-tasks mr-1"></i>Đúng/Sai
                 </span>
-                <span className="px-3 py-1 bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200 rounded-full text-sm">
+                <span className="px-3 py-1.5 bg-gradient-to-r from-purple-100 to-purple-200 dark:from-purple-900 dark:to-purple-800 text-purple-800 dark:text-purple-200 rounded-full text-sm font-semibold shadow-sm">
                   <i className="fas fa-layer-group mr-1"></i>YCCĐ
                 </span>
               </div>
@@ -94,29 +125,30 @@ const Home: React.FC = () => {
         </Link>
 
         <Link to="/san-pham-3" className="group">
-          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 h-full">
-            <div className="text-center">
-              <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
-                <i className="fas fa-industry text-3xl text-white"></i>
+          <div className="relative bg-gradient-to-br from-white to-purple-50 dark:from-gray-800 dark:to-gray-700 rounded-2xl shadow-xl p-6 hover:shadow-2xl transition-all duration-300 hover:-translate-y-3 h-full border-2 border-transparent hover:border-purple-300 overflow-hidden">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-purple-400 to-pink-400 rounded-full blur-3xl opacity-20 group-hover:opacity-40 transition-opacity"></div>
+            <div className="text-center relative z-10">
+              <div className="bg-gradient-to-br from-purple-500 to-pink-600 rounded-2xl w-24 h-24 flex items-center justify-center mx-auto mb-4 group-hover:scale-110 group-hover:rotate-6 transition-transform shadow-lg">
+                <i className="fas fa-industry text-4xl text-white"></i>
               </div>
-              <h3 className="text-2xl font-bold mb-3 text-purple-600 dark:text-purple-400">
-                Sản Phẩm 3
+              <h3 className="text-2xl font-bold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600">
+                Đề Công Nghiệp
               </h3>
               <h4 className="text-xl font-semibold mb-3 text-gray-800 dark:text-gray-200">
-                Đề Thi - Công Nghiệp
+                Điện + Điện Tử
               </h4>
-              <p className="text-gray-600 dark:text-gray-400 mb-4">
+              <p className="text-gray-600 dark:text-gray-400 mb-4 leading-relaxed">
                 Đề thi THPT chuyên đề Công nghiệp: Điện, Điện tử. 
                 28 câu (24 TN + 4 Đ/S) chuẩn format Bộ GD&ĐT với in đề và tải xuống.
               </p>
               <div className="flex flex-wrap gap-2 justify-center">
-                <span className="px-3 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full text-sm">
+                <span className="px-3 py-1.5 bg-gradient-to-r from-blue-100 to-blue-200 dark:from-blue-900 dark:to-blue-800 text-blue-800 dark:text-blue-200 rounded-full text-sm font-semibold shadow-sm">
                   <i className="fas fa-bolt mr-1"></i>Điện
                 </span>
-                <span className="px-3 py-1 bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 rounded-full text-sm">
+                <span className="px-3 py-1.5 bg-gradient-to-r from-purple-100 to-purple-200 dark:from-purple-900 dark:to-purple-800 text-purple-800 dark:text-purple-200 rounded-full text-sm font-semibold shadow-sm">
                   <i className="fas fa-microchip mr-1"></i>Điện tử
                 </span>
-                <span className="px-3 py-1 bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200 rounded-full text-sm">
+                <span className="px-3 py-1.5 bg-gradient-to-r from-pink-100 to-pink-200 dark:from-pink-900 dark:to-pink-800 text-pink-800 dark:text-pink-200 rounded-full text-sm font-semibold shadow-sm">
                   <i className="fas fa-print mr-1"></i>In/Tải
                 </span>
               </div>
@@ -125,29 +157,30 @@ const Home: React.FC = () => {
         </Link>
 
         <Link to="/san-pham-4" className="group">
-          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 h-full">
-            <div className="text-center">
-              <div className="bg-gradient-to-br from-green-500 to-teal-600 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
-                <i className="fas fa-tractor text-3xl text-white"></i>
+          <div className="relative bg-gradient-to-br from-white to-teal-50 dark:from-gray-800 dark:to-gray-700 rounded-2xl shadow-xl p-6 hover:shadow-2xl transition-all duration-300 hover:-translate-y-3 h-full border-2 border-transparent hover:border-teal-300 overflow-hidden">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-teal-400 to-green-400 rounded-full blur-3xl opacity-20 group-hover:opacity-40 transition-opacity"></div>
+            <div className="text-center relative z-10">
+              <div className="bg-gradient-to-br from-green-500 to-teal-600 rounded-2xl w-24 h-24 flex items-center justify-center mx-auto mb-4 group-hover:scale-110 group-hover:rotate-6 transition-transform shadow-lg">
+                <i className="fas fa-tractor text-4xl text-white"></i>
               </div>
-              <h3 className="text-2xl font-bold mb-3 text-green-600 dark:text-green-400">
-                Sản Phẩm 4
+              <h3 className="text-2xl font-bold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-green-600 to-teal-600">
+                Đề Nông Nghiệp
               </h3>
               <h4 className="text-xl font-semibold mb-3 text-gray-800 dark:text-gray-200">
-                Đề Thi - Nông Nghiệp
+                Trồng Trọt + Chăn Nuôi
               </h4>
-              <p className="text-gray-600 dark:text-gray-400 mb-4">
+              <p className="text-gray-600 dark:text-gray-400 mb-4 leading-relaxed">
                 Đề thi THPT chuyên đề Nông nghiệp: Trồng trọt, Chăn nuôi. 
                 28 câu (24 TN + 4 Đ/S) chuẩn format với nội dung từ cả 2 bộ SGK.
               </p>
               <div className="flex flex-wrap gap-2 justify-center">
-                <span className="px-3 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full text-sm">
+                <span className="px-3 py-1.5 bg-gradient-to-r from-green-100 to-green-200 dark:from-green-900 dark:to-green-800 text-green-800 dark:text-green-200 rounded-full text-sm font-semibold shadow-sm">
                   <i className="fas fa-seedling mr-1"></i>Trồng trọt
                 </span>
-                <span className="px-3 py-1 bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 rounded-full text-sm">
+                <span className="px-3 py-1.5 bg-gradient-to-r from-teal-100 to-teal-200 dark:from-teal-900 dark:to-teal-800 text-teal-800 dark:text-teal-200 rounded-full text-sm font-semibold shadow-sm">
                   <i className="fas fa-paw mr-1"></i>Chăn nuôi
                 </span>
-                <span className="px-3 py-1 bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200 rounded-full text-sm">
+                <span className="px-3 py-1.5 bg-gradient-to-r from-blue-100 to-blue-200 dark:from-blue-900 dark:to-blue-800 text-blue-800 dark:text-blue-200 rounded-full text-sm font-semibold shadow-sm">
                   <i className="fas fa-print mr-1"></i>In/Tải
                 </span>
               </div>
@@ -157,34 +190,37 @@ const Home: React.FC = () => {
       </div>
 
       {/* Statistics Section */}
-      <div className="bg-gradient-to-r from-indigo-600 to-blue-600 rounded-2xl shadow-lg p-8 mb-8 text-white">
-        <h3 className="text-3xl font-bold text-center mb-8">
+      <div className="relative bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 rounded-3xl shadow-2xl p-10 mb-12 text-white overflow-hidden">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full blur-2xl"></div>
+        
+        <h3 className="text-4xl font-extrabold text-center mb-10 relative z-10 drop-shadow-lg">
           <i className="fas fa-chart-line mr-3"></i>
           Thống Kê Ấn Tượng
         </h3>
-        <div className="grid md:grid-cols-4 gap-6">
-          <div className="text-center p-6 bg-white/10 backdrop-blur-sm rounded-xl hover:bg-white/20 transition-all duration-300">
-            <div className="text-5xl font-bold mb-2">28</div>
-            <p className="text-lg text-indigo-100">Câu hỏi/Đề thi</p>
-            <p className="text-sm text-indigo-200 mt-1">Format chuẩn THPT</p>
+        <div className="grid md:grid-cols-4 gap-6 relative z-10">
+          <div className="text-center p-8 bg-white/20 backdrop-blur-md rounded-2xl hover:bg-white/30 hover:scale-105 transition-all duration-300 shadow-xl border border-white/20">
+            <div className="text-6xl font-extrabold mb-3 text-yellow-300">28</div>
+            <p className="text-xl font-semibold text-white mb-1">Câu hỏi/Đề thi</p>
+            <p className="text-sm text-indigo-100">Format chuẩn THPT</p>
           </div>
           
-          <div className="text-center p-6 bg-white/10 backdrop-blur-sm rounded-xl hover:bg-white/20 transition-all duration-300">
-            <div className="text-5xl font-bold mb-2">~30s</div>
-            <p className="text-lg text-indigo-100">Tạo đề nhanh</p>
-            <p className="text-sm text-indigo-200 mt-1">Tiết kiệm thời gian</p>
+          <div className="text-center p-8 bg-white/20 backdrop-blur-md rounded-2xl hover:bg-white/30 hover:scale-105 transition-all duration-300 shadow-xl border border-white/20">
+            <div className="text-6xl font-extrabold mb-3 text-green-300">~30s</div>
+            <p className="text-xl font-semibold text-white mb-1">Tạo đề nhanh</p>
+            <p className="text-sm text-indigo-100">Tiết kiệm thời gian</p>
           </div>
           
-          <div className="text-center p-6 bg-white/10 backdrop-blur-sm rounded-xl hover:bg-white/20 transition-all duration-300">
-            <div className="text-5xl font-bold mb-2">1500+</div>
-            <p className="text-lg text-indigo-100">Từ mỗi câu trả lời</p>
-            <p className="text-sm text-indigo-200 mt-1">Giải thích chi tiết</p>
+          <div className="text-center p-8 bg-white/20 backdrop-blur-md rounded-2xl hover:bg-white/30 hover:scale-105 transition-all duration-300 shadow-xl border border-white/20">
+            <div className="text-6xl font-extrabold mb-3 text-blue-300">1500+</div>
+            <p className="text-xl font-semibold text-white mb-1">Từ mỗi câu trả lời</p>
+            <p className="text-sm text-indigo-100">Giải thích chi tiết</p>
           </div>
           
-          <div className="text-center p-6 bg-white/10 backdrop-blur-sm rounded-xl hover:bg-white/20 transition-all duration-300">
-            <div className="text-5xl font-bold mb-2">100%</div>
-            <p className="text-lg text-indigo-100">Tiếng Việt</p>
-            <p className="text-sm text-indigo-200 mt-1">Dễ hiểu, thân thiện</p>
+          <div className="text-center p-8 bg-white/20 backdrop-blur-md rounded-2xl hover:bg-white/30 hover:scale-105 transition-all duration-300 shadow-xl border border-white/20">
+            <div className="text-6xl font-extrabold mb-3 text-pink-300">100%</div>
+            <p className="text-xl font-semibold text-white mb-1">Tiếng Việt</p>
+            <p className="text-sm text-indigo-100">Dễ hiểu, thân thiện</p>
           </div>
         </div>
       </div>

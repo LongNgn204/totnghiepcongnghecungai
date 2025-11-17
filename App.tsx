@@ -27,24 +27,28 @@ const App: React.FC = () => {
       <div className="min-h-screen flex flex-col font-sans text-gray-800 dark:text-gray-200 bg-gray-50 dark:bg-gray-900">
         {/* Disclaimer Banner */}
         {showDisclaimer && (
-          <div className="bg-gradient-to-r from-amber-500 to-orange-600 text-white py-3 px-4 shadow-lg sticky top-0 z-50">
-            <div className="container mx-auto flex flex-wrap items-center justify-between gap-3">
-              <div className="flex items-start gap-3 flex-1 min-w-0">
-                <i className="fas fa-info-circle text-2xl mt-0.5"></i>
+          <div className="bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 text-white py-4 px-4 shadow-2xl sticky top-0 z-50 border-b-2 border-white/30 animate-slideDown">
+            <div className="container mx-auto flex flex-wrap items-center justify-between gap-4">
+              <div className="flex items-start gap-4 flex-1 min-w-0">
+                <div className="bg-white/20 backdrop-blur-sm rounded-full p-3 flex-shrink-0">
+                  <i className="fas fa-exclamation-triangle text-3xl"></i>
+                </div>
                 <div className="text-sm">
-                  <p className="font-bold mb-1">🎓 Công cụ hỗ trợ học tập môn Công nghệ THPT</p>
-                  <p className="text-amber-50">
-                    Website sử dụng AI để tạo đề thi dựa trên SGK <strong>Kết nối tri thức</strong> và <strong>Cánh Diều</strong>. 
-                    Đây là <strong>phiên bản demo</strong>, nội dung mang tính tham khảo, chưa chính xác 100%. 
+                  <p className="font-bold mb-2 text-lg flex items-center gap-2">
+                    🎓 Công cụ hỗ trợ học tập môn Công nghệ THPT
+                  </p>
+                  <p className="text-orange-50 leading-relaxed">
+                    Website sử dụng <span className="font-bold bg-white/20 px-2 py-0.5 rounded">AI Gemini 2.0</span> để tạo đề thi dựa trên SGK <strong>Kết nối tri thức</strong> và <strong>Cánh Diều</strong>. 
+                    Đây là <span className="font-bold bg-white/20 px-2 py-0.5 rounded">phiên bản demo</span>, nội dung mang tính tham khảo, chưa chính xác 100%. 
                     Vui lòng kết hợp với tài liệu chính thức của Bộ GD&ĐT.
                   </p>
                 </div>
               </div>
               <button
                 onClick={acceptDisclaimer}
-                className="px-4 py-2 bg-white text-orange-600 font-semibold rounded-lg hover:bg-orange-50 transition-all whitespace-nowrap"
+                className="px-6 py-3 bg-white text-orange-600 font-bold rounded-xl hover:bg-orange-50 hover:scale-105 transition-all whitespace-nowrap shadow-lg"
               >
-                <i className="fas fa-check mr-2"></i>Đã hiểu
+                <i className="fas fa-check-circle mr-2"></i>Đã hiểu
               </button>
             </div>
           </div>
@@ -64,68 +68,124 @@ const App: React.FC = () => {
         </main>
         <ScrollToTop />
         <TechBadge />
-        <footer className="bg-gradient-to-r from-blue-600 to-purple-600 shadow-lg mt-auto">
-            <div className="container mx-auto px-4 py-8">
-              <div className="grid md:grid-cols-4 gap-8 text-white">
-                <div>
-                  <h3 className="font-bold text-lg mb-3 flex items-center">
-                    <i className="fas fa-graduation-cap mr-2"></i>
+        <footer className="bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 shadow-2xl mt-auto border-t-2 border-blue-500/30">
+            <div className="container mx-auto px-4 py-10">
+              <div className="grid md:grid-cols-4 gap-8 text-white mb-8">
+                <div className="space-y-4">
+                  <h3 className="font-bold text-xl mb-4 flex items-center gap-2 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400">
+                    <div className="bg-gradient-to-r from-blue-500 to-purple-500 p-2 rounded-lg">
+                      <i className="fas fa-graduation-cap text-white"></i>
+                    </div>
                     Về Chúng Tôi
                   </h3>
-                  <p className="text-sm text-blue-100">
-                    Nền tảng học tập thông minh sử dụng AI Gemini 2.0 để hỗ trợ học sinh luyện thi THPT môn Công Nghệ.
+                  <p className="text-sm text-gray-300 leading-relaxed">
+                    Nền tảng học tập thông minh sử dụng <span className="font-semibold text-blue-400">AI Gemini 2.0</span> để hỗ trợ học sinh luyện thi THPT môn Công Nghệ.
                   </p>
+                  <div className="flex gap-3 mt-4">
+                    <a href="#" className="w-10 h-10 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center hover:scale-110 transition-transform">
+                      <i className="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="#" className="w-10 h-10 rounded-full bg-gradient-to-r from-pink-500 to-red-500 flex items-center justify-center hover:scale-110 transition-transform">
+                      <i className="fab fa-youtube"></i>
+                    </a>
+                    <a href="#" className="w-10 h-10 rounded-full bg-gradient-to-r from-blue-400 to-cyan-400 flex items-center justify-center hover:scale-110 transition-transform">
+                      <i className="fab fa-telegram"></i>
+                    </a>
+                  </div>
                 </div>
                 
                 <div>
-                  <h3 className="font-bold text-lg mb-3 flex items-center">
-                    <i className="fas fa-link mr-2"></i>
+                  <h3 className="font-bold text-xl mb-4 flex items-center gap-2 text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-blue-400">
+                    <div className="bg-gradient-to-r from-green-500 to-blue-500 p-2 rounded-lg">
+                      <i className="fas fa-link text-white"></i>
+                    </div>
                     Liên Kết
                   </h3>
-                  <ul className="space-y-2 text-sm text-blue-100">
-                    <li><a href="/#/" className="hover:text-white transition-colors"><i className="fas fa-home mr-1"></i> Trang Chủ</a></li>
-                    <li><a href="/#/san-pham-1" className="hover:text-white transition-colors"><i className="fas fa-comments mr-1"></i> Chat AI</a></li>
-                    <li><a href="/#/san-pham-2" className="hover:text-white transition-colors"><i className="fas fa-question-circle mr-1"></i> Tạo Câu Hỏi</a></li>
-                    <li><a href="/#/lich-su" className="hover:text-white transition-colors"><i className="fas fa-history mr-1"></i> Lịch Sử Đề Thi</a></li>
-                    <li><a href="/#/san-pham-3" className="hover:text-white transition-colors"><i className="fas fa-industry mr-1"></i> Đề Thi Công Nghiệp</a></li>
-                    <li><a href="/#/san-pham-4" className="hover:text-white transition-colors"><i className="fas fa-tractor mr-1"></i> Đề Thi Nông Nghiệp</a></li>
+                  <ul className="space-y-3 text-sm text-gray-300">
+                    <li><a href="/#/" className="hover:text-white transition-colors hover:translate-x-2 inline-block"><i className="fas fa-chevron-right text-xs mr-2 text-blue-400"></i> Trang Chủ</a></li>
+                    <li><a href="/#/san-pham-1" className="hover:text-white transition-colors hover:translate-x-2 inline-block"><i className="fas fa-chevron-right text-xs mr-2 text-purple-400"></i> Chat AI</a></li>
+                    <li><a href="/#/san-pham-2" className="hover:text-white transition-colors hover:translate-x-2 inline-block"><i className="fas fa-chevron-right text-xs mr-2 text-green-400"></i> Tạo Câu Hỏi</a></li>
+                    <li><a href="/#/lich-su" className="hover:text-white transition-colors hover:translate-x-2 inline-block"><i className="fas fa-chevron-right text-xs mr-2 text-pink-400"></i> Lịch Sử Đề Thi</a></li>
+                    <li><a href="/#/san-pham-3" className="hover:text-white transition-colors hover:translate-x-2 inline-block"><i className="fas fa-chevron-right text-xs mr-2 text-purple-400"></i> Đề Thi Công Nghiệp</a></li>
+                    <li><a href="/#/san-pham-4" className="hover:text-white transition-colors hover:translate-x-2 inline-block"><i className="fas fa-chevron-right text-xs mr-2 text-green-400"></i> Đề Thi Nông Nghiệp</a></li>
                   </ul>
                 </div>
                 
                 <div>
-                  <h3 className="font-bold text-lg mb-3 flex items-center">
-                    <i className="fas fa-envelope mr-2"></i>
+                  <h3 className="font-bold text-xl mb-4 flex items-center gap-2 text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-orange-400">
+                    <div className="bg-gradient-to-r from-pink-500 to-orange-500 p-2 rounded-lg">
+                      <i className="fas fa-envelope text-white"></i>
+                    </div>
                     Liên Hệ
                   </h3>
-                  <ul className="space-y-2 text-sm text-blue-100">
-                    <li><i className="fas fa-envelope mr-2"></i>longhngn.hnue@gmail.com</li>
-                    <li><i className="fas fa-phone mr-2"></i>0896636181</li>
-                    <li><i className="fas fa-clock mr-2"></i>8:00 - 22:00 hàng ngày</li>
+                  <ul className="space-y-3 text-sm text-gray-300">
+                    <li className="flex items-center gap-2">
+                      <i className="fas fa-envelope text-blue-400"></i>
+                      <a href="mailto:longhngn.hnue@gmail.com" className="hover:text-white transition-colors">longhngn.hnue@gmail.com</a>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <i className="fas fa-phone text-green-400"></i>
+                      <a href="tel:0896636181" className="hover:text-white transition-colors">0896636181</a>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <i className="fas fa-clock text-purple-400"></i>
+                      8:00 - 22:00 hàng ngày
+                    </li>
                   </ul>
                 </div>
                 
                 <div>
-                  <h3 className="font-bold text-lg mb-3 flex items-center">
-                    <i className="fas fa-robot mr-2"></i>
+                  <h3 className="font-bold text-xl mb-4 flex items-center gap-2 text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-400">
+                    <div className="bg-gradient-to-r from-cyan-500 to-blue-500 p-2 rounded-lg">
+                      <i className="fas fa-robot text-white"></i>
+                    </div>
                     Công Nghệ
                   </h3>
-                  <ul className="space-y-2 text-sm text-blue-100">
-                    <li><i className="fas fa-check mr-2"></i>Google Gemini 2.0</li>
-                    <li><i className="fab fa-react mr-2"></i>React 19 + TypeScript</li>
-                    <li><i className="fas fa-bolt mr-2"></i>Vite + Tailwind CSS</li>
-                    <li><i className="fas fa-book mr-2"></i>SGK Kết nối tri thức với cuộc sống & Cánh Diều</li>
+                  <ul className="space-y-3 text-sm text-gray-300">
+                    <li className="flex items-center gap-2">
+                      <i className="fas fa-check-circle text-green-400"></i>
+                      Google Gemini 2.0
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <i className="fab fa-react text-blue-400"></i>
+                      React 19 + TypeScript
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <i className="fas fa-bolt text-yellow-400"></i>
+                      Vite + Tailwind CSS
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <i className="fas fa-book text-pink-400"></i>
+                      SGK KNTT & Cánh Diều
+                    </li>
                   </ul>
                 </div>
               </div>
               
-              <div className="border-t border-blue-400 mt-6 pt-6 text-center">
-                <p className="text-sm text-white">
-                  <i className="fas fa-graduation-cap mr-2"></i>
+              <div className="border-t border-blue-500/30 pt-6 text-center space-y-3">
+                <p className="text-sm text-white font-semibold">
+                  <i className="fas fa-graduation-cap mr-2 text-blue-400"></i>
                   Ôn Thi THPT Quốc Gia - Công Nghệ với AI | Chương trình GDPT 2018
                 </p>
-                <p className="text-xs text-blue-100 mt-2">
-                  &copy; 2025 - Ý tưởng và phát triển bởi Long Nguyễn 204
+                <p className="text-xs text-gray-400">
+                  &copy; 2025 - Ý tưởng và phát triển bởi <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400 font-bold">Long Nguyễn 204</span>
                 </p>
+                <div className="flex justify-center gap-4 text-xs text-gray-500 mt-4">
+                  <span className="flex items-center gap-1">
+                    <i className="fas fa-heart text-red-400"></i>
+                    Made with Love
+                  </span>
+                  <span>•</span>
+                  <span className="flex items-center gap-1">
+                    <i className="fas fa-code text-purple-400"></i>
+                    Open Source
+                  </span>
+                  <span>•</span>
+                  <span className="flex items-center gap-1">
+                    <i className="fas fa-shield-alt text-green-400"></i>
+                    Safe & Secure
+                  </span>
+                </div>
               </div>
             </div>
         </footer>

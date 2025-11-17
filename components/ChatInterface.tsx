@@ -335,14 +335,14 @@ ${filesToSend.length > 0 ? `\n📎 File đính kèm: ${filesToSend.map(f => f.na
   const groupedChats = groupChatsByTime(chatHistory);
 
   return (
-    <div className="flex h-[calc(100vh-180px)] bg-gray-50 dark:bg-gray-900 rounded-lg overflow-hidden shadow-lg">
+    <div className="flex h-[calc(100vh-180px)] bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800 rounded-2xl overflow-hidden shadow-2xl border border-gray-200 dark:border-gray-700">
       {/* Sidebar */}
-      <div className={`${sidebarOpen ? 'w-80' : 'w-0'} transition-all duration-300 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 flex flex-col overflow-hidden`}>
+      <div className={`${sidebarOpen ? 'w-80' : 'w-0'} transition-all duration-300 bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl border-r border-gray-200 dark:border-gray-700 flex flex-col overflow-hidden`}>
         {/* Sidebar Header */}
-        <div className="p-4 border-b border-gray-200 dark:border-gray-700">
+        <div className="p-4 border-b border-gray-200 dark:border-gray-700 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-gray-800 dark:to-gray-900">
           <button
             onClick={startNewChat}
-            className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-3 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all flex items-center justify-center gap-2 font-semibold"
+            className="w-full bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 text-white px-4 py-3 rounded-xl hover:shadow-lg hover:scale-105 transition-all flex items-center justify-center gap-2 font-semibold shadow-md"
           >
             <i className="fas fa-plus"></i>
             Chat mới
@@ -357,36 +357,41 @@ ${filesToSend.length > 0 ? `\n📎 File đính kèm: ${filesToSend.map(f => f.na
                 setSearchQuery(e.target.value);
                 setTimeout(loadChatHistory, 300);
               }}
-              placeholder="Tìm kiếm..."
-              className="w-full px-4 py-2 pl-10 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-blue-500"
+              placeholder="Tìm kiếm cuộc trò chuyện..."
+              className="w-full px-4 py-2 pl-10 rounded-xl border-2 border-gray-200 dark:border-gray-600 dark:bg-gray-700/50 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
             />
             <i className="fas fa-search absolute left-3 top-3 text-gray-400"></i>
           </div>
         </div>
 
         {/* Chat History */}
-        <div className="flex-1 overflow-y-auto p-3 space-y-4">
+        <div className="flex-1 overflow-y-auto p-3 space-y-4 scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600">
           {groupedChats.today.length > 0 && (
             <div>
-              <h3 className="text-xs font-semibold text-gray-500 dark:text-gray-400 mb-2 px-2">HÔM NAY</h3>
+              <h3 className="text-xs font-bold text-gray-600 dark:text-gray-300 mb-2 px-2 flex items-center gap-2">
+                <i className="fas fa-clock text-blue-500"></i>
+                HÔM NAY
+              </h3>
               {groupedChats.today.map(session => (
                 <div
                   key={session.id}
                   onClick={() => loadChat(session)}
-                  className={`p-3 rounded-lg cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors group ${currentSession?.id === session.id ? 'bg-blue-50 dark:bg-blue-900' : ''}`}
+                  className={`p-3 rounded-xl cursor-pointer hover:shadow-md hover:scale-[1.02] transition-all group relative overflow-hidden ${currentSession?.id === session.id ? 'bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/40 dark:to-purple-900/40 border-2 border-blue-200 dark:border-blue-700' : 'hover:bg-gray-50 dark:hover:bg-gray-700/50'}`}
                 >
-                  <div className="flex items-start justify-between">
+                  <div className="flex items-start justify-between relative z-10">
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
+                      <p className="text-sm font-semibold text-gray-900 dark:text-white truncate flex items-center gap-2">
+                        <i className="fas fa-comment-dots text-blue-500 text-xs"></i>
                         {session.title}
                       </p>
-                      <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                      <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 flex items-center gap-1">
+                        <i className="fas fa-message text-[10px]"></i>
                         {session.messages.length} tin nhắn
                       </p>
                     </div>
                     <button
                       onClick={(e) => handleDeleteChat(session.id, e)}
-                      className="opacity-0 group-hover:opacity-100 text-red-500 hover:text-red-700 ml-2"
+                      className="opacity-0 group-hover:opacity-100 text-red-500 hover:text-red-700 hover:scale-110 transition-all ml-2"
                     >
                       <i className="fas fa-trash text-xs"></i>
                     </button>
@@ -398,25 +403,30 @@ ${filesToSend.length > 0 ? `\n📎 File đính kèm: ${filesToSend.map(f => f.na
 
           {groupedChats.yesterday.length > 0 && (
             <div>
-              <h3 className="text-xs font-semibold text-gray-500 dark:text-gray-400 mb-2 px-2">HÔM QUA</h3>
+              <h3 className="text-xs font-bold text-gray-600 dark:text-gray-300 mb-2 px-2 flex items-center gap-2">
+                <i className="fas fa-history text-purple-500"></i>
+                HÔM QUA
+              </h3>
               {groupedChats.yesterday.map(session => (
                 <div
                   key={session.id}
                   onClick={() => loadChat(session)}
-                  className={`p-3 rounded-lg cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors group ${currentSession?.id === session.id ? 'bg-blue-50 dark:bg-blue-900' : ''}`}
+                  className={`p-3 rounded-xl cursor-pointer hover:shadow-md hover:scale-[1.02] transition-all group relative overflow-hidden ${currentSession?.id === session.id ? 'bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/40 dark:to-purple-900/40 border-2 border-blue-200 dark:border-blue-700' : 'hover:bg-gray-50 dark:hover:bg-gray-700/50'}`}
                 >
-                  <div className="flex items-start justify-between">
+                  <div className="flex items-start justify-between relative z-10">
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
+                      <p className="text-sm font-semibold text-gray-900 dark:text-white truncate flex items-center gap-2">
+                        <i className="fas fa-comment-dots text-purple-500 text-xs"></i>
                         {session.title}
                       </p>
-                      <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                      <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 flex items-center gap-1">
+                        <i className="fas fa-message text-[10px]"></i>
                         {session.messages.length} tin nhắn
                       </p>
                     </div>
                     <button
                       onClick={(e) => handleDeleteChat(session.id, e)}
-                      className="opacity-0 group-hover:opacity-100 text-red-500 hover:text-red-700 ml-2"
+                      className="opacity-0 group-hover:opacity-100 text-red-500 hover:text-red-700 hover:scale-110 transition-all ml-2"
                     >
                       <i className="fas fa-trash text-xs"></i>
                     </button>
@@ -428,25 +438,30 @@ ${filesToSend.length > 0 ? `\n📎 File đính kèm: ${filesToSend.map(f => f.na
 
           {groupedChats.lastWeek.length > 0 && (
             <div>
-              <h3 className="text-xs font-semibold text-gray-500 dark:text-gray-400 mb-2 px-2">7 NGÀY QUA</h3>
+              <h3 className="text-xs font-bold text-gray-600 dark:text-gray-300 mb-2 px-2 flex items-center gap-2">
+                <i className="fas fa-calendar-week text-pink-500"></i>
+                7 NGÀY QUA
+              </h3>
               {groupedChats.lastWeek.map(session => (
                 <div
                   key={session.id}
                   onClick={() => loadChat(session)}
-                  className={`p-3 rounded-lg cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors group ${currentSession?.id === session.id ? 'bg-blue-50 dark:bg-blue-900' : ''}`}
+                  className={`p-3 rounded-xl cursor-pointer hover:shadow-md hover:scale-[1.02] transition-all group relative overflow-hidden ${currentSession?.id === session.id ? 'bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/40 dark:to-purple-900/40 border-2 border-blue-200 dark:border-blue-700' : 'hover:bg-gray-50 dark:hover:bg-gray-700/50'}`}
                 >
-                  <div className="flex items-start justify-between">
+                  <div className="flex items-start justify-between relative z-10">
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
+                      <p className="text-sm font-semibold text-gray-900 dark:text-white truncate flex items-center gap-2">
+                        <i className="fas fa-comment-dots text-pink-500 text-xs"></i>
                         {session.title}
                       </p>
-                      <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                      <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 flex items-center gap-1">
+                        <i className="fas fa-message text-[10px]"></i>
                         {session.messages.length} tin nhắn
                       </p>
                     </div>
                     <button
                       onClick={(e) => handleDeleteChat(session.id, e)}
-                      className="opacity-0 group-hover:opacity-100 text-red-500 hover:text-red-700 ml-2"
+                      className="opacity-0 group-hover:opacity-100 text-red-500 hover:text-red-700 hover:scale-110 transition-all ml-2"
                     >
                       <i className="fas fa-trash text-xs"></i>
                     </button>
@@ -461,52 +476,86 @@ ${filesToSend.length > 0 ? `\n📎 File đính kèm: ${filesToSend.map(f => f.na
       {/* Main Chat Area */}
       <div className="flex-1 flex flex-col">
         {/* Chat Header */}
-        <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 p-4 flex items-center justify-between">
+        <div className="bg-gradient-to-r from-white via-blue-50 to-purple-50 dark:from-gray-800 dark:via-gray-800 dark:to-gray-900 border-b-2 border-gray-200 dark:border-gray-700 p-4 flex items-center justify-between backdrop-blur-xl">
           <div className="flex items-center gap-3">
             <button
               onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
+              className="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:scale-110 transition-all p-2 rounded-lg hover:bg-white dark:hover:bg-gray-700"
             >
-              <i className="fas fa-bars"></i>
+              <i className="fas fa-bars text-xl"></i>
             </button>
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
-              {currentSession?.title || 'Chọn hoặc tạo chat mới'}
-            </h2>
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center text-white shadow-lg">
+                <i className="fas fa-robot"></i>
+              </div>
+              <div>
+                <h2 className="text-lg font-bold text-gray-900 dark:text-white">
+                  {currentSession?.title || 'Chọn hoặc tạo chat mới'}
+                </h2>
+                <p className="text-xs text-gray-500 dark:text-gray-400">AI Assistant - Môn Công Nghệ</p>
+              </div>
+            </div>
           </div>
           {currentSession && (
             <button
               onClick={handleExportChat}
-              className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white flex items-center gap-2"
+              className="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 flex items-center gap-2 px-4 py-2 rounded-xl hover:bg-white dark:hover:bg-gray-700 transition-all hover:shadow-md"
             >
               <i className="fas fa-download"></i>
-              <span className="text-sm">Xuất file</span>
+              <span className="text-sm font-semibold">Xuất file</span>
             </button>
           )}
         </div>
 
         {/* Messages Area */}
-        <div className="flex-1 overflow-y-auto p-6 space-y-6">
+        <div className="flex-1 overflow-y-auto p-6 space-y-6 scrollbar-thin scrollbar-thumb-blue-300 dark:scrollbar-thumb-gray-600">
           {!currentSession || currentSession.messages.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full text-gray-500 dark:text-gray-400">
-              <i className="fas fa-comments text-6xl mb-4 text-gray-300 dark:text-gray-600"></i>
-              <h3 className="text-xl font-semibold mb-2">Bắt đầu trò chuyện</h3>
-              <p className="text-center max-w-md">
-                Hỏi AI về bất kỳ kiến thức Công nghệ nào từ SGK Cánh Diều.<br/>
-                Bạn cũng có thể upload file PDF, DOCX, hình ảnh để AI phân tích.
+              <div className="relative">
+                <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full blur-2xl opacity-20 animate-pulse"></div>
+                <i className="fas fa-comments text-7xl mb-6 text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-purple-500 relative"></i>
+              </div>
+              <h3 className="text-2xl font-bold mb-3 text-gray-700 dark:text-gray-300">Bắt đầu trò chuyện</h3>
+              <p className="text-center max-w-md text-gray-600 dark:text-gray-400 leading-relaxed">
+                Hỏi AI về bất kỳ kiến thức Công nghệ nào từ <span className="font-semibold text-blue-600 dark:text-blue-400">SGK Kết nối tri thức & Cánh Diều</span>.<br/>
+                Bạn cũng có thể upload <span className="font-semibold">file PDF, DOCX, hình ảnh</span> để AI phân tích.
               </p>
+              <div className="mt-6 grid grid-cols-2 gap-3">
+                <div className="bg-blue-50 dark:bg-blue-900/20 p-3 rounded-xl">
+                  <i className="fas fa-lightbulb text-yellow-500 mb-1"></i>
+                  <p className="text-xs font-medium">Giải thích kiến thức</p>
+                </div>
+                <div className="bg-purple-50 dark:bg-purple-900/20 p-3 rounded-xl">
+                  <i className="fas fa-calculator text-blue-500 mb-1"></i>
+                  <p className="text-xs font-medium">Giải bài tập</p>
+                </div>
+                <div className="bg-pink-50 dark:bg-pink-900/20 p-3 rounded-xl">
+                  <i className="fas fa-file-image text-pink-500 mb-1"></i>
+                  <p className="text-xs font-medium">Phân tích hình ảnh</p>
+                </div>
+                <div className="bg-green-50 dark:bg-green-900/20 p-3 rounded-xl">
+                  <i className="fas fa-brain text-green-500 mb-1"></i>
+                  <p className="text-xs font-medium">Tư vấn học tập</p>
+                </div>
+              </div>
             </div>
           ) : (
             <>
               {currentSession.messages.map(message => (
                 <div
                   key={message.id}
-                  className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                  className={`flex gap-3 ${message.role === 'user' ? 'justify-end' : 'justify-start'} animate-fadeIn`}
                 >
-                  <div className={`max-w-3xl ${message.role === 'user' ? 'bg-blue-600 text-white' : 'bg-white dark:bg-gray-800 text-gray-900 dark:text-white'} rounded-2xl px-6 py-4 shadow-md`}>
+                  {message.role === 'assistant' && (
+                    <div className="w-10 h-10 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center text-white shadow-lg flex-shrink-0">
+                      <i className="fas fa-robot"></i>
+                    </div>
+                  )}
+                  <div className={`max-w-3xl ${message.role === 'user' ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg' : 'bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow-xl border border-gray-100 dark:border-gray-700'} rounded-2xl px-6 py-4 hover:shadow-2xl transition-shadow`}>
                     {message.role === 'assistant' && (
-                      <div className="flex items-center gap-2 mb-2 text-sm font-semibold text-blue-600 dark:text-blue-400">
-                        <i className="fas fa-robot"></i>
-                        AI Assistant
+                      <div className="flex items-center gap-2 mb-3 pb-2 border-b border-gray-200 dark:border-gray-700">
+                        <span className="text-sm font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400">AI Assistant</span>
+                        <span className="text-xs text-gray-500 dark:text-gray-400">• Công nghệ THPT</span>
                       </div>
                     )}
                     
@@ -522,31 +571,40 @@ ${filesToSend.length > 0 ? `\n📎 File đính kèm: ${filesToSend.map(f => f.na
                     {message.attachments && message.attachments.length > 0 && (
                       <div className="mt-3 space-y-2">
                         {message.attachments.map((file, idx) => (
-                          <div key={idx} className="flex items-center gap-2 text-sm bg-black/10 rounded px-3 py-2">
-                            <i className="fas fa-file"></i>
-                            <span>{file.name}</span>
+                          <div key={idx} className="flex items-center gap-2 text-sm bg-black/10 dark:bg-white/10 rounded-lg px-3 py-2 backdrop-blur-sm">
+                            <i className="fas fa-file text-blue-400"></i>
+                            <span className="font-medium">{file.name}</span>
                             <span className="text-xs opacity-70">({(file.size / 1024).toFixed(1)} KB)</span>
                           </div>
                         ))}
                       </div>
                     )}
                     
-                    <div className="mt-2 text-xs opacity-70">
+                    <div className="mt-3 text-xs opacity-60 flex items-center gap-2">
+                      <i className="fas fa-clock"></i>
                       {new Date(message.timestamp).toLocaleTimeString('vi-VN')}
                     </div>
                   </div>
+                  {message.role === 'user' && (
+                    <div className="w-10 h-10 rounded-full bg-gradient-to-r from-pink-500 to-orange-500 flex items-center justify-center text-white shadow-lg flex-shrink-0">
+                      <i className="fas fa-user"></i>
+                    </div>
+                  )}
                 </div>
               ))}
               {loading && (
-                <div className="flex justify-start">
-                  <div className="bg-white dark:bg-gray-800 rounded-2xl px-6 py-4 shadow-md">
+                <div className="flex justify-start gap-3 animate-fadeIn">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center text-white shadow-lg flex-shrink-0 animate-pulse">
+                    <i className="fas fa-robot"></i>
+                  </div>
+                  <div className="bg-white dark:bg-gray-800 rounded-2xl px-6 py-4 shadow-xl border border-gray-100 dark:border-gray-700">
                     <div className="flex items-center gap-3">
                       <div className="flex gap-1">
-                        <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style={{animationDelay: '0ms'}}></div>
-                        <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style={{animationDelay: '150ms'}}></div>
-                        <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style={{animationDelay: '300ms'}}></div>
+                        <div className="w-3 h-3 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full animate-bounce" style={{animationDelay: '0ms'}}></div>
+                        <div className="w-3 h-3 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full animate-bounce" style={{animationDelay: '150ms'}}></div>
+                        <div className="w-3 h-3 bg-gradient-to-r from-pink-500 to-blue-500 rounded-full animate-bounce" style={{animationDelay: '300ms'}}></div>
                       </div>
-                      <span className="text-gray-600 dark:text-gray-400 text-sm">
+                      <span className="text-gray-600 dark:text-gray-400 text-sm font-medium">
                         AI đang suy nghĩ và chuẩn bị câu trả lời chi tiết...
                       </span>
                     </div>
@@ -559,17 +617,17 @@ ${filesToSend.length > 0 ? `\n📎 File đính kèm: ${filesToSend.map(f => f.na
         </div>
 
         {/* Input Area */}
-        <div className="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 p-4">
+        <div className="bg-gradient-to-r from-white via-blue-50 to-purple-50 dark:from-gray-800 dark:via-gray-800 dark:to-gray-900 border-t-2 border-gray-200 dark:border-gray-700 p-4 backdrop-blur-xl">
           {/* Attached Files */}
           {attachedFiles.length > 0 && (
             <div className="mb-3 flex flex-wrap gap-2">
               {attachedFiles.map((file, idx) => (
-                <div key={idx} className="flex items-center gap-2 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-3 py-2 rounded-lg text-sm">
-                  <i className="fas fa-file"></i>
+                <div key={idx} className="flex items-center gap-2 bg-gradient-to-r from-blue-100 to-purple-100 dark:from-blue-900 dark:to-purple-900 text-blue-800 dark:text-blue-200 px-4 py-2 rounded-xl text-sm font-medium shadow-md">
+                  <i className="fas fa-file text-blue-600 dark:text-blue-400"></i>
                   <span>{file.name}</span>
                   <button
                     onClick={() => removeFile(idx)}
-                    className="text-red-600 hover:text-red-800 ml-1"
+                    className="text-red-600 hover:text-red-800 ml-1 hover:scale-110 transition-transform"
                   >
                     <i className="fas fa-times"></i>
                   </button>
@@ -579,7 +637,7 @@ ${filesToSend.length > 0 ? `\n📎 File đính kèm: ${filesToSend.map(f => f.na
           )}
 
           {/* Input Box */}
-          <div className="flex gap-2">
+          <div className="flex gap-3">
             <input
               type="file"
               ref={fileInputRef}
@@ -590,10 +648,10 @@ ${filesToSend.length > 0 ? `\n📎 File đính kèm: ${filesToSend.map(f => f.na
             />
             <button
               onClick={() => fileInputRef.current?.click()}
-              className="px-4 py-3 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+              className="px-5 py-3 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-600 transition-all hover:shadow-lg hover:scale-105 border-2 border-gray-200 dark:border-gray-600"
               title="Đính kèm file"
             >
-              <i className="fas fa-paperclip"></i>
+              <i className="fas fa-paperclip text-xl"></i>
             </button>
             
             <textarea
@@ -606,7 +664,7 @@ ${filesToSend.length > 0 ? `\n📎 File đính kèm: ${filesToSend.map(f => f.na
                 }
               }}
               placeholder="Nhập câu hỏi... (Shift+Enter để xuống dòng)"
-              className="flex-1 px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-blue-500 resize-none"
+              className="flex-1 px-5 py-3 rounded-xl border-2 border-gray-200 dark:border-gray-600 dark:bg-gray-700/50 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none transition-all shadow-sm hover:shadow-md backdrop-blur-sm"
               rows={1}
               disabled={loading}
             />
@@ -614,17 +672,18 @@ ${filesToSend.length > 0 ? `\n📎 File đính kèm: ${filesToSend.map(f => f.na
             <button
               onClick={handleSendMessage}
               disabled={loading || (!inputMessage.trim() && attachedFiles.length === 0)}
-              className="px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed font-semibold"
+              className="px-8 py-3 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 text-white rounded-xl hover:shadow-xl hover:scale-105 transition-all disabled:opacity-50 disabled:cursor-not-allowed font-bold"
             >
               {loading ? (
-                <i className="fas fa-spinner fa-spin"></i>
+                <i className="fas fa-spinner fa-spin text-xl"></i>
               ) : (
-                <i className="fas fa-paper-plane"></i>
+                <i className="fas fa-paper-plane text-xl"></i>
               )}
             </button>
           </div>
 
-          <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 text-center">
+          <p className="text-xs text-gray-500 dark:text-gray-400 mt-3 text-center flex items-center justify-center gap-2">
+            <i className="fas fa-info-circle"></i>
             AI có thể mắc lỗi. Hãy kiểm tra thông tin quan trọng.
           </p>
         </div>

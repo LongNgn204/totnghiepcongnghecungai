@@ -20,51 +20,62 @@ const Header: React.FC = () => {
   }, [dropdownRef]);
 
   return (
-    <header className="bg-gradient-to-r from-blue-600 to-purple-600 shadow-lg sticky top-0 z-50">
-      <div className="container mx-auto px-4 py-3 flex flex-col sm:flex-row justify-between items-center">
-        <div className="flex items-center mb-3 sm:mb-0">
-            <i className="fas fa-graduation-cap text-3xl text-white mr-3"></i>
+    <header className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 shadow-2xl sticky top-0 z-50 backdrop-blur-xl border-b-2 border-white/20">
+      <div className="container mx-auto px-4 py-4 flex flex-col sm:flex-row justify-between items-center">
+        <div className="flex items-center mb-3 sm:mb-0 group">
+            <div className="bg-white/20 backdrop-blur-sm rounded-full p-2 mr-3 group-hover:scale-110 transition-transform">
+              <i className="fas fa-graduation-cap text-4xl text-white"></i>
+            </div>
             <div>
-              <h1 className="text-xl font-bold text-white">Ôn Thi THPT Quốc Gia - Công Nghệ</h1>
-              <p className="text-xs text-blue-100">SGK Kết nối tri thức với cuộc sống & Cánh Diều</p>
+              <h1 className="text-2xl font-bold text-white drop-shadow-lg">Ôn Thi THPT Quốc Gia - Công Nghệ</h1>
+              <p className="text-xs text-blue-100 flex items-center gap-1">
+                <i className="fas fa-book-open text-[10px]"></i>
+                SGK Kết nối tri thức & Cánh Diều
+              </p>
             </div>
         </div>
-        <nav className="flex items-center space-x-2 sm:space-x-3">
+        <nav className="flex items-center space-x-1 sm:space-x-2 flex-wrap justify-center gap-y-2">
           <NavLink
             to="/"
-            className={({ isActive }) => `${isActive ? 'bg-white text-blue-600' : 'text-white hover:bg-blue-700'} px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200`}
+            className={({ isActive }) => `${isActive ? 'bg-white text-blue-600 shadow-lg scale-105' : 'text-white hover:bg-white/20 hover:backdrop-blur-sm'} px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-200 flex items-center gap-2`}
           >
-            <i className="fas fa-home mr-1"></i> Trang Chủ
+            <i className="fas fa-home"></i> 
+            <span className="hidden sm:inline">Trang Chủ</span>
           </NavLink>
           <NavLink
             to="/san-pham-1"
-            className={({ isActive }) => `${isActive ? 'bg-white text-blue-600' : 'text-white hover:bg-blue-700'} px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200`}
+            className={({ isActive }) => `${isActive ? 'bg-white text-purple-600 shadow-lg scale-105' : 'text-white hover:bg-white/20 hover:backdrop-blur-sm'} px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-200 flex items-center gap-2`}
           >
-            <i className="fas fa-comments mr-1"></i> Chat AI
+            <i className="fas fa-comments"></i> 
+            <span className="hidden sm:inline">Chat AI</span>
           </NavLink>
           <NavLink
             to="/san-pham-2"
-            className={({ isActive }) => `${isActive ? 'bg-white text-blue-600' : 'text-white hover:bg-blue-700'} px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200`}
+            className={({ isActive }) => `${isActive ? 'bg-white text-green-600 shadow-lg scale-105' : 'text-white hover:bg-white/20 hover:backdrop-blur-sm'} px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-200 flex items-center gap-2`}
           >
-            <i className="fas fa-question-circle mr-1"></i> Câu hỏi
+            <i className="fas fa-question-circle"></i> 
+            <span className="hidden sm:inline">Câu hỏi</span>
           </NavLink>
           <NavLink
             to="/san-pham-3"
-            className={({ isActive }) => `${isActive ? 'bg-white text-blue-600' : 'text-white hover:bg-blue-700'} px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200`}
+            className={({ isActive }) => `${isActive ? 'bg-white text-purple-600 shadow-lg scale-105' : 'text-white hover:bg-white/20 hover:backdrop-blur-sm'} px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-200 flex items-center gap-2`}
           >
-            <i className="fas fa-industry mr-1"></i> Công nghiệp
+            <i className="fas fa-industry"></i> 
+            <span className="hidden sm:inline">Công nghiệp</span>
           </NavLink>
           <NavLink
             to="/san-pham-4"
-            className={({ isActive }) => `${isActive ? 'bg-white text-blue-600' : 'text-white hover:bg-blue-700'} px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200`}
+            className={({ isActive }) => `${isActive ? 'bg-white text-green-600 shadow-lg scale-105' : 'text-white hover:bg-white/20 hover:backdrop-blur-sm'} px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-200 flex items-center gap-2`}
           >
-            <i className="fas fa-tractor mr-1"></i> Nông nghiệp
+            <i className="fas fa-tractor"></i> 
+            <span className="hidden sm:inline">Nông nghiệp</span>
           </NavLink>
           <NavLink
             to="/lich-su"
-            className={({ isActive }) => `${isActive ? 'bg-white text-blue-600' : 'text-white hover:bg-blue-700'} px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200`}
+            className={({ isActive }) => `${isActive ? 'bg-white text-pink-600 shadow-lg scale-105' : 'text-white hover:bg-white/20 hover:backdrop-blur-sm'} px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-200 flex items-center gap-2`}
           >
-            <i className="fas fa-history mr-1"></i> Lịch sử
+            <i className="fas fa-history"></i> 
+            <span className="hidden sm:inline">Lịch sử</span>
           </NavLink>
         </nav>
       </div>
