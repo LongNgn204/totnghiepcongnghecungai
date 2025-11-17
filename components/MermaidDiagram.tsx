@@ -43,10 +43,10 @@ const MermaidDiagram: React.FC<MermaidDiagramProps> = ({ chart }) => {
   }, [chart]);
 
   if (error) {
-    return <div className="text-red-500 bg-red-100 p-4 rounded-md">{error}</div>;
+    return <div className="text-red-500 dark:text-red-400 bg-red-100 dark:bg-red-900/30 p-4 rounded-md">{error}</div>;
   }
 
-  return <div dangerouslySetInnerHTML={{ __html: svg }} />;
+  return <div className="dark:invert dark:hue-rotate-180" dangerouslySetInnerHTML={{ __html: svg }} />;
 };
 
 export default MermaidDiagram;

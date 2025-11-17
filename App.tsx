@@ -1,16 +1,19 @@
 
-import React, { useState } from 'react';
+import React, { useState, lazy, Suspense } from 'react';
 import { HashRouter, Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
-import Home from './components/Home';
-import Product1 from './components/Product1';
-import Product2 from './components/Product2';
-import Product3 from './components/Product3';
-import Product4 from './components/Product4';
-import ExamHistory from './components/ExamHistory';
-import ExamReview from './components/ExamReview';
 import ScrollToTop from './components/ScrollToTop';
 import TechBadge from './components/TechBadge';
+import LoadingSpinner from './components/LoadingSpinner';
+
+// Lazy load components for code splitting
+const Home = lazy(() => import('./components/Home'));
+const Product1 = lazy(() => import('./components/Product1'));
+const Product2 = lazy(() => import('./components/Product2'));
+const Product3 = lazy(() => import('./components/Product3'));
+const Product4 = lazy(() => import('./components/Product4'));
+const ExamHistory = lazy(() => import('./components/ExamHistory'));
+const ExamReview = lazy(() => import('./components/ExamReview'));
 
 const App: React.FC = () => {
   const [showDisclaimer, setShowDisclaimer] = useState(() => {
@@ -24,7 +27,11 @@ const App: React.FC = () => {
 
   return (
     <HashRouter>
-      <div className="min-h-screen flex flex-col font-sans text-gray-800 dark:text-gray-200 bg-gray-50 dark:bg-gray-900">
+      <div className="min-h-screen flex flex-col font-sans text-gray-800 bg-gray-50">
+        {/* Skip to main content for accessibility */}
+        <a href="#main-content" className="skip-to-main">
+          Nhảy đến nội dung chính
+        </a>
         {/* Disclaimer Banner */}
         {showDisclaimer && (
           <div className="bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 text-white py-4 px-4 shadow-2xl sticky top-0 z-50 border-b-2 border-white/30 animate-slideDown">
@@ -55,16 +62,26 @@ const App: React.FC = () => {
         )}
 
         <Header />
-        <main className="flex-grow container mx-auto px-4 py-8">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/san-pham-1" element={<Product1 />} />
-            <Route path="/san-pham-2" element={<Product2 />} />
-            <Route path="/san-pham-3" element={<Product3 />} />
-            <Route path="/san-pham-4" element={<Product4 />} />
-            <Route path="/lich-su" element={<ExamHistory />} />
-            <Route path="/xem-lai/:id" element={<ExamReview />} />
-          </Routes>
+        <main id="main-content" className="flex-grow container mx-auto px-4 py-8" role="main">
+          <Suspense fallback={
+            <div className="flex items-center justify-center min-h-screen">
+              <LoadingSpinner 
+                size="lg" 
+                text="Đang tải trang..." 
+                color="blue"
+              />
+            </div>
+          }>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/san-pham-1" element={<Product1 />} />
+              <Route path="/san-pham-2" element={<Product2 />} />
+              <Route path="/san-pham-3" element={<Product3 />} />
+              <Route path="/san-pham-4" element={<Product4 />} />
+              <Route path="/lich-su" element={<ExamHistory />} />
+              <Route path="/xem-lai/:id" element={<ExamReview />} />
+            </Routes>
+          </Suspense>
         </main>
         <ScrollToTop />
         <TechBadge />

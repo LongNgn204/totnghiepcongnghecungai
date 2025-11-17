@@ -1,8 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { generateContent } from '../utils/geminiAPI';
 import QuestionCard from './QuestionCard';
 import { QuestionMC, QuestionTF, QuestionLevel } from '../types';
 import { saveExamToHistory } from '../utils/examStorage';
+import LoadingSpinner from './LoadingSpinner';
+import { ExamSkeleton } from './Skeleton';
+import CountdownTimer from './CountdownTimer';
 
 const Product3: React.FC = () => {
   const [grade, setGrade] = useState('12');
@@ -20,6 +23,25 @@ const Product3: React.FC = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [startTime, setStartTime] = useState<number | null>(null);
   const [endTime, setEndTime] = useState<number | null>(null);
+
+  // Keyboard shortcuts
+  useEffect(() => {
+    const handleKeyPress = (e: KeyboardEvent) => {
+      // Ctrl/Cmd + Enter to submit
+      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter' && hasGenerated && !isSubmitted) {
+        e.preventDefault();
+        handleSubmit();
+      }
+      // Escape to reset
+      if (e.key === 'Escape' && isSubmitted) {
+        e.preventDefault();
+        handleReset();
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyPress);
+    return () => document.removeEventListener('keydown', handleKeyPress);
+  }, [hasGenerated, isSubmitted]);
 
   const handleGenerate = async () => {
     setLoading(true);
@@ -343,6 +365,36 @@ d) Tần số của mỗi pha là 100Hz [SAI - f = 50Hz]"
         </div>
       )}
 
+      {/* Loading Skeleton */}
+      {loading && (
+        <div className="space-y-6">
+          <LoadingSpinner 
+            size="lg"
+            text="AI Gemini đang tạo đề thi Công nghiệp..."
+            showProgress={true}
+            progress={50}
+          />
+          <ExamSkeleton />
+        </div>
+      )}
+
+      {/* Countdown Timer */}
+      {hasGenerated && questions.length > 0 && !isSubmitted && (
+        <CountdownTimer
+          initialMinutes={50}
+          onTimeUp={() => {
+            if (!isSubmitted) {
+              handleSubmit();
+              alert('⏰ Hết giờ! Bài thi đã được tự động nộp.');
+            }
+          }}
+          onWarning={(minutes) => {
+            alert(`⚠️ Chỉ còn ${minutes} phút! Hãy chuẩn bị nộp bài.`);
+          }}
+          autoStart={true}
+        />
+      )}
+
       {/* Hiển thị kết quả */}
       {isSubmitted && (
         <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg sticky top-20 z-40">
@@ -445,14 +497,17 @@ d) Tần số của mỗi pha là 100Hz [SAI - f = 50Hz]"
                 <button
                   onClick={handleSubmit}
                   className="bg-green-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-green-700 transition-transform transform hover:scale-105 shadow-lg"
+                  aria-label="Nộp bài thi (Ctrl+Enter)"
+                  title="Nhấn Ctrl+Enter để nộp nhanh"
                 >
-                  <i className="fas fa-check-circle mr-2"></i>Nộp bài
+                  <i className="fas fa-check-circle mr-2" aria-hidden="true"></i>Nộp bài
                 </button>
                 <button
                   onClick={() => window.print()}
                   className="bg-purple-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-purple-700 transition-transform transform hover:scale-105"
+                  aria-label="In đề thi"
                 >
-                  <i className="fas fa-print mr-2"></i>In đề thi
+                  <i className="fas fa-print mr-2" aria-hidden="true"></i>In đề thi
                 </button>
               </>
             ) : (

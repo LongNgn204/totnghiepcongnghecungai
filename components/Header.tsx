@@ -5,7 +5,7 @@ const Header: React.FC = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const activeLinkClass = "bg-blue-600 text-white";
-  const inactiveLinkClass = "text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700";
+  const inactiveLinkClass = "text-gray-600 hover:bg-gray-200";
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {

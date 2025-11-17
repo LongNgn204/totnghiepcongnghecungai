@@ -1,5 +1,10 @@
 import React, { useState } from 'react';
 import { generateContent } from '../utils/geminiAPI';
+import { saveExamToHistory } from '../utils/examStorage';
+import QuestionCard from './QuestionCard';
+import LoadingSpinner from './LoadingSpinner';
+import { ExamSkeleton } from './Skeleton';
+import CountdownTimer from './CountdownTimer';
 
 interface Question {
   id: number;
@@ -19,6 +24,8 @@ const Product4: React.FC = () => {
   const [questions, setQuestions] = useState<Question[]>([]);
   const [examTitle, setExamTitle] = useState('');
   const [userAnswers, setUserAnswers] = useState<{ [key: number]: any }>({});
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [startTime, setStartTime] = useState<number | null>(null);
 
   const generateExam = async () => {
     const prompt = `🎓 Bạn là chuyên gia biên soạn đề thi tốt nghiệp THPT môn Công nghệ - Chuyên đề NÔNG NGHIỆP theo Chương trình GDPT 2018.
@@ -201,6 +208,7 @@ d) Lợn nái mang thai cần cho ăn nhiều ✗ [SAI - ăn vừa đủ]"
       });
 
       setQuestions(parsedQuestions);
+      setStartTime(Date.now());
       setLoading(false);
     } catch (err) {
       console.error(err);
@@ -214,6 +222,51 @@ d) Lợn nái mang thai cần cho ăn nhiều ✗ [SAI - ăn vừa đủ]"
       ...prev,
       [questionId]: answer
     }));
+  };
+
+  const handleSubmit = () => {
+    setIsSubmitted(true);
+    
+    // Tính điểm
+    let correctCount = 0;
+    questions.forEach(q => {
+      const userAnswer = userAnswers[q.id];
+      if (q.type === 'mc') {
+        if (userAnswer === q.answer) correctCount++;
+      } else if (q.type === 'tf') {
+        const correctAnswer = q.answer as { a: boolean; b: boolean; c: boolean; d: boolean };
+        if (
+          userAnswer?.a === correctAnswer.a &&
+          userAnswer?.b === correctAnswer.b &&
+          userAnswer?.c === correctAnswer.c &&
+          userAnswer?.d === correctAnswer.d
+        ) {
+          correctCount++;
+        }
+      }
+    });
+
+    const score = correctCount;
+    const percentage = (score / questions.length) * 100;
+    const timeSpent = startTime ? Math.floor((Date.now() - startTime) / 1000) : 0;
+
+    // Lưu vào localStorage
+    const examId = `exam_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    saveExamToHistory({
+      id: examId,
+      examTitle: examTitle,
+      examType: 'agriculture',
+      questions: questions,
+      userAnswers: userAnswers,
+      score: score,
+      totalQuestions: questions.length,
+      timeSpent: timeSpent,
+      percentage: percentage,
+      createdAt: new Date().toISOString(),
+      isSubmitted: true
+    });
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handlePrint = () => {
@@ -305,6 +358,19 @@ d) Lợn nái mang thai cần cho ăn nhiều ✗ [SAI - ăn vừa đủ]"
         </button>
       </div>
 
+      {/* Loading Skeleton */}
+      {loading && (
+        <div className="space-y-6">
+          <LoadingSpinner 
+            size="lg"
+            text="AI Gemini đang tạo đề thi Nông nghiệp..."
+            showProgress={true}
+            progress={50}
+          />
+          <ExamSkeleton />
+        </div>
+      )}
+
       {/* Error */}
       {error && (
         <div className="bg-red-50 dark:bg-red-900 border-l-4 border-red-500 p-4 rounded">
@@ -315,27 +381,26 @@ d) Lợn nái mang thai cần cho ăn nhiều ✗ [SAI - ăn vừa đủ]"
         </div>
       )}
 
-      {/* Exam Display */}
-      {questions.length > 0 && (
-        <>
-          {/* Action Buttons */}
-          <div className="flex gap-4 justify-center no-print">
-            <button
-              onClick={handlePrint}
-              className="px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors shadow-md"
-            >
-              <i className="fas fa-print mr-2"></i>
-              In Đề Thi
-            </button>
-            <button
-              onClick={handleDownload}
-              className="px-6 py-3 bg-purple-600 text-white font-semibold rounded-lg hover:bg-purple-700 transition-colors shadow-md"
-            >
-              <i className="fas fa-download mr-2"></i>
-              Tải Kết Quả
-            </button>
-          </div>
+      {/* Countdown Timer */}
+      {!loading && questions.length > 0 && !isSubmitted && (
+        <CountdownTimer
+          initialMinutes={50}
+          onTimeUp={() => {
+            if (!isSubmitted) {
+              handleSubmit();
+              alert('⏰ Hết giờ! Bài thi đã được tự động nộp.');
+            }
+          }}
+          onWarning={(minutes) => {
+            alert(`⚠️ Chỉ còn ${minutes} phút! Hãy chuẩn bị nộp bài.`);
+          }}
+          autoStart={true}
+        />
+      )}
 
+      {/* Exam Display */}
+      {!loading && questions.length > 0 && (
+        <>
           {/* Exam Content */}
           <div className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg exam-content">
             <div className="text-center mb-8">
@@ -355,18 +420,13 @@ d) Lợn nái mang thai cần cho ăn nhiều ✗ [SAI - ăn vừa đủ]"
               <div className="space-y-6">
                 {questions.filter(q => q.type === 'mc').map(q => (
                   <div key={q.id} className="border-l-4 border-green-500 pl-4">
-                    <p className="font-semibold text-gray-800 dark:text-white mb-2">
-                      <span className="text-green-600 dark:text-green-400">Câu {q.id}:</span> {q.question}
-                    </p>
-                    <div className="space-y-1 ml-4">
-                      {q.options?.map((opt, idx) => (
-                        <p key={idx} className="text-gray-700 dark:text-gray-300">{opt}</p>
-                      ))}
-                    </div>
-                    <div className="mt-2 text-sm text-gray-500 dark:text-gray-400 italic">
-                      <i className="fas fa-info-circle mr-1"></i>
-                      {q.requirement} • <span className="font-semibold">{q.level}</span> • Lớp {q.grade}
-                    </div>
+                    <QuestionCard
+                      question={q}
+                      type="mc"
+                      onAnswerChange={handleAnswerChange}
+                      userAnswer={userAnswers[q.id]}
+                      isSubmitted={isSubmitted}
+                    />
                   </div>
                 ))}
               </div>
@@ -380,26 +440,122 @@ d) Lợn nái mang thai cần cho ăn nhiều ✗ [SAI - ăn vừa đủ]"
               <div className="space-y-6">
                 {questions.filter(q => q.type === 'tf').map(q => (
                   <div key={q.id} className="border-l-4 border-teal-500 pl-4">
-                    <p className="font-semibold text-gray-800 dark:text-white mb-2">
-                      <span className="text-teal-600 dark:text-teal-400">Câu {q.id}:</span> {q.question}
-                    </p>
-                    {typeof q.answer === 'object' && (
-                      <div className="ml-4 space-y-1 text-gray-700 dark:text-gray-300">
-                        {Object.entries(q.answer).map(([key, value]) => (
-                          <p key={key}>
-                            {key}) {value ? '✓ Đúng' : '✗ Sai'}
-                          </p>
-                        ))}
-                      </div>
-                    )}
-                    <div className="mt-2 text-sm text-gray-500 dark:text-gray-400 italic">
-                      <i className="fas fa-info-circle mr-1"></i>
-                      {q.requirement} • <span className="font-semibold">{q.level}</span> • Lớp {q.grade}
-                    </div>
+                    <QuestionCard
+                      question={q}
+                      type="tf"
+                      onAnswerChange={handleAnswerChange}
+                      userAnswer={userAnswers[q.id]}
+                      isSubmitted={isSubmitted}
+                    />
                   </div>
                 ))}
               </div>
             </div>
+          </div>
+
+          {/* Submit Button and Results */}
+          <div className="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
+            {!isSubmitted ? (
+              <div className="flex flex-wrap justify-center gap-4">
+                <button
+                  onClick={handleSubmit}
+                  className="bg-green-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-green-700 transition-transform transform hover:scale-105 shadow-lg"
+                >
+                  <i className="fas fa-check-circle mr-2"></i>Nộp bài
+                </button>
+                <button
+                  onClick={handlePrint}
+                  className="bg-purple-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-purple-700 transition-transform transform hover:scale-105"
+                >
+                  <i className="fas fa-print mr-2"></i>In đề thi
+                </button>
+                <button
+                  onClick={handleDownload}
+                  className="bg-blue-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-blue-700 transition-transform transform hover:scale-105"
+                >
+                  <i className="fas fa-download mr-2"></i>Tải kết quả
+                </button>
+              </div>
+            ) : (
+              <>
+                <div className="bg-gradient-to-r from-green-100 to-teal-100 dark:from-green-900 dark:to-teal-900 p-8 rounded-lg shadow-lg mb-6">
+                  <h3 className="text-2xl font-bold text-center mb-4 text-green-800 dark:text-green-200">
+                    <i className="fas fa-trophy mr-2"></i>Kết Quả Bài Thi
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+                    <div>
+                      <p className="text-gray-600 dark:text-gray-400">Số câu đúng</p>
+                      <p className="text-3xl font-bold text-green-600 dark:text-green-400">
+                        {Object.keys(userAnswers).filter(key => {
+                          const q = questions.find(q => q.id === parseInt(key));
+                          if (!q) return false;
+                          if (q.type === 'mc') {
+                            return userAnswers[parseInt(key)] === q.answer;
+                          } else {
+                            const correctAnswer = q.answer as { a: boolean; b: boolean; c: boolean; d: boolean };
+                            const userAnswer = userAnswers[parseInt(key)];
+                            return userAnswer?.a === correctAnswer.a &&
+                                   userAnswer?.b === correctAnswer.b &&
+                                   userAnswer?.c === correctAnswer.c &&
+                                   userAnswer?.d === correctAnswer.d;
+                          }
+                        }).length}/{questions.length}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-gray-600 dark:text-gray-400">Điểm số</p>
+                      <p className="text-3xl font-bold text-blue-600 dark:text-blue-400">
+                        {((Object.keys(userAnswers).filter(key => {
+                          const q = questions.find(q => q.id === parseInt(key));
+                          if (!q) return false;
+                          if (q.type === 'mc') {
+                            return userAnswers[parseInt(key)] === q.answer;
+                          } else {
+                            const correctAnswer = q.answer as { a: boolean; b: boolean; c: boolean; d: boolean };
+                            const userAnswer = userAnswers[parseInt(key)];
+                            return userAnswer?.a === correctAnswer.a &&
+                                   userAnswer?.b === correctAnswer.b &&
+                                   userAnswer?.c === correctAnswer.c &&
+                                   userAnswer?.d === correctAnswer.d;
+                          }
+                        }).length / questions.length) * 10).toFixed(1)}/10
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-gray-600 dark:text-gray-400">Thời gian</p>
+                      <p className="text-3xl font-bold text-purple-600 dark:text-purple-400">
+                        {startTime ? Math.floor((Date.now() - startTime) / 60000) : 0} phút
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex justify-center gap-4">
+                  <button
+                    onClick={() => {
+                      setIsSubmitted(false);
+                      setUserAnswers({});
+                      setStartTime(Date.now());
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }}
+                    className="bg-blue-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-blue-700 transition-transform transform hover:scale-105"
+                  >
+                    <i className="fas fa-redo mr-2"></i>Làm lại
+                  </button>
+                  <button
+                    onClick={() => {
+                      setQuestions([]);
+                      setUserAnswers({});
+                      setIsSubmitted(false);
+                      setStartTime(null);
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }}
+                    className="bg-green-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-green-700 transition-transform transform hover:scale-105"
+                  >
+                    <i className="fas fa-plus mr-2"></i>Tạo đề mới
+                  </button>
+                </div>
+              </>
+            )}
           </div>
 
           {/* Benefits */}
