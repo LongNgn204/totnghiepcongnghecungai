@@ -6,9 +6,12 @@ import ScrollToTop from './components/ScrollToTop';
 import TechBadge from './components/TechBadge';
 import LoadingSpinner from './components/LoadingSpinner';
 import SyncStatus from './components/SyncStatus';
+import { AuthProvider } from './contexts/AuthContext';
+import ProtectedRoute from './components/ProtectedRoute';
 
 // Lazy load components for code splitting
 const Home = lazy(() => import('./components/Home'));
+const Dashboard = lazy(() => import('./components/Dashboard'));
 const Product1 = lazy(() => import('./components/Product1'));
 const Product2 = lazy(() => import('./components/Product2'));
 const Product3 = lazy(() => import('./components/Product3'));
@@ -21,6 +24,9 @@ const PWASettings = lazy(() => import('./components/PWASettings'));
 const SyncSettings = lazy(() => import('./components/SyncSettings'));
 const ExamHistory = lazy(() => import('./components/ExamHistory'));
 const ExamReview = lazy(() => import('./components/ExamReview'));
+const AuthPage = lazy(() => import('./components/auth/AuthPage'));
+const ForgotPassword = lazy(() => import('./components/auth/ForgotPassword'));
+const Profile = lazy(() => import('./components/Profile'));
 
 const App: React.FC = () => {
   const [showDisclaimer, setShowDisclaimer] = useState(() => {
@@ -33,6 +39,7 @@ const App: React.FC = () => {
   };
 
   return (
+    <AuthProvider>
     <HashRouter>
       <div className="min-h-screen flex flex-col font-sans text-gray-800 bg-gray-50">
         {/* Skip to main content for accessibility */}
@@ -80,19 +87,26 @@ const App: React.FC = () => {
             </div>
           }>
             <Routes>
+              {/* Public routes */}
               <Route path="/" element={<Home />} />
-              <Route path="/san-pham-1" element={<Product1 />} />
-              <Route path="/san-pham-2" element={<Product2 />} />
-              <Route path="/san-pham-3" element={<Product3 />} />
-              <Route path="/san-pham-4" element={<Product4 />} />
-              <Route path="/san-pham-5" element={<Product5 />} />
-              <Route path="/san-pham-6" element={<Product6 />} />
-              <Route path="/san-pham-7" element={<Product7 />} />
-              <Route path="/bang-xep-hang" element={<Leaderboard />} />
-              <Route path="/pwa-settings" element={<PWASettings />} />
-              <Route path="/sync-settings" element={<SyncSettings />} />
-              <Route path="/lich-su" element={<ExamHistory />} />
-              <Route path="/xem-lai/:id" element={<ExamReview />} />
+              <Route path="/login" element={<AuthPage />} />
+              <Route path="/forgot-password" element={<ForgotPassword />} />
+              
+              {/* Protected routes */}
+              <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+              <Route path="/san-pham-1" element={<ProtectedRoute><Product1 /></ProtectedRoute>} />
+              <Route path="/san-pham-2" element={<ProtectedRoute><Product2 /></ProtectedRoute>} />
+              <Route path="/san-pham-3" element={<ProtectedRoute><Product3 /></ProtectedRoute>} />
+              <Route path="/san-pham-4" element={<ProtectedRoute><Product4 /></ProtectedRoute>} />
+              <Route path="/san-pham-5" element={<ProtectedRoute><Product5 /></ProtectedRoute>} />
+              <Route path="/san-pham-6" element={<ProtectedRoute><Product6 /></ProtectedRoute>} />
+              <Route path="/san-pham-7" element={<ProtectedRoute><Product7 /></ProtectedRoute>} />
+              <Route path="/bang-xep-hang" element={<ProtectedRoute><Leaderboard /></ProtectedRoute>} />
+              <Route path="/pwa-settings" element={<ProtectedRoute><PWASettings /></ProtectedRoute>} />
+              <Route path="/sync-settings" element={<ProtectedRoute><SyncSettings /></ProtectedRoute>} />
+              <Route path="/lich-su" element={<ProtectedRoute><ExamHistory /></ProtectedRoute>} />
+              <Route path="/xem-lai/:id" element={<ProtectedRoute><ExamReview /></ProtectedRoute>} />
+              <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
             </Routes>
           </Suspense>
         </main>
@@ -222,6 +236,7 @@ const App: React.FC = () => {
         </footer>
       </div>
     </HashRouter>
+    </AuthProvider>
   );
 };
 

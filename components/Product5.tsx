@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import FlashcardView from './FlashcardView';
+import FlashcardGenerator, { GeneratedFlashcard } from './FlashcardGenerator';
 import {
   FlashcardDeck,
   Flashcard,
@@ -16,13 +17,14 @@ import {
 } from '../utils/flashcardStorage';
 
 const Product5: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'decks' | 'study' | 'create'>('decks');
+  const [activeTab, setActiveTab] = useState<'decks' | 'study' | 'create' | 'ai'>('decks');
   const [decks, setDecks] = useState<FlashcardDeck[]>([]);
   const [selectedDeck, setSelectedDeck] = useState<FlashcardDeck | null>(null);
   const [studyCards, setStudyCards] = useState<Flashcard[]>([]);
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
   const [showCreateDeck, setShowCreateDeck] = useState(false);
   const [showCreateCard, setShowCreateCard] = useState(false);
+  const [generatedCards, setGeneratedCards] = useState<GeneratedFlashcard[]>([]);
 
   // Form states
   const [deckForm, setDeckForm] = useState({
@@ -164,22 +166,33 @@ const Product5: React.FC = () => {
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-2 bg-white rounded-lg shadow-md p-2">
+      <div className="flex gap-2 bg-white rounded-lg shadow-md p-2 overflow-x-auto">
         <button
           onClick={() => setActiveTab('decks')}
-          className={`flex-1 px-6 py-3 rounded-lg font-semibold transition-all ${
+          className={`flex-1 px-6 py-3 rounded-lg font-semibold transition-all whitespace-nowrap ${
             activeTab === 'decks'
               ? 'bg-gradient-to-r from-pink-600 to-rose-600 text-white shadow-lg'
               : 'text-gray-600 hover:bg-gray-100'
           }`}
         >
           <i className="fas fa-folder mr-2"></i>
-          Bộ thẻ của tôi ({decks.length})
+          Bộ thẻ ({decks.length})
+        </button>
+        <button
+          onClick={() => setActiveTab('ai')}
+          className={`flex-1 px-6 py-3 rounded-lg font-semibold transition-all whitespace-nowrap ${
+            activeTab === 'ai'
+              ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg'
+              : 'text-gray-600 hover:bg-gray-100'
+          }`}
+        >
+          <i className="fas fa-robot mr-2"></i>
+          AI tạo thẻ
         </button>
         <button
           onClick={() => setActiveTab('study')}
           disabled={!selectedDeck}
-          className={`flex-1 px-6 py-3 rounded-lg font-semibold transition-all ${
+          className={`flex-1 px-6 py-3 rounded-lg font-semibold transition-all whitespace-nowrap ${
             activeTab === 'study' && selectedDeck
               ? 'bg-gradient-to-r from-pink-600 to-rose-600 text-white shadow-lg'
               : 'text-gray-600 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed'
@@ -193,7 +206,7 @@ const Product5: React.FC = () => {
             setShowCreateDeck(true);
             setActiveTab('create');
           }}
-          className={`flex-1 px-6 py-3 rounded-lg font-semibold transition-all ${
+          className={`flex-1 px-6 py-3 rounded-lg font-semibold transition-all whitespace-nowrap ${
             activeTab === 'create'
               ? 'bg-gradient-to-r from-pink-600 to-rose-600 text-white shadow-lg'
               : 'text-gray-600 hover:bg-gray-100'
@@ -203,6 +216,134 @@ const Product5: React.FC = () => {
           Tạo bộ thẻ mới
         </button>
       </div>
+
+      {/* AI Tab */}
+      {activeTab === 'ai' && (
+        <div>
+          <FlashcardGenerator 
+            onGenerate={(cards) => {
+              setGeneratedCards(cards);
+            }}
+          />
+          
+          {generatedCards.length > 0 && (
+            <div className="bg-white rounded-xl shadow-lg p-6">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-xl font-bold text-gray-800">
+                  <i className="fas fa-check-circle text-green-500 mr-2"></i>
+                  Đã tạo {generatedCards.length} flashcards
+                </h3>
+                <button
+                  onClick={() => setGeneratedCards([])}
+                  className="text-gray-500 hover:text-red-500"
+                >
+                  <i className="fas fa-times"></i>
+                </button>
+              </div>
+
+              {/* Preview cards */}
+              <div className="space-y-3 mb-6 max-h-96 overflow-y-auto">
+                {generatedCards.map((card, index) => (
+                  <div key={index} className="border border-gray-200 rounded-lg p-4 hover:border-purple-400 transition-all">
+                    <div className="flex items-start gap-3">
+                      <div className="bg-purple-100 rounded-full w-8 h-8 flex items-center justify-center flex-shrink-0">
+                        <span className="text-purple-600 font-bold text-sm">{index + 1}</span>
+                      </div>
+                      <div className="flex-1">
+                        <p className="font-semibold text-gray-800 mb-1">
+                          <i className="fas fa-question-circle text-blue-500 mr-1"></i>
+                          {card.front}
+                        </p>
+                        <p className="text-gray-600 text-sm mb-2">
+                          <i className="fas fa-lightbulb text-yellow-500 mr-1"></i>
+                          {card.back}
+                        </p>
+                        {card.explanation && (
+                          <p className="text-gray-500 text-xs italic">
+                            <i className="fas fa-info-circle text-gray-400 mr-1"></i>
+                            {card.explanation}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Save to deck */}
+              <div className="border-t pt-4">
+                <p className="text-sm text-gray-600 mb-3">
+                  <i className="fas fa-save mr-2"></i>
+                  Lưu vào bộ thẻ nào?
+                </p>
+                <div className="flex gap-3">
+                  <select
+                    className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                    id="saveDeckSelect"
+                  >
+                    <option value="">-- Tạo bộ thẻ mới --</option>
+                    {decks.map(deck => (
+                      <option key={deck.id} value={deck.id}>{deck.title}</option>
+                    ))}
+                  </select>
+                  <button
+                    onClick={() => {
+                      const selectEl = document.getElementById('saveDeckSelect') as HTMLSelectElement;
+                      const deckId = selectEl.value;
+                      
+                      if (!deckId) {
+                        // Create new deck
+                        const deckTitle = prompt('Tên bộ thẻ mới:', 'Flashcards AI');
+                        if (!deckTitle) return;
+                        
+                        const newDeck = createDeck({
+                          title: deckTitle,
+                          description: 'Tạo bởi AI',
+                          category: 'AI Generated',
+                          grade: '10'
+                        });
+                        
+                        // Add all cards
+                        generatedCards.forEach(card => {
+                          addCardToDeck(newDeck.id, {
+                            question: card.front,
+                            answer: card.back + (card.explanation ? `\n\n${card.explanation}` : ''),
+                            difficulty: 'medium',
+                            tags: ['AI']
+                          });
+                        });
+                        
+                        alert(`Đã tạo bộ thẻ "${deckTitle}" với ${generatedCards.length} thẻ!`);
+                      } else {
+                        // Add to existing deck
+                        generatedCards.forEach(card => {
+                          addCardToDeck(deckId, {
+                            question: card.front,
+                            answer: card.back + (card.explanation ? `\n\n${card.explanation}` : ''),
+                            difficulty: 'medium',
+                            tags: ['AI']
+                          });
+                        });
+                        
+                        const deck = getDeck(deckId);
+                        alert(`Đã thêm ${generatedCards.length} thẻ vào "${deck?.title}"!`);
+                      }
+                      
+                      setGeneratedCards([]);
+                      loadDecks();
+                      setActiveTab('decks');
+                    }}
+                    className="px-6 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg hover:shadow-lg transition-all"
+                  >
+                    <i className="fas fa-check mr-2"></i>
+                    Lưu
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Decks Tab */}
       {activeTab === 'decks' && (

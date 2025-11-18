@@ -8,7 +8,19 @@ import {
   badRequestResponse,
   unauthorizedResponse,
 } from './utils';
-import { requireAuth, ensureUser } from './auth';
+import { requireAuth as requireAuthOld, ensureUser } from './auth';
+import {
+  registerUser,
+  loginUser,
+  logoutUser,
+  getUserById,
+  updateUserProfile,
+  changePassword,
+  requestPasswordReset,
+  verifyResetToken,
+  resetPassword,
+  requireAuth as requireAuthNew
+} from './auth-service';
 
 export interface Env {
   DB: D1Database;
@@ -26,11 +38,176 @@ router.get('/api/health', () =>
   successResponse({ status: 'ok', version: '1.0.0' })
 );
 
-// ============= USERS =============
+// ============= AUTHENTICATION =============
+
+// Register
+router.post('/api/auth/register', async (request, env: Env) => {
+  try {
+    const body: any = await request.json();
+    const { username, email, password, displayName } = body;
+    
+    if (!username || !email || !password || !displayName) {
+      return badRequestResponse('Missing required fields');
+    }
+    
+    const result = await registerUser(env.DB, {
+      username,
+      email,
+      password,
+      displayName
+    });
+    
+    return successResponse(result, 'Registration successful');
+  } catch (error: any) {
+    return errorResponse(error.message, 400);
+  }
+});
+
+// Login
+router.post('/api/auth/login', async (request, env: Env) => {
+  try {
+    const body: any = await request.json();
+    const { username, password } = body;
+    
+    if (!username || !password) {
+      return badRequestResponse('Username and password are required');
+    }
+    
+    const result = await loginUser(env.DB, username, password);
+    
+    return successResponse(result, 'Login successful');
+  } catch (error: any) {
+    return errorResponse(error.message, 401);
+  }
+});
+
+// Logout
+router.post('/api/auth/logout', async (request, env: Env) => {
+  try {
+    const authHeader = request.headers.get('Authorization');
+    if (!authHeader?.startsWith('Bearer ')) {
+      return unauthorizedResponse();
+    }
+    
+    const token = authHeader.substring(7);
+    await logoutUser(env.DB, token);
+    
+    return successResponse(null, 'Logout successful');
+  } catch (error: any) {
+    return errorResponse(error.message);
+  }
+});
+
+// Get current user
+router.get('/api/auth/me', async (request, env: Env) => {
+  try {
+    const userId = await requireAuthNew(request, env.DB);
+    const user = await getUserById(env.DB, userId);
+    
+    return successResponse(user);
+  } catch (error: any) {
+    return unauthorizedResponse(error.message);
+  }
+});
+
+// Update profile
+router.put('/api/auth/profile', async (request, env: Env) => {
+  try {
+    const userId = await requireAuthNew(request, env.DB);
+    const body: any = await request.json();
+    
+    const { displayName, avatar, bio } = body;
+    const updatedUser = await updateUserProfile(env.DB, userId, {
+      displayName,
+      avatar,
+      bio
+    });
+    
+    return successResponse(updatedUser, 'Profile updated');
+  } catch (error: any) {
+    return errorResponse(error.message);
+  }
+});
+
+// Change password
+router.post('/api/auth/change-password', async (request, env: Env) => {
+  try {
+    const userId = await requireAuthNew(request, env.DB);
+    const body: any = await request.json();
+    
+    const { oldPassword, newPassword } = body;
+    
+    if (!oldPassword || !newPassword) {
+      return badRequestResponse('Old and new passwords are required');
+    }
+    
+    await changePassword(env.DB, userId, oldPassword, newPassword);
+    
+    return successResponse(null, 'Password changed successfully');
+  } catch (error: any) {
+    return errorResponse(error.message, 400);
+  }
+});
+
+// Request password reset
+router.post('/api/auth/forgot-password', async (request, env: Env) => {
+  try {
+    const body: any = await request.json();
+    const { email } = body;
+    
+    if (!email) {
+      return badRequestResponse('Email is required');
+    }
+    
+    const result = await requestPasswordReset(env.DB, email);
+    
+    return successResponse(result);
+  } catch (error: any) {
+    return errorResponse(error.message, 400);
+  }
+});
+
+// Verify reset token
+router.post('/api/auth/verify-reset-token', async (request, env: Env) => {
+  try {
+    const body: any = await request.json();
+    const { email, token } = body;
+    
+    if (!email || !token) {
+      return badRequestResponse('Email and token are required');
+    }
+    
+    const result = await verifyResetToken(env.DB, email, token);
+    
+    return successResponse(result);
+  } catch (error: any) {
+    return errorResponse(error.message, 400);
+  }
+});
+
+// Reset password
+router.post('/api/auth/reset-password', async (request, env: Env) => {
+  try {
+    const body: any = await request.json();
+    const { email, token, newPassword } = body;
+    
+    if (!email || !token || !newPassword) {
+      return badRequestResponse('Email, token, and new password are required');
+    }
+    
+    const result = await resetPassword(env.DB, email, token, newPassword);
+    
+    return successResponse(result);
+  } catch (error: any) {
+    return errorResponse(error.message, 400);
+  }
+});
+
+// ============= USERS (Legacy - keeping for backward compatibility) =============
 
 router.post('/api/users/register', async (request, env: Env) => {
   try {
-    const userId = requireAuth(request);
+    const userId = requireAuthOld(request);
     const body = await request.json();
 
     await ensureUser(env.DB, userId);

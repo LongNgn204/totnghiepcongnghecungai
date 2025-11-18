@@ -13,6 +13,7 @@
     "tail": "wrangler tail"
   },
   "dependencies": {
+    "bcryptjs": "^3.0.3",
     "itty-router": "^4.0.0"
   },
   "devDependencies": {
