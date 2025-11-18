@@ -392,43 +392,43 @@ const Home: React.FC = () => {
               <span><i className="fas fa-chevron-right mr-2 text-blue-600 group-open:rotate-90 transition-transform"></i>Trang web này có mất phí không?</span>
             </summary>
             <p className="mt-3 text-gray-600 dark:text-gray-300 pl-6">
-              ⭐ <strong>Hoàn toàn miễn phí!</strong> Bạn chỉ cần có API key của Google Gemini (miễn phí) là có thể sử dụng tất cả tính năng.
+              ⭐ <strong>Hoàn toàn miễn phí!</strong> Chỉ cần đăng ký tài khoản là có thể sử dụng tất cả tính năng học tập và thi thử.
             </p>
           </details>
 
           <details className="group bg-gradient-to-r from-green-50 to-teal-50 dark:from-gray-700 dark:to-gray-600 rounded-xl p-4 cursor-pointer hover:shadow-md transition-all">
             <summary className="font-semibold text-lg text-gray-800 dark:text-white flex items-center justify-between">
-              <span><i className="fas fa-chevron-right mr-2 text-green-600 group-open:rotate-90 transition-transform"></i>Làm sao để lấy API key của Gemini?</span>
+              <span><i className="fas fa-chevron-right mr-2 text-green-600 group-open:rotate-90 transition-transform"></i>Làm thế nào để đăng ký tài khoản?</span>
             </summary>
             <p className="mt-3 text-gray-600 dark:text-gray-300 pl-6">
-              🔑 Truy cập <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline font-semibold">Google AI Studio</a>, đăng nhập tài khoản Google và tạo API key mới. Miễn phí và không giới hạn số lượng yêu cầu cơ bản.
+              🔑 Click nút <strong>"Login"</strong> ở góc trên phải, sau đó chọn tab <strong>"Đăng Ký"</strong>. Điền thông tin (username, email, tên hiển thị, mật khẩu) và bắt đầu học ngay!
             </p>
           </details>
 
           <details className="group bg-gradient-to-r from-purple-50 to-pink-50 dark:from-gray-700 dark:to-gray-600 rounded-xl p-4 cursor-pointer hover:shadow-md transition-all">
             <summary className="font-semibold text-lg text-gray-800 dark:text-white flex items-center justify-between">
-              <span><i className="fas fa-chevron-right mr-2 text-purple-600 group-open:rotate-90 transition-transform"></i>Đề thi được tạo có chính xác không?</span>
+              <span><i className="fas fa-chevron-right mr-2 text-purple-600 group-open:rotate-90 transition-transform"></i>Đề thi được tạo bằng công nghệ gì?</span>
             </summary>
             <p className="mt-3 text-gray-600 dark:text-gray-300 pl-6">
-              ✅ <strong>Chính xác 95-99%!</strong> Đề thi được tạo dựa trên SGK Cánh Diều và đúng format thi THPT Quốc Gia. AI Gemini 2.0 đã được huấn luyện với hàng triệu dữ liệu giáo dục.
+              🤖 Sử dụng <strong>Google Gemini 2.0 Flash</strong> - AI tiên tiến nhất hiện nay. Đề thi được tạo dựa trên SGK Công Nghệ 10, 11, 12 (Cánh Diều) và đúng chuẩn format THPT Quốc Gia.
             </p>
           </details>
 
           <details className="group bg-gradient-to-r from-orange-50 to-red-50 dark:from-gray-700 dark:to-gray-600 rounded-xl p-4 cursor-pointer hover:shadow-md transition-all">
             <summary className="font-semibold text-lg text-gray-800 dark:text-white flex items-center justify-between">
-              <span><i className="fas fa-chevron-right mr-2 text-orange-600 group-open:rotate-90 transition-transform"></i>Tôi có thể sử dụng offline không?</span>
+              <span><i className="fas fa-chevron-right mr-2 text-orange-600 group-open:rotate-90 transition-transform"></i>Tôi có thể xem lại lịch sử thi không?</span>
             </summary>
             <p className="mt-3 text-gray-600 dark:text-gray-300 pl-6">
-              📶 <strong>Cần kết nối internet</strong> để gọi API của Google Gemini. Tuy nhiên, lịch sử chat được lưu trên máy bạn (LocalStorage) nên bạn vẫn có thể xem lại khi offline.
+              ✅ <strong>Có!</strong> Vào menu <strong>"Lịch Sử Thi"</strong> để xem tất cả các bài đã làm, điểm số, thời gian làm bài. Click vào từng bài để xem chi tiết đáp án và giải thích.
             </p>
           </details>
 
           <details className="group bg-gradient-to-r from-indigo-50 to-blue-50 dark:from-gray-700 dark:to-gray-600 rounded-xl p-4 cursor-pointer hover:shadow-md transition-all">
             <summary className="font-semibold text-lg text-gray-800 dark:text-white flex items-center justify-between">
-              <span><i className="fas fa-chevron-right mr-2 text-indigo-600 group-open:rotate-90 transition-transform"></i>Dữ liệu của tôi có được lưu trữ ở đâu?</span>
+              <span><i className="fas fa-chevron-right mr-2 text-indigo-600 group-open:rotate-90 transition-transform"></i>Tôi quên mật khẩu thì làm sao?</span>
             </summary>
             <p className="mt-3 text-gray-600 dark:text-gray-300 pl-6">
-              🔒 <strong>An toàn tuyệt đối!</strong> Tất cả dữ liệu được lưu trên trình duyệt của bạn (LocalStorage), không qua server bên thứ 3. Chỉ có API call đến Google Gemini để xử lý câu hỏi.
+              � Click <strong>"Quên mật khẩu?"</strong> ở trang đăng nhập → Nhập email → Hệ thống gửi mã 6 số đến Gmail của bạn → Nhập mã và đặt mật khẩu mới (mã có hiệu lực 15 phút).
             </p>
           </details>
 
@@ -437,7 +437,7 @@ const Home: React.FC = () => {
               <span><i className="fas fa-chevron-right mr-2 text-yellow-600 group-open:rotate-90 transition-transform"></i>Tôi có thể dùng trên điện thoại không?</span>
             </summary>
             <p className="mt-3 text-gray-600 dark:text-gray-300 pl-6">
-              📱 <strong>Có!</strong> Website được thiết kế responsive, hoạt động mượt mà trên mọi thiết bị: điện thoại, tablet, laptop, máy tính bàn.
+              📱 <strong>Có!</strong> Website được thiết kế responsive, hoạt động mượt mà trên mọi thiết bị: điện thoại, tablet, laptop, máy tính bàn. Bạn cũng có thể cài đặt làm PWA (Progressive Web App) để dùng như ứng dụng thật.
             </p>
           </details>
         </div>

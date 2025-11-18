@@ -1,5 +1,6 @@
 // Authentication utilities for Cloudflare Workers
 import bcrypt from 'bcryptjs';
+import { sendResetCodeEmail, type EmailConfig } from './email-service';
 
 // Hash password with bcrypt
 export async function hashPassword(password: string): Promise<string> {
@@ -282,7 +283,11 @@ export async function changePassword(db: any, userId: string, oldPassword: strin
 }
 
 // Request password reset - Generate reset token
-export async function requestPasswordReset(db: any, email: string) {
+export async function requestPasswordReset(
+  db: any, 
+  email: string,
+  emailConfig?: EmailConfig
+) {
   // Find user by email
   const user = await db.prepare(
     'SELECT id, email, display_name FROM auth_users WHERE email = ? AND is_active = 1'
@@ -290,7 +295,7 @@ export async function requestPasswordReset(db: any, email: string) {
   
   if (!user) {
     // For security: don't reveal if email exists
-    return { success: true, message: 'Nếu email tồn tại, link reset đã được gửi' };
+    return { success: true, message: 'Nếu email tồn tại, mã reset đã được gửi đến email' };
   }
   
   // Generate reset token (6 digit code for simplicity)
@@ -303,13 +308,34 @@ export async function requestPasswordReset(db: any, email: string) {
     'INSERT INTO password_reset_tokens (id, user_id, token, expires_at, created_at) VALUES (?, ?, ?, ?, ?)'
   ).bind(tokenId, user.id, resetCode, expiresAt, Date.now()).run();
   
-  // In production: Send email with reset code
-  // For now, return code directly (dev mode)
+  // Send email if config is provided
+  if (emailConfig && emailConfig.apiKey) {
+    try {
+      const emailResult = await sendResetCodeEmail(
+        emailConfig,
+        user.email,
+        resetCode,
+        user.display_name
+      );
+      
+      if (!emailResult.success) {
+        console.error('Failed to send reset email:', emailResult.error);
+        // Continue anyway, user can still use code if shown in dev mode
+      }
+    } catch (error) {
+      console.error('Email sending error:', error);
+    }
+  }
+  
+  // Return response (show code in dev mode only)
+  const isDevelopment = !emailConfig || !emailConfig.apiKey;
+  
   return {
     success: true,
-    message: 'Mã reset đã được tạo',
-    resetCode, // Remove in production
-    email: user.email
+    message: isDevelopment 
+      ? 'Mã reset đã được tạo (Dev mode - email không được gửi)'
+      : 'Mã reset đã được gửi đến email của bạn',
+    ...(isDevelopment && { resetCode }) // Only show code in dev mode
   };
 }
 

@@ -26,6 +26,9 @@ export interface Env {
   DB: D1Database;
   GEMINI_API_KEY?: string;
   ALLOWED_ORIGINS?: string;
+  RESEND_API_KEY?: string;
+  EMAIL_FROM?: string;
+  EMAIL_FROM_NAME?: string;
 }
 
 const router = Router();
@@ -159,7 +162,14 @@ router.post('/api/auth/forgot-password', async (request, env: Env) => {
       return badRequestResponse('Email is required');
     }
     
-    const result = await requestPasswordReset(env.DB, email);
+    // Prepare email config (if available)
+    const emailConfig = env.RESEND_API_KEY ? {
+      apiKey: env.RESEND_API_KEY,
+      fromEmail: env.EMAIL_FROM || 'noreply@yourdomain.com',
+      fromName: env.EMAIL_FROM_NAME || 'AI Học Tập'
+    } : undefined;
+    
+    const result = await requestPasswordReset(env.DB, email, emailConfig);
     
     return successResponse(result);
   } catch (error: any) {

@@ -12,6 +12,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 // Lazy load components for code splitting
 const Home = lazy(() => import('./components/Home'));
 const Dashboard = lazy(() => import('./components/Dashboard'));
+const APITester = lazy(() => import('./components/APITester'));
 const Product1 = lazy(() => import('./components/Product1'));
 const Product2 = lazy(() => import('./components/Product2'));
 const Product3 = lazy(() => import('./components/Product3'));
@@ -91,6 +92,7 @@ const App: React.FC = () => {
               <Route path="/" element={<Home />} />
               <Route path="/login" element={<AuthPage />} />
               <Route path="/forgot-password" element={<ForgotPassword />} />
+              <Route path="/api-tester" element={<APITester />} />
               
               {/* Protected routes */}
               <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />

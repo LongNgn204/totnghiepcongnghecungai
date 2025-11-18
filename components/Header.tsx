@@ -80,45 +80,71 @@ export const Header: React.FC = () => {
             <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="lg:hidden text-white hover:bg-white/20 p-2 rounded-lg transition-all">
               <i className={`fas ${mobileMenuOpen ? 'fa-times' : 'fa-bars'} text-xl`}></i>
             </button>
-            {isAuthenticated && user && (
-              <div className="hidden lg:block relative" ref={userMenuRef}>
-                <button onClick={() => setUserMenuOpen(!userMenuOpen)} className="flex items-center gap-2 bg-white/20 hover:bg-white/30 px-3 py-2 rounded-xl transition-all">
-                  <img src={user.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName)}&background=random`} alt={user.displayName} className="w-8 h-8 rounded-full border-2 border-white" />
-                  <span className="text-white font-semibold text-sm">{user.displayName}</span>
-                  <i className={`fas fa-chevron-down text-white text-xs transition-transform ${userMenuOpen ? 'rotate-180' : ''}`}></i>
-                </button>
-                {userMenuOpen && (
-                  <div className="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-2xl overflow-hidden z-50">
-                    <div className="bg-gradient-to-r from-blue-500 to-purple-500 px-4 py-3">
-                      <p className="text-white font-semibold">{user.displayName}</p>
-                      <p className="text-white/80 text-sm">{user.email}</p>
+            
+            {!isAuthenticated ? (
+              // Login button when not authenticated
+              <NavLink 
+                to="/login" 
+                className="hidden lg:flex items-center gap-2 bg-white text-blue-600 hover:bg-blue-50 px-5 py-2 rounded-xl font-semibold transition-all hover:scale-105 shadow-lg"
+              >
+                <i className="fas fa-sign-in-alt"></i>
+                Đăng nhập
+              </NavLink>
+            ) : (
+              // User menu when authenticated
+              user && (
+                <div className="hidden lg:block relative" ref={userMenuRef}>
+                  <button onClick={() => setUserMenuOpen(!userMenuOpen)} className="flex items-center gap-2 bg-white/20 hover:bg-white/30 px-3 py-2 rounded-xl transition-all">
+                    <img src={user.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName)}&background=random`} alt={user.displayName} className="w-8 h-8 rounded-full border-2 border-white" />
+                    <span className="text-white font-semibold text-sm">{user.displayName}</span>
+                    <i className={`fas fa-chevron-down text-white text-xs transition-transform ${userMenuOpen ? 'rotate-180' : ''}`}></i>
+                  </button>
+                  {userMenuOpen && (
+                    <div className="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-2xl overflow-hidden z-50">
+                      <div className="bg-gradient-to-r from-blue-500 to-purple-500 px-4 py-3">
+                        <p className="text-white font-semibold">{user.displayName}</p>
+                        <p className="text-white/80 text-sm">{user.email}</p>
+                      </div>
+                      <div className="py-2">
+                        <NavLink to="/profile" className="flex items-center gap-3 px-4 py-2 hover:bg-gray-100 transition" onClick={() => setUserMenuOpen(false)}>
+                          <i className="fas fa-user text-blue-500"></i>
+                          <span className="text-gray-700">Hồ sơ cá nhân</span>
+                        </NavLink>
+                        <button onClick={() => { logout(); setUserMenuOpen(false); }} className="w-full flex items-center gap-3 px-4 py-2 hover:bg-red-50 transition text-left">
+                          <i className="fas fa-sign-out-alt text-red-500"></i>
+                          <span className="text-red-600 font-semibold">Đăng xuất</span>
+                        </button>
+                      </div>
                     </div>
-                    <div className="py-2">
-                      <NavLink to="/profile" className="flex items-center gap-3 px-4 py-2 hover:bg-gray-100 transition" onClick={() => setUserMenuOpen(false)}>
-                        <i className="fas fa-user text-blue-500"></i>
-                        <span className="text-gray-700">Hồ sơ cá nhân</span>
-                      </NavLink>
-                      <button onClick={() => { logout(); setUserMenuOpen(false); }} className="w-full flex items-center gap-3 px-4 py-2 hover:bg-red-50 transition text-left">
-                        <i className="fas fa-sign-out-alt text-red-500"></i>
-                        <span className="text-red-600 font-semibold">Đăng xuất</span>
-                      </button>
-                    </div>
-                  </div>
-                )}
-              </div>
+                  )}
+                </div>
+              )
             )}
           </div>
         </div>
         {mobileMenuOpen && (
           <div className="lg:hidden mt-4 pb-4 space-y-2">
-            {isAuthenticated && user && (
-              <div className="bg-white/10 rounded-lg p-3 mb-2 flex items-center gap-3">
-                <img src={user.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName)}&background=random`} alt={user.displayName} className="w-10 h-10 rounded-full border-2 border-white" />
-                <div>
-                  <p className="text-white font-semibold text-sm">{user.displayName}</p>
-                  <p className="text-white/70 text-xs">{user.email}</p>
+            {!isAuthenticated ? (
+              // Login button for mobile when not authenticated
+              <NavLink 
+                to="/login" 
+                onClick={() => setMobileMenuOpen(false)}
+                className="w-full flex items-center gap-3 px-4 py-3 bg-white text-blue-600 rounded-lg transition-all font-semibold shadow-lg justify-center"
+              >
+                <i className="fas fa-sign-in-alt"></i>
+                <span>Đăng nhập</span>
+              </NavLink>
+            ) : (
+              // User info card when authenticated
+              user && (
+                <div className="bg-white/10 rounded-lg p-3 mb-2 flex items-center gap-3">
+                  <img src={user.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName)}&background=random`} alt={user.displayName} className="w-10 h-10 rounded-full border-2 border-white" />
+                  <div>
+                    <p className="text-white font-semibold text-sm">{user.displayName}</p>
+                    <p className="text-white/70 text-xs">{user.email}</p>
+                  </div>
                 </div>
-              </div>
+              )
             )}
             <MobileNavLink to="/dashboard" icon="fa-home" onClick={() => setMobileMenuOpen(false)}>Bảng điều khiển</MobileNavLink>
             <MobileNavLink to="/san-pham-1" icon="fa-comments" onClick={() => setMobileMenuOpen(false)}>Chat AI</MobileNavLink>
