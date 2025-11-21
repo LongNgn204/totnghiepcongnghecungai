@@ -3,20 +3,27 @@
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://ai-hoc-tap-api.your-account.workers.dev';
 
 function getHeaders(): HeadersInit {
-  const userId = localStorage.getItem('user_id');
-  if (!userId) {
-    const newId = `user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-    localStorage.setItem('user_id', newId);
-    return {
-      'Content-Type': 'application/json',
-      'X-User-ID': newId,
-    };
+  const headers: HeadersInit = {
+    'Content-Type': 'application/json',
+  };
+
+  // Add auth token if available
+  const token = localStorage.getItem('auth_token');
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
   }
 
-  return {
-    'Content-Type': 'application/json',
-    'X-User-ID': userId,
-  };
+  // Add user ID for backward compatibility
+  const userId = localStorage.getItem('user_id');
+  if (userId) {
+    headers['X-User-ID'] = userId;
+  } else {
+    const newId = `user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    localStorage.setItem('user_id', newId);
+    headers['X-User-ID'] = newId;
+  }
+
+  return headers;
 }
 
 async function fetchAPI(endpoint: string, options: RequestInit = {}) {

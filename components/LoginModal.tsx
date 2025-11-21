@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { X, Mail, Lock, User, LogIn } from 'lucide-react';
+import { X, Mail, Lock, User, LogIn, UserPlus, AlertCircle, CheckCircle } from 'lucide-react';
 
 interface LoginModalProps {
     isOpen: boolean;
@@ -8,11 +8,17 @@ interface LoginModalProps {
 }
 
 const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
-    const { login } = useAuth();
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+    const { login, register } = useAuth();
+    const [mode, setMode] = useState<'login' | 'register'>('login');
+    const [formData, setFormData] = useState({
+        email: '',
+        password: '',
+        displayName: '',
+        confirmPassword: ''
+    });
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
+    const [success, setSuccess] = useState('');
 
     if (!isOpen) return null;
 
@@ -20,22 +26,56 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
         e.preventDefault();
         setLoading(true);
         setError('');
+        setSuccess('');
 
         try {
-            await login(email, password);
-            onClose();
-            setEmail('');
-            setPassword('');
+            if (mode === 'register') {
+                // Validate
+                if (formData.password !== formData.confirmPassword) {
+                    throw new Error('Mật khẩu xác nhận không khớp');
+                }
+                if (formData.password.length < 6) {
+                    throw new Error('Mật khẩu phải có ít nhất 6 ký tự');
+                }
+                if (!formData.displayName.trim()) {
+                    throw new Error('Vui lòng nhập tên hiển thị');
+                }
+
+                await register(formData.email, formData.password, formData.displayName);
+                setSuccess('Đăng ký thành công!');
+                setTimeout(() => {
+                    onClose();
+                    resetForm();
+                }, 1500);
+            } else {
+                await login(formData.email, formData.password);
+                setSuccess('Đăng nhập thành công!');
+                setTimeout(() => {
+                    onClose();
+                    resetForm();
+                }, 1000);
+            }
         } catch (err: any) {
-            setError(err.message || 'Đăng nhập thất bại');
+            setError(err.message || 'Có lỗi xảy ra');
         } finally {
             setLoading(false);
         }
     };
 
-    const handleQuickLogin = () => {
-        setEmail('student@example.com');
-        setPassword('password123');
+    const resetForm = () => {
+        setFormData({
+            email: '',
+            password: '',
+            displayName: '',
+            confirmPassword: ''
+        });
+        setError('');
+        setSuccess('');
+    };
+
+    const switchMode = () => {
+        setMode(mode === 'login' ? 'register' : 'login');
+        resetForm();
     };
 
     return (
@@ -44,29 +84,86 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
                 {/* Header */}
                 <div className="bg-gradient-to-r from-blue-600 to-indigo-700 p-6 rounded-t-2xl relative">
                     <button
-                        onClick={onClose}
+                        onClick={() => {
+                            onClose();
+                            resetForm();
+                        }}
                         className="absolute top-4 right-4 text-white hover:bg-white/20 rounded-full p-2 transition-all"
                     >
                         <X className="w-5 h-5" />
                     </button>
                     <div className="text-center text-white">
                         <div className="bg-white/20 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <User className="w-8 h-8" />
+                            {mode === 'login' ? <User className="w-8 h-8" /> : <UserPlus className="w-8 h-8" />}
                         </div>
-                        <h2 className="text-2xl font-bold mb-2">Đăng Nhập</h2>
+                        <h2 className="text-2xl font-bold mb-2">
+                            {mode === 'login' ? 'Đăng Nhập' : 'Đăng Ký'}
+                        </h2>
                         <p className="text-blue-100 text-sm">Ôn Thi THPT QG môn Công Nghệ</p>
                     </div>
                 </div>
 
                 {/* Body */}
                 <div className="p-6">
+                    {/* Mode Toggle */}
+                    <div className="flex gap-2 mb-6 bg-gray-100 p-1 rounded-xl">
+                        <button
+                            onClick={() => mode !== 'login' && switchMode()}
+                            className={`flex-1 py-2 rounded-lg font-bold text-sm transition-all ${mode === 'login'
+                                    ? 'bg-white text-blue-600 shadow-sm'
+                                    : 'text-gray-600 hover:text-gray-900'
+                                }`}
+                        >
+                            Đăng Nhập
+                        </button>
+                        <button
+                            onClick={() => mode !== 'register' && switchMode()}
+                            className={`flex-1 py-2 rounded-lg font-bold text-sm transition-all ${mode === 'register'
+                                    ? 'bg-white text-blue-600 shadow-sm'
+                                    : 'text-gray-600 hover:text-gray-900'
+                                }`}
+                        >
+                            Đăng Ký
+                        </button>
+                    </div>
+
+                    {/* Error Message */}
                     {error && (
-                        <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-xl text-red-700 text-sm">
-                            {error}
+                        <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-xl text-red-700 text-sm flex items-start gap-2">
+                            <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5" />
+                            <span>{error}</span>
+                        </div>
+                    )}
+
+                    {/* Success Message */}
+                    {success && (
+                        <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-xl text-green-700 text-sm flex items-start gap-2">
+                            <CheckCircle className="w-5 h-5 flex-shrink-0 mt-0.5" />
+                            <span>{success}</span>
                         </div>
                     )}
 
                     <form onSubmit={handleSubmit} className="space-y-4">
+                        {/* Display Name (Register only) */}
+                        {mode === 'register' && (
+                            <div>
+                                <label className="block text-sm font-bold text-gray-700 mb-2">
+                                    Tên hiển thị
+                                </label>
+                                <div className="relative">
+                                    <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                                    <input
+                                        type="text"
+                                        value={formData.displayName}
+                                        onChange={(e) => setFormData({ ...formData, displayName: e.target.value })}
+                                        className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50"
+                                        placeholder="Nguyễn Văn A"
+                                        required={mode === 'register'}
+                                    />
+                                </div>
+                            </div>
+                        )}
+
                         {/* Email */}
                         <div>
                             <label className="block text-sm font-bold text-gray-700 mb-2">
@@ -76,8 +173,8 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
                                 <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                                 <input
                                     type="email"
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
+                                    value={formData.email}
+                                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                                     className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50"
                                     placeholder="student@example.com"
                                     required
@@ -94,53 +191,75 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
                                 <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                                 <input
                                     type="password"
-                                    value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
+                                    value={formData.password}
+                                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                                     className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50"
                                     placeholder="••••••••"
                                     required
+                                    minLength={6}
                                 />
                             </div>
+                            {mode === 'register' && (
+                                <p className="text-xs text-gray-500 mt-1">Ít nhất 6 ký tự</p>
+                            )}
                         </div>
 
-                        {/* Quick Login Hint */}
-                        <div className="p-3 bg-blue-50 border border-blue-200 rounded-xl">
-                            <p className="text-sm text-blue-800">
-                                <strong>Demo:</strong> Nhập bất kỳ email/password nào để đăng nhập
-                            </p>
-                            <button
-                                type="button"
-                                onClick={handleQuickLogin}
-                                className="text-sm text-blue-600 hover:text-blue-700 font-medium mt-1 underline"
-                            >
-                                Hoặc click để điền sẵn
-                            </button>
-                        </div>
+                        {/* Confirm Password (Register only) */}
+                        {mode === 'register' && (
+                            <div>
+                                <label className="block text-sm font-bold text-gray-700 mb-2">
+                                    Xác nhận mật khẩu
+                                </label>
+                                <div className="relative">
+                                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                                    <input
+                                        type="password"
+                                        value={formData.confirmPassword}
+                                        onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
+                                        className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50"
+                                        placeholder="••••••••"
+                                        required={mode === 'register'}
+                                    />
+                                </div>
+                            </div>
+                        )}
 
                         {/* Submit Button */}
                         <button
                             type="submit"
                             disabled={loading}
-                            className="w-full bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-3 rounded-xl font-bold hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                            className="w-full bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-3 rounded-xl font-bold hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 mt-6"
                         >
                             {loading ? (
                                 <>
                                     <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                                    Đang đăng nhập...
+                                    {mode === 'login' ? 'Đang đăng nhập...' : 'Đang đăng ký...'}
                                 </>
                             ) : (
                                 <>
-                                    <LogIn className="w-5 h-5" />
-                                    Đăng Nhập
+                                    {mode === 'login' ? <LogIn className="w-5 h-5" /> : <UserPlus className="w-5 h-5" />}
+                                    {mode === 'login' ? 'Đăng Nhập' : 'Đăng Ký'}
                                 </>
                             )}
                         </button>
                     </form>
 
                     {/* Footer Note */}
-                    <p className="text-center text-xs text-gray-500 mt-4">
-                        Đây là mock authentication - chỉ để demo. <br />
-                        Dữ liệu được lưu trong localStorage.
+                    <div className="text-center mt-4">
+                        <p className="text-sm text-gray-600">
+                            {mode === 'login' ? 'Chưa có tài khoản?' : 'Đã có tài khoản?'}{' '}
+                            <button
+                                onClick={switchMode}
+                                className="text-blue-600 font-bold hover:text-blue-700 hover:underline"
+                            >
+                                {mode === 'login' ? 'Đăng ký ngay' : 'Đăng nhập'}
+                            </button>
+                        </p>
+                    </div>
+
+                    {/* Backend Note */}
+                    <p className="text-center text-xs text-gray-500 mt-4 pt-4 border-t border-gray-200">
+                        Dữ liệu được lưu trữ an toàn trên Cloudflare Workers
                     </p>
                 </div>
             </div>

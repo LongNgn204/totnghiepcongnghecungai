@@ -50,8 +50,10 @@ router.post('/api/auth/register', async (request, env: Env) => {
     const body: any = await request.json();
     const { username, email, password, displayName } = body;
 
-    if (!username || !email || !password || !displayName) {
-      return badRequestResponse('Missing required fields');
+    // Only email, password, and displayName are required
+    // username will be auto-generated from email if not provided
+    if (!email || !password || !displayName) {
+      return badRequestResponse('Missing required fields: email, password, displayName');
     }
 
     const result = await registerUser(env.DB, {

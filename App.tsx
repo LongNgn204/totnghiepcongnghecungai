@@ -5,8 +5,9 @@ import Header from './components/Header';
 import Home from './components/Home';
 import Product1 from './components/Product1';
 import Product2 from './components/Product2';
-import Product3 from './components/Product3';
+import Product3 from './components/Product3'; // Full version restored
 import Product4 from './components/Product4';
+import ErrorBoundary from './components/ErrorBoundary';
 import Product5 from './components/Product5';
 import Product6 from './components/Product6';
 import Product7 from './components/Product7';
@@ -181,7 +182,11 @@ const App: React.FC = () => {
           <Route path="/" element={<Home />} />
           <Route path="/san-pham-1" element={<Product1 />} />
           <Route path="/san-pham-2" element={<Product2 />} />
-          <Route path="/san-pham-3" element={<Product3 />} />
+          <Route path="/san-pham-3" element={
+            <ErrorBoundary componentName="Product3">
+              <Product3 />
+            </ErrorBoundary>
+          } />
           <Route path="/san-pham-4" element={<Product4 />} />
           <Route path="/san-pham-5" element={<Product5 />} />
           <Route path="/san-pham-6" element={<Product6 />} />

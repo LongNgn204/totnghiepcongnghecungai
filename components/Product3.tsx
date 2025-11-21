@@ -23,7 +23,8 @@ import {
   Eye,
   Clock,
   Calendar,
-  BarChart2
+  BarChart2,
+  Trophy
 } from 'lucide-react';
 
 const Product3: React.FC = () => {
@@ -511,8 +512,8 @@ const Product3: React.FC = () => {
                   </div>
                   <div className="text-sm text-gray-600">Điểm (thang 10)</div>
                 </div>
-                <div className="p-4 bg-purple-50 rounded-lg border border-purple-100">
-                  <div className="text-3xl font-bold text-purple-600">
+                <div className="p-4 bg-blue-50 rounded-lg border border-blue-100">
+                  <div className="text-3xl font-bold text-blue-600">
                     {timeSpent} phút
                   </div>
                   <div className="text-sm text-gray-600">Thời gian làm bài</div>
