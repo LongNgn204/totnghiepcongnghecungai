@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { generateContent } from '../utils/geminiAPI';
 
 interface FlashcardGeneratorProps {
   onGenerate: (flashcards: GeneratedFlashcard[]) => void;
@@ -60,7 +61,7 @@ export default function FlashcardGenerator({ onGenerate }: FlashcardGeneratorPro
     try {
       const prompt = generatePrompt(formData);
       const flashcards = await generateFlashcardsWithAI(prompt);
-      
+
       if (flashcards.length === 0) {
         throw new Error('AI không thể tạo flashcards. Vui lòng thử lại.');
       }
@@ -74,78 +75,62 @@ export default function FlashcardGenerator({ onGenerate }: FlashcardGeneratorPro
   };
 
   const generatePrompt = (data: FormData): string => {
-    return `Bạn là một giáo viên Công nghệ chuyên nghiệp, chuyên soạn flashcards cho học sinh THPT Việt Nam.
+    return `🎓 Bạn là chuyên gia giáo dục Công nghệ và AI Tutor hàng đầu Việt Nam.
+Nhiệm vụ của bạn là tạo bộ Flashcards ôn tập chất lượng cao cho học sinh THPT.
 
-YÊU CẦU QUAN TRỌNG:
-- Nội dung PHẢI CHÍNH XÁC 99% theo sách giáo khoa "${data.textbook}" lớp ${data.grade}
-- Chủ đề: "${data.topic}"${data.subtopic ? `, chi tiết: "${data.subtopic}"` : ''}
-- Mức độ: ${data.difficulty}
-- Số lượng: ${data.quantity} flashcards
+📚 **THÔNG TIN CẤU HÌNH:**
+- **Sách giáo khoa:** ${data.textbook}
+- **Lớp:** ${data.grade}
+- **Chủ đề chính:** ${data.topic}
+${data.subtopic ? `- **Chi tiết:** ${data.subtopic}` : ''}
+- **Độ khó:** ${data.difficulty}
+- **Số lượng:** ${data.quantity} thẻ
 
-ĐỊNH DẠNG TRỰC TIẾP JSON (không bao bọc trong markdown):
+🧠 **YÊU CẦU SƯ PHẠM:**
+1. **Chính xác tuyệt đối:** Nội dung phải bám sát SGK "${data.textbook}".
+2. **Ngôn ngữ tự nhiên:** Giải thích dễ hiểu, gần gũi, không copy-paste máy móc.
+3. **Tư duy sâu:**
+   - Front: Câu hỏi gợi mở, kích thích tư duy.
+   - Back: Câu trả lời súc tích, đi vào bản chất.
+   - Explanation: Ví dụ thực tế, liên hệ đời sống.
+
+🔥 **ĐỘ KHÓ:**
+${data.difficulty === 'Dễ' ? '- Tập trung khái niệm cơ bản, nhận biết.' : ''}
+${data.difficulty === 'Trung bình' ? '- Tập trung hiểu và vận dụng đơn giản.' : ''}
+${data.difficulty === 'Khó' ? '- Tập trung phân tích, so sánh, vận dụng cao.' : ''}
+
+📝 **OUTPUT FORMAT (JSON Only):**
+\`\`\`json
 [
   {
-    "front": "Câu hỏi hoặc khái niệm (ngắn gọn, rõ ràng)",
-    "back": "Câu trả lời hoặc định nghĩa (chính xác theo SGK)",
-    "explanation": "Giải thích bổ sung hoặc ví dụ (nếu cần)"
+    "front": "Câu hỏi ngắn gọn (Max 20 từ)",
+    "back": "Câu trả lời cốt lõi (50-100 từ)",
+    "explanation": "Giải thích chi tiết + Ví dụ thực tế (Rất quan trọng)"
   }
 ]
-
-QUY TẮC NỘI DUNG:
-1. Front: Câu hỏi ngắn gọn, dễ hiểu (tối đa 20 từ)
-2. Back: Câu trả lời chính xác theo SGK (50-100 từ)
-3. Explanation: Giải thích thêm hoặc ví dụ thực tế (nếu cần)
-4. PHẢI trích dẫn CHÍNH XÁC từ sách "${data.textbook}"
-5. Không viết sai chính tả, ngữ pháp
-6. Phù hợp với học sinh lớp ${data.grade}
-
-MỨC ĐỘ KHÓ:
-${data.difficulty === 'Dễ' ? '- Tập trung vào định nghĩa cơ bản, khái niệm đơn giản\n- Sử dụng ngôn ngữ dễ hiểu' : ''}
-${data.difficulty === 'Trung bình' ? '- Kết hợp lý thuyết và ứng dụng\n- Yêu cầu hiểu và phân tích' : ''}
-${data.difficulty === 'Khó' ? '- Câu hỏi tổng hợp, phân tích sâu\n- Yêu cầu tư duy logic và so sánh' : ''}
-
-Tạo ngay ${data.quantity} flashcards với JSON format:`;
+\`\`\`
+⚠️ LƯU Ý: Chỉ trả về JSON thuần, KHÔNG thêm text giải thích!`;
   };
 
   const generateFlashcardsWithAI = async (prompt: string): Promise<GeneratedFlashcard[]> => {
-    const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
-    
-    if (!apiKey) {
-      throw new Error('API key chưa được cấu hình');
+    const response = await generateContent(prompt);
+
+    if (!response.success) {
+      throw new Error(response.error || 'AI API không phản hồi');
     }
 
-    const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: prompt }] }],
-          generationConfig: {
-            temperature: 0.3, // Giảm nhiệt độ để nội dung chính xác hơn
-            maxOutputTokens: 4000,
-          }
-        })
-      }
-    );
-
-    if (!response.ok) {
-      throw new Error('AI API không phản hồi');
-    }
-
-    const data = await response.json();
-    const text = data.candidates[0].content.parts[0].text;
+    const text = response.text;
 
     // Parse JSON từ response
     try {
       // Loại bỏ markdown code blocks nếu có
-      const jsonText = text
-        .replace(/```json\n?/g, '')
-        .replace(/```\n?/g, '')
-        .trim();
-      
-      const flashcards = JSON.parse(jsonText);
-      
+      const jsonMatch = text.match(/\[[\s\S]*\]/);
+      if (!jsonMatch) {
+        throw new Error('Invalid format');
+      }
+
+      const flashcards = JSON.parse(jsonMatch[0]);
+
       if (!Array.isArray(flashcards)) {
         throw new Error('Invalid format');
       }
@@ -162,8 +147,8 @@ Tạo ngay ${data.quantity} flashcards với JSON format:`;
   return (
     <div className="bg-white rounded-xl shadow-lg p-6 mb-6">
       <div className="flex items-center gap-3 mb-6">
-        <div className="bg-gradient-to-r from-purple-500 to-pink-500 rounded-full p-3">
-          <i className="fas fa-robot text-2xl text-white"></i>
+        <div className="bg-gradient-to-r from-purple-500 to-pink-500 rounded-full p-3 shadow-md">
+          <span className="text-2xl">✨</span>
         </div>
         <div>
           <h2 className="text-2xl font-bold text-gray-800">AI Tạo Flashcards</h2>
@@ -173,7 +158,7 @@ Tạo ngay ${data.quantity} flashcards với JSON format:`;
 
       {error && (
         <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg flex items-start gap-3">
-          <i className="fas fa-exclamation-triangle text-red-500 mt-0.5"></i>
+          <span className="text-red-500 mt-0.5">⚠️</span>
           <p className="text-red-700 text-sm">{error}</p>
         </div>
       )}
@@ -181,9 +166,8 @@ Tạo ngay ${data.quantity} flashcards với JSON format:`;
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
         {/* Lớp */}
         <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-2">
-            <i className="fas fa-graduation-cap mr-2 text-blue-500"></i>
-            Lớp
+          <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
+            <span>🎓</span> Lớp
           </label>
           <select
             value={formData.grade}
@@ -199,9 +183,8 @@ Tạo ngay ${data.quantity} flashcards với JSON format:`;
 
         {/* Sách giáo khoa */}
         <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-2">
-            <i className="fas fa-book mr-2 text-green-500"></i>
-            Sách giáo khoa
+          <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
+            <span>📚</span> Sách giáo khoa
           </label>
           <select
             value={formData.textbook}
@@ -217,9 +200,8 @@ Tạo ngay ${data.quantity} flashcards với JSON format:`;
 
         {/* Chủ đề */}
         <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-2">
-            <i className="fas fa-lightbulb mr-2 text-yellow-500"></i>
-            Chủ đề <span className="text-red-500">*</span>
+          <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
+            <span>💡</span> Chủ đề <span className="text-red-500">*</span>
           </label>
           <select
             value={formData.topic}
@@ -236,15 +218,14 @@ Tạo ngay ${data.quantity} flashcards với JSON format:`;
 
         {/* Chi tiết */}
         <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-2">
-            <i className="fas fa-tag mr-2 text-purple-500"></i>
-            Chi tiết (tùy chọn)
+          <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
+            <span>🏷️</span> Chi tiết (tùy chọn)
           </label>
           <input
             type="text"
             value={formData.subtopic}
             onChange={(e) => setFormData({ ...formData, subtopic: e.target.value })}
-            placeholder="VD: Cấu trúc lặp, Mạng LAN, Robot tự động..."
+            placeholder="VD: Cấu trúc lặp, Mạng LAN..."
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
             disabled={loading}
           />
@@ -252,9 +233,8 @@ Tạo ngay ${data.quantity} flashcards với JSON format:`;
 
         {/* Số lượng */}
         <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-2">
-            <i className="fas fa-list-ol mr-2 text-indigo-500"></i>
-            Số lượng flashcards
+          <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
+            <span>🔢</span> Số lượng flashcards
           </label>
           <input
             type="number"
@@ -270,9 +250,8 @@ Tạo ngay ${data.quantity} flashcards với JSON format:`;
 
         {/* Độ khó */}
         <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-2">
-            <i className="fas fa-chart-line mr-2 text-orange-500"></i>
-            Mức độ
+          <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
+            <span>📊</span> Mức độ
           </label>
           <select
             value={formData.difficulty}
@@ -290,7 +269,7 @@ Tạo ngay ${data.quantity} flashcards với JSON format:`;
       {/* Thông tin */}
       <div className="bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200 rounded-lg p-4 mb-6">
         <div className="flex items-start gap-3">
-          <i className="fas fa-info-circle text-blue-500 mt-1"></i>
+          <span className="text-blue-500 mt-1">ℹ️</span>
           <div className="text-sm text-gray-700">
             <p className="font-semibold mb-1">Lưu ý:</p>
             <ul className="list-disc list-inside space-y-1 text-xs">
@@ -307,16 +286,16 @@ Tạo ngay ${data.quantity} flashcards với JSON format:`;
       <button
         onClick={handleGenerate}
         disabled={loading || !formData.topic}
-        className="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white py-3 rounded-lg font-semibold hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+        className="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white py-3 rounded-lg font-semibold hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
       >
         {loading ? (
           <>
-            <i className="fas fa-spinner fa-spin mr-2"></i>
+            <span className="animate-spin">⏳</span>
             Đang tạo flashcards... (có thể mất 10-15s)
           </>
         ) : (
           <>
-            <i className="fas fa-magic mr-2"></i>
+            <span>✨</span>
             Tạo {formData.quantity} Flashcards với AI
           </>
         )}

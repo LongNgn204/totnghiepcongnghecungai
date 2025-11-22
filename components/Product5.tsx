@@ -15,28 +15,6 @@ import {
   getCardsForReview,
   getDeckStats
 } from '../utils/flashcardStorage';
-import {
-  Layers,
-  Brain,
-  Plus,
-  Trash2,
-  Check,
-  X,
-  Save,
-  Folder,
-  Zap,
-  MessageSquare,
-  Calendar,
-  Sparkles,
-  BookOpen,
-  Clock,
-  BarChart2,
-  CheckCircle,
-  AlertCircle,
-  Play,
-  RotateCcw,
-  Tag
-} from 'lucide-react';
 
 const Product5: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'decks' | 'study' | 'create' | 'ai'>('decks');
@@ -177,23 +155,17 @@ const Product5: React.FC = () => {
   return (
     <div className="space-y-8 animate-fade-in">
       {/* Header */}
-      <div className="bg-gradient-to-r from-blue-600 to-indigo-700 p-8 rounded-2xl shadow-lg text-white relative overflow-hidden">
-        <div className="absolute top-0 right-0 opacity-10 transform translate-x-1/4 -translate-y-1/4">
-          <Layers size={200} />
-        </div>
-        <div className="relative z-10">
-          <h2 className="text-3xl font-bold text-center mb-3 flex items-center justify-center gap-3">
-            <Layers className="w-8 h-8" />
-            Sản Phẩm 5: Flashcards - Học Thông Minh
-          </h2>
-          <p className="text-center text-blue-100 max-w-2xl mx-auto text-lg">
-            Tạo flashcards, ôn tập theo phương pháp spaced repetition, theo dõi tiến độ học tập
-          </p>
-        </div>
+      <div className="bg-white p-6 rounded-xl shadow-sm border border-blue-100">
+        <h2 className="text-3xl font-bold text-center mb-2 text-gray-800 flex items-center justify-center gap-3">
+          🧠 Sản Phẩm 5: Flashcards - Học Thông Minh
+        </h2>
+        <p className="text-center text-gray-600">
+          Tạo flashcards, ôn tập theo phương pháp spaced repetition, theo dõi tiến độ học tập
+        </p>
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-2 bg-white rounded-xl shadow-sm p-2 border border-gray-200 overflow-x-auto">
+      <div className="flex gap-2 bg-white rounded-lg shadow-sm p-2 border border-gray-200 overflow-x-auto">
         <button
           onClick={() => setActiveTab('decks')}
           className={`flex-1 px-6 py-3 rounded-lg font-semibold transition-all whitespace-nowrap flex items-center justify-center gap-2 ${activeTab === 'decks'
@@ -201,8 +173,7 @@ const Product5: React.FC = () => {
             : 'text-gray-600 hover:bg-gray-50'
             }`}
         >
-          <Folder className="w-5 h-5" />
-          Bộ thẻ ({decks.length})
+          📂 Bộ thẻ ({decks.length})
         </button>
         <button
           onClick={() => setActiveTab('ai')}
@@ -211,8 +182,7 @@ const Product5: React.FC = () => {
             : 'text-gray-600 hover:bg-gray-50'
             }`}
         >
-          <Sparkles className="w-5 h-5" />
-          AI tạo thẻ
+          ✨ AI tạo thẻ
         </button>
         <button
           onClick={() => setActiveTab('study')}
@@ -222,8 +192,7 @@ const Product5: React.FC = () => {
             : 'text-gray-600 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed'
             }`}
         >
-          <Brain className="w-5 h-5" />
-          Ôn tập
+          🧠 Ôn tập
         </button>
         <button
           onClick={() => {
@@ -235,8 +204,7 @@ const Product5: React.FC = () => {
             : 'text-gray-600 hover:bg-gray-50'
             }`}
         >
-          <Plus className="w-5 h-5" />
-          Tạo bộ thẻ mới
+          ➕ Tạo bộ thẻ mới
         </button>
       </div>
 
@@ -253,14 +221,13 @@ const Product5: React.FC = () => {
             <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mt-6">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-xl font-bold text-gray-800 flex items-center gap-2">
-                  <CheckCircle className="w-6 h-6 text-green-500" />
-                  Đã tạo {generatedCards.length} flashcards
+                  ✅ Đã tạo {generatedCards.length} flashcards
                 </h3>
                 <button
                   onClick={() => setGeneratedCards([])}
                   className="text-gray-500 hover:text-red-500 transition-colors"
                 >
-                  <X className="w-6 h-6" />
+                  ❌
                 </button>
               </div>
 
@@ -274,16 +241,16 @@ const Product5: React.FC = () => {
                       </div>
                       <div className="flex-1">
                         <p className="font-semibold text-gray-800 mb-2 flex items-start gap-2">
-                          <AlertCircle className="w-4 h-4 text-blue-500 mt-1 shrink-0" />
+                          <span className="text-blue-500 mt-1 shrink-0">❓</span>
                           {card.front}
                         </p>
                         <p className="text-gray-600 text-sm mb-2 flex items-start gap-2">
-                          <Check className="w-4 h-4 text-green-500 mt-1 shrink-0" />
+                          <span className="text-green-500 mt-1 shrink-0">💡</span>
                           {card.back}
                         </p>
                         {card.explanation && (
                           <p className="text-gray-500 text-xs italic flex items-start gap-2 mt-2 pt-2 border-t border-gray-200">
-                            <BookOpen className="w-3 h-3 text-gray-400 mt-0.5 shrink-0" />
+                            <span className="text-gray-400 mt-0.5 shrink-0">📖</span>
                             {card.explanation}
                           </p>
                         )}
@@ -296,8 +263,7 @@ const Product5: React.FC = () => {
               {/* Save to deck */}
               <div className="border-t border-gray-200 pt-6">
                 <p className="text-sm text-gray-600 mb-3 flex items-center gap-2">
-                  <Save className="w-4 h-4" />
-                  Lưu vào bộ thẻ nào?
+                  💾 Lưu vào bộ thẻ nào?
                 </p>
                 <div className="flex gap-3">
                   <select
@@ -358,8 +324,7 @@ const Product5: React.FC = () => {
                     }}
                     className="px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-all font-bold shadow-md flex items-center gap-2"
                   >
-                    <Save className="w-5 h-5" />
-                    Lưu
+                    💾 Lưu
                   </button>
                 </div>
               </div>
@@ -374,7 +339,7 @@ const Product5: React.FC = () => {
           {decks.length === 0 ? (
             <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-16 text-center">
               <div className="bg-gray-50 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
-                <Folder className="w-10 h-10 text-gray-400" />
+                <span className="text-4xl">📂</span>
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-2">Chưa có bộ thẻ nào</h3>
               <p className="text-gray-500 mb-8">Tạo bộ thẻ đầu tiên để bắt đầu học!</p>
@@ -385,8 +350,7 @@ const Product5: React.FC = () => {
                 }}
                 className="px-8 py-4 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-all flex items-center mx-auto gap-2 font-bold shadow-lg"
               >
-                <Plus className="w-5 h-5" />
-                Tạo bộ thẻ mới
+                ➕ Tạo bộ thẻ mới
               </button>
             </div>
           ) : (
@@ -443,8 +407,7 @@ const Product5: React.FC = () => {
                       disabled={stats?.dueCards === 0}
                       className="flex-1 bg-blue-600 text-white px-4 py-3 rounded-xl hover:bg-blue-700 transition-all font-bold shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                     >
-                      <Brain className="w-5 h-5" />
-                      Ôn tập ngay ({stats?.dueCards || 0})
+                      🧠 Ôn tập ngay ({stats?.dueCards || 0})
                     </button>
                     <button
                       onClick={() => {
@@ -454,14 +417,14 @@ const Product5: React.FC = () => {
                       className="px-6 py-3 bg-white text-blue-600 border border-blue-200 rounded-xl hover:bg-blue-50 transition-all font-bold flex items-center justify-center"
                       title="Thêm thẻ"
                     >
-                      <Plus className="w-5 h-5" />
+                      ➕
                     </button>
                     <button
                       onClick={() => handleDeleteDeck(deck.id)}
                       className="px-6 py-3 bg-white text-red-600 border border-red-200 rounded-xl hover:bg-red-50 transition-all font-bold flex items-center justify-center"
                       title="Xóa bộ thẻ"
                     >
-                      <Trash2 className="w-5 h-5" />
+                      🗑️
                     </button>
                   </div>
                 </div>
@@ -478,7 +441,7 @@ const Product5: React.FC = () => {
           <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
             <div className="flex justify-between items-center mb-3">
               <span className="text-sm font-bold text-gray-700 flex items-center gap-2">
-                <Layers className="w-4 h-4 text-blue-600" />
+                <span className="text-blue-600">📂</span>
                 Thẻ {currentCardIndex + 1} / {studyCards.length}
               </span>
               <span className="text-sm font-medium text-gray-500">
@@ -507,7 +470,7 @@ const Product5: React.FC = () => {
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full p-8 animate-scale-in">
             <h3 className="text-2xl font-bold mb-6 text-gray-900 flex items-center gap-2">
-              <Plus className="w-6 h-6 text-blue-600" />
+              <span className="text-blue-600">➕</span>
               Tạo bộ thẻ mới
             </h3>
 
@@ -584,8 +547,7 @@ const Product5: React.FC = () => {
                 onClick={handleCreateDeck}
                 className="flex-1 px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-all font-bold shadow-md flex items-center justify-center gap-2"
               >
-                <Check className="w-5 h-5" />
-                Tạo bộ thẻ
+                ✅ Tạo bộ thẻ
               </button>
             </div>
           </div>
@@ -597,7 +559,7 @@ const Product5: React.FC = () => {
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full p-8 animate-scale-in max-h-[90vh] overflow-y-auto">
             <h3 className="text-2xl font-bold mb-6 text-gray-900 flex items-center gap-2">
-              <Plus className="w-6 h-6 text-blue-600" />
+              <span className="text-blue-600">➕</span>
               Thêm thẻ vào: <span className="text-blue-600">{selectedDeck.title}</span>
             </h3>
 
@@ -667,7 +629,7 @@ const Product5: React.FC = () => {
                     onClick={handleAddTag}
                     className="px-4 py-3 bg-blue-100 text-blue-600 rounded-xl hover:bg-blue-200 transition-all font-bold"
                   >
-                    <Plus className="w-5 h-5" />
+                    ➕
                   </button>
                 </div>
                 {cardForm.tags.length > 0 && (
@@ -677,13 +639,13 @@ const Product5: React.FC = () => {
                         key={tag}
                         className="px-3 py-1 bg-blue-50 text-blue-700 rounded-lg text-sm font-medium flex items-center gap-2 border border-blue-100"
                       >
-                        <Tag className="w-3 h-3" />
+                        <span className="text-xs">🏷️</span>
                         {tag}
                         <button
                           onClick={() => handleRemoveTag(tag)}
                           className="text-blue-400 hover:text-blue-600"
                         >
-                          <X className="w-3 h-3" />
+                          ❌
                         </button>
                       </span>
                     ))}
@@ -703,8 +665,7 @@ const Product5: React.FC = () => {
                 onClick={handleCreateCard}
                 className="flex-1 px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-all font-bold shadow-md flex items-center justify-center gap-2"
               >
-                <Check className="w-5 h-5" />
-                Thêm thẻ
+                ✅ Thêm thẻ
               </button>
             </div>
           </div>

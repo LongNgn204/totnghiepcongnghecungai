@@ -15,25 +15,6 @@ import {
   StudyGoal,
   StudyStats
 } from '../utils/studyProgress';
-import {
-  BarChart2,
-  Clock,
-  FileText,
-  Star,
-  Flame,
-  Layers,
-  MessageSquare,
-  Calendar,
-  Trophy,
-  Target,
-  Plus,
-  Check,
-  Trash2,
-  TrendingUp,
-  Activity,
-  CheckCircle,
-  AlertCircle
-} from 'lucide-react';
 
 const Product6: React.FC = () => {
   const [stats, setStats] = useState<StudyStats | null>(null);
@@ -110,8 +91,8 @@ const Product6: React.FC = () => {
 
   if (!stats) {
     return <div className="flex items-center justify-center h-96">
-      <div className="animate-spin text-blue-600">
-        <Activity size={48} />
+      <div className="animate-spin text-blue-600 text-4xl">
+        ⏳
       </div>
     </div>;
   }
@@ -119,26 +100,20 @@ const Product6: React.FC = () => {
   return (
     <div className="space-y-8 animate-fade-in">
       {/* Header */}
-      <div className="bg-gradient-to-r from-blue-600 to-indigo-700 p-8 rounded-2xl shadow-lg text-white relative overflow-hidden">
-        <div className="absolute top-0 right-0 opacity-10 transform translate-x-1/4 -translate-y-1/4">
-          <TrendingUp size={200} />
-        </div>
-        <div className="relative z-10">
-          <h2 className="text-3xl font-bold text-center mb-3 flex items-center justify-center gap-3">
-            <BarChart2 className="w-8 h-8" />
-            Dashboard - Theo Dõi Tiến Độ Học Tập
-          </h2>
-          <p className="text-center text-blue-100 max-w-2xl mx-auto text-lg">
-            Phân tích thống kê, đặt mục tiêu và theo dõi sự tiến bộ của bạn
-          </p>
-        </div>
+      <div className="bg-white p-6 rounded-xl shadow-sm border border-blue-100">
+        <h2 className="text-3xl font-bold text-center mb-2 text-gray-800 flex items-center justify-center gap-3">
+          📊 Dashboard - Theo Dõi Tiến Độ Học Tập
+        </h2>
+        <p className="text-center text-gray-600">
+          Phân tích thống kê, đặt mục tiêu và theo dõi sự tiến bộ của bạn
+        </p>
       </div>
 
       {/* Stats Overview */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
         <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl p-6 text-white shadow-lg transform hover:scale-105 transition-all">
           <div className="flex items-center justify-between mb-4">
-            <Clock className="w-8 h-8 opacity-75" />
+            <span className="text-3xl opacity-75">⏱️</span>
             <span className="text-xs bg-white/20 px-3 py-1 rounded-full font-medium">Tổng</span>
           </div>
           <div className="text-4xl font-bold mb-1">{Math.round(stats.totalStudyTime / 60)}h</div>
@@ -147,7 +122,7 @@ const Product6: React.FC = () => {
 
         <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-2xl p-6 text-white shadow-lg transform hover:scale-105 transition-all">
           <div className="flex items-center justify-between mb-4">
-            <FileText className="w-8 h-8 opacity-75" />
+            <span className="text-3xl opacity-75">📝</span>
             <span className="text-xs bg-white/20 px-3 py-1 rounded-full font-medium">Đề</span>
           </div>
           <div className="text-4xl font-bold mb-1">{stats.totalExams}</div>
@@ -156,7 +131,7 @@ const Product6: React.FC = () => {
 
         <div className="bg-gradient-to-br from-yellow-500 to-orange-500 rounded-2xl p-6 text-white shadow-lg transform hover:scale-105 transition-all">
           <div className="flex items-center justify-between mb-4">
-            <Star className="w-8 h-8 opacity-75" />
+            <span className="text-3xl opacity-75">⭐</span>
             <span className="text-xs bg-white/20 px-3 py-1 rounded-full font-medium">TB</span>
           </div>
           <div className="text-4xl font-bold mb-1">{stats.averageScore.toFixed(1)}%</div>
@@ -165,7 +140,7 @@ const Product6: React.FC = () => {
 
         <div className="bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl p-6 text-white shadow-lg transform hover:scale-105 transition-all">
           <div className="flex items-center justify-between mb-4">
-            <Flame className="w-8 h-8 opacity-75" />
+            <span className="text-3xl opacity-75">🔥</span>
             <span className="text-xs bg-white/20 px-3 py-1 rounded-full font-medium">Streak</span>
           </div>
           <div className="text-4xl font-bold mb-1">{stats.currentStreak}</div>
@@ -177,7 +152,7 @@ const Product6: React.FC = () => {
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
         <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-200 hover:border-blue-300 transition-all">
           <div className="text-center">
-            <Layers className="w-8 h-8 text-blue-500 mx-auto mb-3" />
+            <div className="text-4xl mb-3">📂</div>
             <div className="text-3xl font-bold text-gray-900">{stats.flashcardsLearned}</div>
             <div className="text-sm text-gray-500 font-medium mt-1">Flashcards ôn</div>
           </div>
@@ -185,7 +160,7 @@ const Product6: React.FC = () => {
 
         <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-200 hover:border-blue-300 transition-all">
           <div className="text-center">
-            <MessageSquare className="w-8 h-8 text-indigo-500 mx-auto mb-3" />
+            <div className="text-4xl mb-3">💬</div>
             <div className="text-3xl font-bold text-gray-900">{stats.chatSessions}</div>
             <div className="text-sm text-gray-500 font-medium mt-1">Chat sessions</div>
           </div>
@@ -193,7 +168,7 @@ const Product6: React.FC = () => {
 
         <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-200 hover:border-blue-300 transition-all">
           <div className="text-center">
-            <Calendar className="w-8 h-8 text-green-500 mx-auto mb-3" />
+            <div className="text-4xl mb-3">📅</div>
             <div className="text-3xl font-bold text-gray-900">{stats.weeklyActiveDays}/7</div>
             <div className="text-sm text-gray-500 font-medium mt-1">Ngày học/tuần</div>
           </div>
@@ -201,7 +176,7 @@ const Product6: React.FC = () => {
 
         <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-200 hover:border-blue-300 transition-all">
           <div className="text-center">
-            <Trophy className="w-8 h-8 text-yellow-500 mx-auto mb-3" />
+            <div className="text-4xl mb-3">🏆</div>
             <div className="text-3xl font-bold text-gray-900">{stats.longestStreak}</div>
             <div className="text-sm text-gray-500 font-medium mt-1">Kỷ lục streak</div>
           </div>
@@ -214,7 +189,7 @@ const Product6: React.FC = () => {
         <div className="bg-white rounded-2xl shadow-sm p-8 border border-gray-200">
           <div className="flex items-center justify-between mb-6">
             <h3 className="text-xl font-bold text-gray-900 flex items-center gap-2">
-              <BarChart2 className="w-6 h-6 text-blue-600" />
+              <span className="text-blue-600">📊</span>
               Hoạt động học tập
             </h3>
             <div className="flex gap-2 bg-gray-100 p-1 rounded-lg">
@@ -252,7 +227,7 @@ const Product6: React.FC = () => {
         {/* Score Trend */}
         <div className="bg-white rounded-2xl shadow-sm p-8 border border-gray-200">
           <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-            <TrendingUp className="w-6 h-6 text-green-600" />
+            <span className="text-green-600">📈</span>
             Xu hướng điểm số
           </h3>
           <ResponsiveContainer width="100%" height={300}>
@@ -287,21 +262,21 @@ const Product6: React.FC = () => {
       <div className="bg-white rounded-2xl shadow-sm p-8 border border-gray-200">
         <div className="flex items-center justify-between mb-8">
           <h3 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
-            <Target className="w-8 h-8 text-red-600" />
+            <span className="text-red-600">🎯</span>
             Mục tiêu học tập
           </h3>
           <button
             onClick={() => setShowCreateGoal(true)}
             className="px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-all font-bold shadow-md flex items-center gap-2"
           >
-            <Plus className="w-5 h-5" />
+            <span className="text-white">➕</span>
             Tạo mục tiêu mới
           </button>
         </div>
 
         {goals.length === 0 ? (
           <div className="text-center py-16 bg-gray-50 rounded-2xl border border-dashed border-gray-300">
-            <Target className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+            <div className="text-6xl mb-4 text-gray-300">🎯</div>
             <p className="text-gray-600 text-lg font-medium">Chưa có mục tiêu nào</p>
             <p className="text-gray-500 text-sm mt-2">Đặt mục tiêu để theo dõi tiến độ học tập!</p>
           </div>
@@ -331,7 +306,7 @@ const Product6: React.FC = () => {
                             : 'border-gray-300 hover:border-blue-500 text-transparent hover:text-blue-500'
                             }`}
                         >
-                          {goal.completed && <Check className="w-5 h-5 text-white" />}
+                          {goal.completed && <span className="text-white text-sm">✓</span>}
                         </button>
                         <h4 className={`text-lg font-bold ${goal.completed ? 'line-through text-gray-500' : 'text-gray-900'}`}>
                           {goal.title}
@@ -343,7 +318,7 @@ const Product6: React.FC = () => {
                       onClick={() => handleDeleteGoal(goal.id)}
                       className="text-gray-400 hover:text-red-500 transition-all p-2 rounded-lg hover:bg-red-50"
                     >
-                      <Trash2 className="w-5 h-5" />
+                      🗑️
                     </button>
                   </div>
 
@@ -370,7 +345,7 @@ const Product6: React.FC = () => {
 
                     <div className="flex items-center justify-between mt-3 text-xs">
                       <span className={`flex items-center gap-1 ${isOverdue ? 'text-red-600 font-bold' : 'text-gray-500'}`}>
-                        <Calendar className="w-3 h-3" />
+                        <span>📅</span>
                         Deadline: {new Date(goal.deadline).toLocaleDateString('vi-VN')}
                       </span>
                       <span className="font-bold text-gray-700">
@@ -390,7 +365,7 @@ const Product6: React.FC = () => {
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full p-8 animate-scale-in max-h-[90vh] overflow-y-auto">
             <h3 className="text-2xl font-bold mb-6 text-gray-900 flex items-center gap-2">
-              <Target className="w-6 h-6 text-blue-600" />
+              <span className="text-blue-600">🎯</span>
               Tạo mục tiêu mới
             </h3>
 
@@ -491,8 +466,7 @@ const Product6: React.FC = () => {
                 onClick={handleCreateGoal}
                 className="flex-1 px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-all font-bold shadow-md flex items-center justify-center gap-2"
               >
-                <Check className="w-5 h-5" />
-                Tạo mục tiêu
+                ✅ Tạo mục tiêu
               </button>
             </div>
           </div>

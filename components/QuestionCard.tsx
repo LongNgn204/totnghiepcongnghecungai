@@ -4,8 +4,8 @@ import { QuestionMC, QuestionTF, QuestionLevel } from '../types';
 interface QuestionCardProps {
   question: QuestionMC | QuestionTF;
   type: 'mc' | 'tf';
-  onAnswerChange: (questionId: number, answer: string | boolean) => void;
-  userAnswer?: string | boolean;
+  onAnswerChange: (questionId: number, answer: any) => void;
+  userAnswer?: any;
   isSubmitted: boolean;
 }
 
@@ -24,124 +24,126 @@ const getLevelColor = (level: QuestionLevel) => {
 
 const QuestionCard: React.FC<QuestionCardProps> = ({ question, type, onAnswerChange, userAnswer, isSubmitted }) => {
 
-  const getOptionClass = (option: string | boolean) => {
+  const getOptionClass = (option: string | boolean, currentAnswer?: string | boolean) => {
     if (!isSubmitted) {
-      return userAnswer === option 
+      return currentAnswer === option
         ? 'bg-blue-100 dark:bg-blue-900 ring-2 ring-blue-500'
         : 'bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600';
     }
 
-    const isCorrect = question.answer === option;
-    const isSelected = userAnswer === option;
-
-    if (isCorrect) {
-        return 'bg-green-100 dark:bg-green-900 ring-2 ring-green-500 text-green-800 dark:text-green-200';
+    // Logic hiển thị màu sắc sau khi nộp bài (cho MC)
+    if (type === 'mc') {
+      const isCorrect = question.answer === option;
+      const isSelected = currentAnswer === option;
+      if (isCorrect) return 'bg-green-100 dark:bg-green-900 ring-2 ring-green-500 text-green-800 dark:text-green-200';
+      if (isSelected && !isCorrect) return 'bg-red-100 dark:bg-red-900 ring-2 ring-red-500 text-red-800 dark:text-red-300';
+      return 'bg-gray-50 dark:bg-gray-700';
     }
-    if(isSelected && !isCorrect){
-        return 'bg-red-100 dark:bg-red-900 ring-2 ring-red-500 text-red-800 dark:text-red-300';
-    }
-    return 'bg-gray-50 dark:bg-gray-700';
+    return '';
   };
-  
-  const questionNumber = type === 'mc' ? `Câu ${question.id}` : `Câu ${question.id - 10}`;
+
+  const getTFButtonClass = (isTrue: boolean, statementKey: string) => {
+    const currentAnswer = userAnswer?.[statementKey];
+    const isSelected = currentAnswer === isTrue;
+
+    if (!isSubmitted) {
+      return isSelected
+        ? (isTrue ? 'bg-blue-600 text-white' : 'bg-blue-600 text-white')
+        : 'bg-gray-100 text-gray-600 hover:bg-gray-200';
+    }
+
+    // Sau khi nộp bài
+    const tfQuestion = question as QuestionTF;
+    const correctAnswer = tfQuestion.answers?.[statementKey as 'a' | 'b' | 'c' | 'd'];
+
+    if (correctAnswer === isTrue) {
+      return 'bg-green-500 text-white'; // Đáp án đúng
+    }
+    if (isSelected && correctAnswer !== isTrue) {
+      return 'bg-red-500 text-white'; // Chọn sai
+    }
+    return 'bg-gray-100 text-gray-400 opacity-50';
+  };
+
+  const questionNumber = type === 'mc' ? `Câu ${question.id}` : `Câu ${question.id}`;
+
+  const handleTFChange = (statementKey: string, value: boolean) => {
+    if (isSubmitted) return;
+    const currentAnswers = userAnswer || {};
+    onAnswerChange(question.id, { ...currentAnswers, [statementKey]: value });
+  };
 
   return (
-    <div className="bg-white dark:bg-gray-800 p-5 rounded-lg shadow-md flex flex-col h-full transition-all duration-300">
+    <div className="bg-white dark:bg-gray-800 p-5 rounded-lg shadow-md flex flex-col h-full transition-all duration-300 border border-gray-100 hover:shadow-lg">
       <div className="flex justify-between items-start mb-3">
         <p className="font-bold text-lg text-blue-600 dark:text-blue-400">{questionNumber}</p>
         <span className={`px-2 py-1 text-xs font-semibold rounded-full ${getLevelColor(question.level)}`}>
           {question.level}
         </span>
       </div>
-      <p className="text-gray-700 dark:text-gray-300 mb-4 flex-grow">{question.question}</p>
-      
+      <p className="text-gray-800 dark:text-gray-200 mb-4 flex-grow font-medium text-base">{question.question}</p>
+
       {type === 'mc' && (
         <div className="space-y-2 mb-4">
           {(question as QuestionMC).options.map((option, index) => (
-            <button 
-                key={index}
-                disabled={isSubmitted}
-                onClick={() => onAnswerChange(question.id, option)}
-                className={`w-full text-left p-3 rounded-md text-sm transition-all duration-200 cursor-pointer disabled:cursor-not-allowed ${getOptionClass(option)}`}
+            <button
+              key={index}
+              disabled={isSubmitted}
+              onClick={() => onAnswerChange(question.id, option)}
+              className={`w-full text-left p-3 rounded-lg text-sm transition-all duration-200 cursor-pointer disabled:cursor-not-allowed border border-transparent ${getOptionClass(option, userAnswer)}`}
             >
               <span className="font-bold mr-2">{String.fromCharCode(65 + index)}.</span> {option}
-              {isSubmitted && question.answer === option && <i className="fas fa-check-circle text-green-600 ml-2"></i>}
-              {isSubmitted && userAnswer === option && question.answer !== option && <i className="fas fa-times-circle text-red-600 ml-2"></i>}
+              {isSubmitted && question.answer === option && <span className="ml-2 float-right text-green-600">✅</span>}
+              {isSubmitted && userAnswer === option && question.answer !== option && <span className="ml-2 float-right text-red-600">❌</span>}
             </button>
           ))}
         </div>
       )}
-      
+
       {type === 'tf' && (
-        <div className="space-y-3 mb-4">
+        <div className="space-y-4 mb-4">
           {/* Hiển thị các phát biểu a, b, c, d */}
           {(question as QuestionTF).statements && (
-            <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg border-l-4 border-blue-500">
-              <p className="text-sm font-semibold text-blue-800 dark:text-blue-300 mb-3">
-                <i className="fas fa-list-check mr-2"></i>
-                Xác định các phát biểu sau đúng hay sai:
+            <div className="space-y-3">
+              <p className="text-sm font-semibold text-gray-600 dark:text-gray-400 italic">
+                Chọn Đúng (Đ) hoặc Sai (S) cho mỗi phát biểu:
               </p>
-              <div className="space-y-2">
-                {Object.entries((question as QuestionTF).statements).map(([key, statement]) => {
-                  const tfQuestion = question as QuestionTF;
-                  const isCorrect = tfQuestion.answers?.[key as 'a' | 'b' | 'c' | 'd'];
-                  const explanation = tfQuestion.explanations?.[key as 'a' | 'b' | 'c' | 'd'];
-                  
-                  return (
-                    <div key={key} className="bg-white dark:bg-gray-800 p-3 rounded-md border border-gray-200 dark:border-gray-700">
-                      <div className="flex items-start gap-2">
-                        <span className="font-bold text-blue-600 dark:text-blue-400 mt-0.5">{key})</span>
-                        <div className="flex-1">
-                          <p className="text-sm text-gray-800 dark:text-gray-200">{statement}</p>
-                          {isSubmitted && explanation && (
-                            <div className={`mt-2 p-2 rounded text-xs ${
-                              isCorrect 
-                                ? 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300' 
-                                : 'bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300'
-                            }`}>
-                              <i className={`fas ${isCorrect ? 'fa-check-circle' : 'fa-times-circle'} mr-1`}></i>
-                              {explanation}
-                            </div>
-                          )}
-                        </div>
-                        {isSubmitted && (
-                          <span className={`px-2 py-1 rounded text-xs font-bold ${
-                            isCorrect 
-                              ? 'bg-green-500 text-white' 
-                              : 'bg-red-500 text-white'
-                          }`}>
-                            {isCorrect ? 'ĐÚNG' : 'SAI'}
-                          </span>
-                        )}
+              {Object.entries((question as QuestionTF).statements).map(([key, statement]) => {
+                const tfQuestion = question as QuestionTF;
+                const explanation = tfQuestion.explanations?.[key as 'a' | 'b' | 'c' | 'd'];
+
+                return (
+                  <div key={key} className="bg-gray-50 dark:bg-gray-700/50 p-3 rounded-lg border border-gray-100 dark:border-gray-600">
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+                      <span className="font-bold text-blue-600 dark:text-blue-400 w-6">{key})</span>
+                      <p className="text-sm text-gray-800 dark:text-gray-200 flex-1">{statement}</p>
+
+                      <div className="flex gap-2 shrink-0">
+                        <button
+                          onClick={() => handleTFChange(key, true)}
+                          disabled={isSubmitted}
+                          className={`w-10 h-10 rounded-full font-bold text-sm transition-all flex items-center justify-center shadow-sm ${getTFButtonClass(true, key)}`}
+                        >
+                          Đ
+                        </button>
+                        <button
+                          onClick={() => handleTFChange(key, false)}
+                          disabled={isSubmitted}
+                          className={`w-10 h-10 rounded-full font-bold text-sm transition-all flex items-center justify-center shadow-sm ${getTFButtonClass(false, key)}`}
+                        >
+                          S
+                        </button>
                       </div>
                     </div>
-                  );
-                })}
-              </div>
-            </div>
-          )}
-          
-          {/* Nút chọn Đúng/Sai (giữ lại để tương thích với câu hỏi cũ) */}
-          {!(question as QuestionTF).statements && (
-            <div className="flex space-x-4">
-              <button 
-                  disabled={isSubmitted}
-                  onClick={() => onAnswerChange(question.id, true)}
-                  className={`w-full text-center p-3 rounded-md text-sm transition-all duration-200 cursor-pointer disabled:cursor-not-allowed ${getOptionClass(true)}`}
-              >
-                  Đúng
-                  {isSubmitted && (question as QuestionTF).answer === true && <i className="fas fa-check-circle text-green-600 ml-2"></i>}
-                  {isSubmitted && userAnswer === true && (question as QuestionTF).answer === false && <i className="fas fa-times-circle text-red-600 ml-2"></i>}
-              </button>
-              <button
-                  disabled={isSubmitted}
-                  onClick={() => onAnswerChange(question.id, false)} 
-                  className={`w-full text-center p-3 rounded-md text-sm transition-all duration-200 cursor-pointer disabled:cursor-not-allowed ${getOptionClass(false)}`}
-              >
-                  Sai
-                  {isSubmitted && (question as QuestionTF).answer === false && <i className="fas fa-check-circle text-green-600 ml-2"></i>}
-                  {isSubmitted && userAnswer === false && (question as QuestionTF).answer === true && <i className="fas fa-times-circle text-red-600 ml-2"></i>}
-              </button>
+
+                    {isSubmitted && explanation && (
+                      <div className="mt-2 ml-9 text-xs text-gray-600 bg-white p-2 rounded border border-gray-100">
+                        <strong>Giải thích:</strong> {explanation}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
             </div>
           )}
         </div>

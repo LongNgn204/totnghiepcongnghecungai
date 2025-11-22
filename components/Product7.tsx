@@ -12,19 +12,6 @@ import {
   StudyGroup,
   GroupMessage,
 } from '../utils/shareUtils';
-import {
-  Users,
-  Plus,
-  Send,
-  Lock,
-  Calendar,
-  LogOut,
-  Tag,
-  MessageCircle,
-  UserPlus,
-  Hash,
-  ChevronRight
-} from 'lucide-react';
 
 const Product7: React.FC = () => {
   const [groups, setGroups] = useState<StudyGroup[]>([]);
@@ -112,24 +99,20 @@ const Product7: React.FC = () => {
   return (
     <div className="space-y-8 animate-fade-in">
       {/* Header */}
-      <div className="bg-gradient-to-r from-blue-600 to-indigo-700 p-8 rounded-2xl shadow-lg text-white relative overflow-hidden">
-        <div className="absolute top-0 right-0 opacity-10 transform translate-x-1/4 -translate-y-1/4">
-          <Users size={200} />
-        </div>
-        <div className="relative z-10">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold mb-2">Nhóm Học Tập</h1>
-              <p className="text-blue-100 text-lg">Học cùng nhau, tiến bộ hơn mỗi ngày</p>
-            </div>
-            <button
-              onClick={() => setShowCreateModal(true)}
-              className="bg-white text-blue-600 px-6 py-3 rounded-xl font-bold hover:shadow-xl transition-all duration-300 transform hover:scale-105 flex items-center gap-2"
-            >
-              <Plus className="w-5 h-5" />
-              Tạo nhóm mới
-            </button>
-          </div>
+      <div className="bg-white p-6 rounded-xl shadow-sm border border-blue-100">
+        <h1 className="text-3xl font-bold text-center mb-2 text-gray-800 flex items-center justify-center gap-3">
+          👥 Nhóm Học Tập
+        </h1>
+        <p className="text-center text-gray-600">
+          Học cùng nhau, tiến bộ hơn mỗi ngày
+        </p>
+        <div className="flex justify-center mt-4">
+          <button
+            onClick={() => setShowCreateModal(true)}
+            className="bg-blue-600 text-white px-6 py-3 rounded-xl font-bold hover:bg-blue-700 transition-all duration-300 transform hover:scale-105 flex items-center gap-2 shadow-md"
+          >
+            ➕ Tạo nhóm mới
+          </button>
         </div>
       </div>
 
@@ -138,14 +121,14 @@ const Product7: React.FC = () => {
         <div className="lg:col-span-1">
           <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
             <h2 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-              <Users className="w-6 h-6 text-blue-600" />
+              <span className="text-blue-600">👥</span>
               Danh sách nhóm
             </h2>
 
             <div className="space-y-3 max-h-[600px] overflow-y-auto custom-scrollbar pr-2">
               {groups.length === 0 ? (
                 <div className="text-center py-12 bg-gray-50 rounded-xl">
-                  <Users className="w-16 h-16 text-gray-300 mx-auto mb-3" />
+                  <div className="text-6xl mb-3 text-gray-300">👥</div>
                   <p className="text-gray-600 font-medium">Chưa có nhóm nào</p>
                   <p className="text-sm text-gray-500 mt-1">Hãy tạo nhóm đầu tiên!</p>
                 </div>
@@ -170,7 +153,7 @@ const Product7: React.FC = () => {
                         <div className="flex-1">
                           <h3 className="font-bold text-gray-900 flex items-center gap-2 mb-1">
                             {group.name}
-                            {!group.isPublic && <Lock className="w-3 h-3 text-gray-400" />}
+                            {!group.isPublic && <span className="text-gray-400 text-xs">🔒</span>}
                           </h3>
                           <p className="text-sm text-gray-600 line-clamp-2">{group.description}</p>
                         </div>
@@ -179,7 +162,7 @@ const Product7: React.FC = () => {
                       <div className="flex items-center justify-between mt-3">
                         <div className="flex items-center gap-3 text-sm text-gray-600">
                           <span className="flex items-center gap-1">
-                            <Users className="w-4 h-4" />
+                            <span>👤</span>
                             {group.members.length}
                           </span>
                           <span className="px-2 py-1 bg-blue-100 text-blue-700 rounded-lg text-xs font-bold">
@@ -195,7 +178,7 @@ const Product7: React.FC = () => {
                             }}
                             className="px-3 py-1 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center gap-1"
                           >
-                            <UserPlus className="w-3 h-3" />
+                            <span>➕</span>
                             Tham gia
                           </button>
                         )}
@@ -220,11 +203,11 @@ const Product7: React.FC = () => {
                     <p className="text-gray-600 mb-3">{selectedGroup.description}</p>
                     <div className="flex items-center gap-4 text-sm text-gray-600">
                       <span className="flex items-center gap-1">
-                        <Users className="w-4 h-4 text-blue-600" />
+                        <span className="text-blue-600">👤</span>
                         <span className="font-medium">{selectedGroup.members.length} thành viên</span>
                       </span>
                       <span className="flex items-center gap-1">
-                        <Calendar className="w-4 h-4 text-indigo-600" />
+                        <span className="text-indigo-600">📅</span>
                         <span className="font-medium">{formatDate(selectedGroup.createdAt)}</span>
                       </span>
                       <span className="px-2 py-1 bg-blue-100 text-blue-700 rounded-lg text-xs font-bold">
@@ -238,7 +221,7 @@ const Product7: React.FC = () => {
                       onClick={() => handleLeaveGroup(selectedGroup.id)}
                       className="px-4 py-2 bg-red-500 text-white rounded-xl hover:bg-red-600 transition-colors text-sm font-bold flex items-center gap-2"
                     >
-                      <LogOut className="w-4 h-4" />
+                      <span>🚪</span>
                       Rời nhóm
                     </button>
                   )}
@@ -248,7 +231,7 @@ const Product7: React.FC = () => {
               {/* Members List */}
               <div className="p-6 border-b border-gray-200">
                 <h3 className="font-bold text-gray-900 mb-3 flex items-center gap-2">
-                  <Users className="w-5 h-5 text-blue-600" />
+                  <span className="text-blue-600">👥</span>
                   Thành viên
                 </h3>
                 <div className="flex flex-wrap gap-3">
@@ -278,7 +261,7 @@ const Product7: React.FC = () => {
               <div className="flex-1 flex flex-col min-h-0">
                 <div className="p-6 pb-2">
                   <h3 className="font-bold text-gray-900 flex items-center gap-2">
-                    <MessageCircle className="w-5 h-5 text-indigo-600" />
+                    <span className="text-indigo-600">💬</span>
                     Trò chuyện nhóm
                   </h3>
                 </div>
@@ -286,7 +269,7 @@ const Product7: React.FC = () => {
                 <div className="flex-1 overflow-y-auto px-6 py-4 space-y-3 custom-scrollbar">
                   {selectedGroup.chat.length === 0 ? (
                     <div className="text-center py-12 bg-gray-50 rounded-xl">
-                      <MessageCircle className="w-16 h-16 text-gray-300 mx-auto mb-3" />
+                      <div className="text-6xl mb-3 text-gray-300">💬</div>
                       <p className="text-gray-600 font-medium">Chưa có tin nhắn nào</p>
                       <p className="text-sm text-gray-500 mt-1">Hãy bắt đầu cuộc trò chuyện!</p>
                     </div>
@@ -335,7 +318,7 @@ const Product7: React.FC = () => {
                         disabled={!newMessage.trim()}
                         className="px-6 py-3 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center shadow-md hover:shadow-lg"
                       >
-                        <Send className="w-5 h-5" />
+                        🚀
                       </button>
                     </div>
                   </div>
@@ -346,7 +329,7 @@ const Product7: React.FC = () => {
             <div className="bg-white rounded-2xl shadow-sm border border-gray-200 h-full flex items-center justify-center min-h-[500px]">
               <div className="text-center text-gray-500">
                 <div className="bg-gray-50 w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-6">
-                  <ChevronRight className="w-12 h-12 text-gray-300" />
+                  <span className="text-4xl text-gray-300">👉</span>
                 </div>
                 <p className="text-xl font-medium text-gray-900">Chọn một nhóm để xem chi tiết</p>
                 <p className="text-sm text-gray-500 mt-2">Hoặc tạo nhóm mới để bắt đầu</p>
@@ -361,7 +344,9 @@ const Product7: React.FC = () => {
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full">
             <div className="bg-gradient-to-r from-blue-600 to-indigo-700 p-6 rounded-t-2xl">
-              <h2 className="text-2xl font-bold text-white">Tạo nhóm học tập</h2>
+              <h2 className="text-2xl font-bold text-white flex items-center gap-2">
+                <span>👥</span> Tạo nhóm học tập
+              </h2>
             </div>
 
             <div className="p-6 space-y-5">
