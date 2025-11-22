@@ -73,13 +73,15 @@ router.post('/api/auth/register', async (request, env: Env) => {
 router.post('/api/auth/login', async (request, env: Env) => {
   try {
     const body: any = await request.json();
-    const { username, password } = body;
+    const { username, email, password } = body;
 
-    if (!username || !password) {
-      return badRequestResponse('Username and password are required');
+    const identifier = username || email;
+
+    if (!identifier || !password) {
+      return badRequestResponse('Email/Username and password are required');
     }
 
-    const result = await loginUser(env.DB, username, password);
+    const result = await loginUser(env.DB, identifier, password);
 
     return successResponse(result, 'Login successful');
   } catch (error: any) {

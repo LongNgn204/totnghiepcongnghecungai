@@ -141,11 +141,11 @@ export async function registerUser(db: any, data: {
 }
 
 // Login user
-export async function loginUser(db: any, username: string, password: string) {
-  // Find user by username or email
+export async function loginUser(db: any, identifier: string, password: string) {
+  // Find user by username OR email
   const user = await db.prepare(
     'SELECT * FROM auth_users WHERE username = ? OR email = ?'
-  ).bind(username.toLowerCase(), username.toLowerCase()).first();
+  ).bind(identifier.toLowerCase(), identifier.toLowerCase()).first();
 
   if (!user) {
     throw new Error('Tài khoản không tồn tại');
