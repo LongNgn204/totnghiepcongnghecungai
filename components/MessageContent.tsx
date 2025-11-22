@@ -109,7 +109,7 @@ const formatMarkdown = (text: string): string => {
   html = html.replace(/`([^`]+)`/g, '<code class="bg-gray-200 px-2 py-1 rounded text-sm font-mono text-pink-600">$1</code>');
 
   // Images
-  html = html.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img src="$2" alt="$1" class="max-w-full rounded-lg shadow-lg my-4 border-2 border-gray-200 hover:scale-105 transition-transform cursor-pointer" onclick="window.open(\'$2\', \'_blank\')" />');
+  html = html.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img src="$2" alt="$1" class="max-w-full rounded-xl shadow-sm my-4 border border-gray-100 cursor-pointer" onclick="window.open(\'$2\', \'_blank\')" />');
 
   // Links
   html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" class="text-blue-500 hover:underline font-medium" target="_blank" rel="noopener noreferrer">$1 🔗</a>');

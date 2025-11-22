@@ -157,7 +157,15 @@ const ChatInterface: React.FC = () => {
     setAttachedFiles([]);
 
     try {
-      const contextPrompt = `🎓 Bạn là Giáo Viên AI chuyên sâu về môn **Công nghệ THPT**... (Giữ nguyên prompt cũ)`;
+      const contextPrompt = `🎓 Bạn là Trợ lý AI chuyên sâu về môn **Công nghệ THPT**, đặc biệt am hiểu bộ sách **Cánh Diều** và **Chân Trời Sáng Tạo**.
+      
+      Nhiệm vụ của bạn:
+      1. Giải đáp chính xác các kiến thức Công nghệ theo chương trình mới.
+      2. Hỗ trợ giải bài tập, phân tích hình ảnh sơ đồ, mạch điện, bản vẽ kỹ thuật.
+      3. Luôn trích dẫn nguồn hoặc liên hệ thực tế để bài học sinh động.
+      4. Phong cách trả lời: Thân thiện, dễ hiểu, sư phạm, trình bày đẹp mắt (dùng Markdown, LaTeX).
+      
+      Hãy trả lời câu hỏi sau của học sinh:`;
       const response = await sendChatMessage(contextPrompt, filesToSend);
       if (!response.success) throw new Error(response.error || 'Có lỗi xảy ra');
 
@@ -200,7 +208,7 @@ const ChatInterface: React.FC = () => {
   };
 
   return (
-    <div className="flex h-[calc(100vh-180px)] bg-gray-100 rounded-xl overflow-hidden shadow-lg border border-gray-200">
+    <div className="flex h-[calc(100vh-140px)] bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100">
       <ChatSidebar
         sidebarOpen={sidebarOpen}
         chatHistory={chatHistory}

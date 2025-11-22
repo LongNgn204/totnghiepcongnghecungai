@@ -27,88 +27,102 @@ const MessageList: React.FC<MessageListProps> = ({
 }) => {
   return (
     <div
-      className="flex-1 overflow-y-auto p-6 space-y-6 bg-gray-50"
+      className="flex-1 overflow-y-auto p-4 md:p-8 space-y-8 bg-white"
       onDragOver={onDragOver}
       onDragLeave={onDragLeave}
       onDrop={onDrop}
     >
       {isDragging && (
-        <div className="absolute inset-0 bg-blue-500/20 backdrop-blur-sm z-50 flex items-center justify-center border-4 border-dashed border-blue-500 rounded-lg">
-          <div className="text-center bg-white p-6 rounded-xl shadow-xl">
-            <div className="text-6xl mb-4">📂</div>
-            <p className="text-xl font-bold text-blue-700">Thả file vào đây</p>
+        <div className="absolute inset-0 bg-blue-50/90 z-50 flex items-center justify-center border-4 border-dashed border-blue-400 rounded-lg transition-all">
+          <div className="text-center">
+            <p className="text-2xl font-medium text-blue-600">Thả file vào đây</p>
           </div>
         </div>
       )}
 
       {messages.length === 0 ? (
-        <div className="flex flex-col items-center justify-center h-full text-gray-700">
-          <div className="text-7xl mb-6">💬</div>
-          <h3 className="text-2xl font-bold mb-3">Bắt đầu trò chuyện</h3>
-          <p className="text-center max-w-md text-gray-600 mb-8">
-            Hỏi AI về kiến thức Công nghệ, giải bài tập, hoặc upload file để phân tích.
+        <div className="flex flex-col items-center justify-center h-full text-gray-800">
+          <h3 className="text-4xl font-medium mb-2 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Xin chào, tôi có thể giúp gì?</h3>
+          <p className="text-center max-w-lg text-gray-500 mb-12 text-lg">
+            Hỏi về Công nghệ, giải bài tập, hoặc tải lên hình ảnh để phân tích.
           </p>
-          <div className="grid grid-cols-2 gap-4 w-full max-w-lg">
-            <button onClick={() => onSuggestionClick('Giải thích định luật Ohm?')} className="bg-white p-4 rounded-xl shadow hover:shadow-md text-left border border-gray-200 hover:border-blue-300 transition-all">
-              💡 <span className="font-semibold">Giải thích kiến thức</span>
-            </button>
-            <button onClick={() => onSuggestionClick('Giải bài tập điện xoay chiều?')} className="bg-white p-4 rounded-xl shadow hover:shadow-md text-left border border-gray-200 hover:border-purple-300 transition-all">
-              🧮 <span className="font-semibold">Giải bài tập</span>
-            </button>
-            <button onClick={onFileInputClick} className="bg-white p-4 rounded-xl shadow hover:shadow-md text-left border border-gray-200 hover:border-pink-300 transition-all">
-              🖼️ <span className="font-semibold">Phân tích hình ảnh</span>
-            </button>
-            <button onClick={() => onSuggestionClick('Lộ trình ôn thi THPT?')} className="bg-white p-4 rounded-xl shadow hover:shadow-md text-left border border-gray-200 hover:border-green-300 transition-all">
-              📅 <span className="font-semibold">Tư vấn học tập</span>
-            </button>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-2xl">
+            <SuggestionCard onClick={() => onSuggestionClick('Giải thích định luật Ohm?')} text="Giải thích định luật Ohm" />
+            <SuggestionCard onClick={() => onSuggestionClick('Giải bài tập điện xoay chiều?')} text="Giải bài tập điện xoay chiều" />
+            <SuggestionCard onClick={onFileInputClick} text="Phân tích hình ảnh sơ đồ" />
+            <SuggestionCard onClick={() => onSuggestionClick('Lộ trình ôn thi THPT môn Công nghệ?')} text="Tư vấn lộ trình ôn thi" />
           </div>
         </div>
       ) : (
-        <>
-          {messages.map(message => (
-            <div key={message.id} className={`flex gap-3 ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-              {message.role === 'assistant' && <div className="text-2xl mt-1">🤖</div>}
-              <div className={`max-w-3xl ${message.role === 'user' ? 'bg-blue-600 text-white' : 'bg-white text-gray-900 border border-gray-200'} rounded-2xl px-6 py-4 shadow-md`}>
+        <div className="max-w-4xl mx-auto space-y-8">
+          {messages.map((message) => (
+            <div key={message.id} className={`flex flex-col ${message.role === 'user' ? 'items-end' : 'items-start'}`}>
+              <div className={`max-w-[90%] md:max-w-[80%] ${message.role === 'user' ? 'bg-[#f0f4f9] rounded-3xl px-6 py-4 text-gray-800' : 'text-gray-900 px-0 py-0'}`}>
                 {message.role === 'assistant' && (
-                  <div className="flex items-center justify-between mb-2 pb-2 border-b border-gray-100">
-                    <span className="text-sm font-bold text-blue-600">AI Assistant</span>
-                    <button onClick={() => navigator.clipboard.writeText(message.content)} className="text-gray-400 hover:text-blue-500" title="Copy">📋</button>
+                  <div className="flex items-center gap-2 mb-3">
+                    <div className="w-6 h-6 rounded-full bg-gradient-to-tr from-blue-500 to-red-500 animate-pulse" />
+                    <span className="font-medium text-sm text-gray-600">Gemini</span>
                   </div>
                 )}
-                
+
                 <MessageContent content={message.content} />
 
-                {message.attachments?.map((file, idx) => (
-                  <div key={idx} className="mt-2">
-                    {file.preview ? (
-                      <img src={file.preview} alt={file.name} className="max-w-xs rounded-lg border border-gray-300 cursor-pointer" onClick={() => window.open(file.preview, '_blank')} />
-                    ) : (
-                      <div className="flex items-center gap-2 bg-gray-100 p-2 rounded text-sm text-gray-800">
-                        📄 {file.name}
+                {message.attachments && message.attachments.length > 0 && (
+                  <div className="mt-4 flex flex-wrap gap-3">
+                    {message.attachments.map((file, idx) => (
+                      <div key={idx} className="group relative">
+                        {file.preview ? (
+                          <img
+                            src={file.preview}
+                            alt={file.name}
+                            className="max-w-[300px] max-h-[300px] rounded-xl border border-gray-200 cursor-pointer hover:shadow-lg transition-shadow object-contain bg-white"
+                            onClick={() => window.open(file.preview, '_blank')}
+                          />
+                        ) : (
+                          <div className="flex items-center gap-3 bg-gray-100 px-4 py-3 rounded-xl border border-gray-200">
+                            <div className="w-8 h-8 bg-gray-200 rounded flex items-center justify-center text-gray-500 font-bold text-xs">FILE</div>
+                            <span className="text-sm font-medium text-gray-700">{file.name}</span>
+                          </div>
+                        )}
                       </div>
-                    )}
+                    ))}
                   </div>
-                ))}
-                <div className={`mt-2 text-xs opacity-60 text-right ${message.role === 'user' ? 'text-blue-100' : 'text-gray-500'}`}>
-                  {new Date(message.timestamp).toLocaleTimeString('vi-VN')}
-                </div>
+                )}
+
+                {message.role === 'assistant' && (
+                  <div className="mt-3 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <button onClick={() => navigator.clipboard.writeText(message.content)} className="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-colors" title="Sao chép">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                    </button>
+                  </div>
+                )}
               </div>
-              {message.role === 'user' && <div className="text-2xl mt-1">👤</div>}
             </div>
           ))}
           {loading && (
-            <div className="flex gap-3">
-              <div className="text-2xl">🤖</div>
-              <div className="bg-white rounded-2xl px-6 py-4 shadow-md border border-gray-200">
-                <span className="text-gray-500 font-medium">Đang suy nghĩ...</span>
+            <div className="flex flex-col items-start animate-pulse">
+              <div className="flex items-center gap-2 mb-3">
+                <div className="w-6 h-6 rounded-full bg-gradient-to-tr from-blue-500 to-red-500" />
+                <span className="font-medium text-sm text-gray-600">Gemini</span>
               </div>
+              <div className="h-4 w-32 bg-gray-200 rounded mb-2"></div>
+              <div className="h-4 w-64 bg-gray-200 rounded"></div>
             </div>
           )}
           <div ref={messagesEndRef} />
-        </>
+        </div>
       )}
     </div>
   );
 };
+
+const SuggestionCard: React.FC<{ onClick: () => void; text: string }> = ({ onClick, text }) => (
+  <button
+    onClick={onClick}
+    className="p-4 bg-gray-50 hover:bg-gray-100 rounded-xl text-left transition-colors text-gray-700 font-medium border border-transparent hover:border-gray-200"
+  >
+    {text}
+  </button>
+);
 
 export default MessageList;

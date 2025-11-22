@@ -7,7 +7,7 @@ export interface GeminiResponse {
 }
 
 const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
-const API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent';
+const API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-3.0-pro:generateContent';
 
 /**
  * Gọi Gemini API để tạo nội dung
@@ -115,7 +115,7 @@ export async function fileToGenerativePart(file: File) {
  * Gửi chat message với files tới Gemini
  */
 export async function sendChatMessage(
-  message: string, 
+  message: string,
   files?: File[]
 ): Promise<GeminiResponse> {
   if (!API_KEY || API_KEY === 'your_gemini_api_key_here') {
@@ -129,7 +129,7 @@ export async function sendChatMessage(
   try {
     // Chuẩn bị parts cho request
     const parts: any[] = [{ text: message }];
-    
+
     // Thêm files nếu có
     if (files && files.length > 0) {
       for (const file of files) {
