@@ -3,7 +3,8 @@ import React, { useState } from 'react';
 interface Book {
     id: string;
     title: string;
-    cover: string;
+    shortTitle: string;
+    color: string;
     link: string;
     grade: number;
     publisher: string;
@@ -14,7 +15,8 @@ const booksData: Book[] = [
     {
         id: '10-1',
         title: "Công nghệ 10 - Công nghệ trồng trọt",
-        cover: "https://www.hoc10.vn/storage/images/2022/03/29/cong-nghe-10-cong-nghe-trong-trot-bia-sach-624268e390978.png",
+        shortTitle: "CNT",
+        color: "bg-green-600",
         link: "https://www.hoc10.vn/doc-sach/cong-nghe-10-cong-nghe-trong-trot/1/162/0/",
         grade: 10,
         publisher: "Cánh Diều"
@@ -22,7 +24,8 @@ const booksData: Book[] = [
     {
         id: '10-2',
         title: "Công nghệ 10 - Thiết kế và Công nghệ",
-        cover: "https://www.hoc10.vn/storage/images/2022/03/29/cong-nghe-10-thiet-ke-va-cong-nghe-bia-sach-624268f742323.png",
+        shortTitle: "TKC",
+        color: "bg-orange-500",
         link: "https://www.hoc10.vn/doc-sach/cong-nghe-10-thiet-ke-va-cong-nghe/1/163/0/",
         grade: 10,
         publisher: "Cánh Diều"
@@ -30,49 +33,55 @@ const booksData: Book[] = [
     {
         id: '10-3',
         title: "Chuyên đề học tập Công nghệ 10 - Công nghệ trồng trọt",
-        cover: "https://www.hoc10.vn/storage/images/2022/03/29/chuyen-de-hoc-tap-cong-nghe-10-cong-nghe-trong-trot-bia-sach-6242690a2a472.png",
-        link: "https://www.hoc10.vn/doc-sach/chuyen-de-hoc-tap-cong-nghe-10-cong-nghe-trong-trot/1/164/0/",
+        shortTitle: "CĐT",
+        color: "bg-emerald-600",
+        link: "https://www.hoc10.vn/doc-sach/chuyen-de-hoc-tap-cong-nghe-10-(cong-nghe-trong-trot)/1/203/0/",
         grade: 10,
         publisher: "Cánh Diều"
     },
     {
         id: '10-4',
         title: "Chuyên đề học tập Công nghệ 10 - Thiết kế và Công nghệ",
-        cover: "https://www.hoc10.vn/storage/images/2022/03/29/chuyen-de-hoc-tap-cong-nghe-10-thiet-ke-va-cong-nghe-bia-sach-6242691e20436.png",
-        link: "https://www.hoc10.vn/doc-sach/chuyen-de-hoc-tap-cong-nghe-10-thiet-ke-va-cong-nghe/1/165/0/",
+        shortTitle: "CĐK",
+        color: "bg-amber-500",
+        link: "https://www.hoc10.vn/doc-sach/chuyen-de-hoc-tap-cong-nghe-10-(thiet-ke-va-cong-nghe)/1/204/0/",
         grade: 10,
         publisher: "Cánh Diều"
     },
     // Lớp 11
     {
         id: '11-1',
-        title: "Công nghệ 11 - Công nghệ cơ khí",
-        cover: "https://www.hoc10.vn/storage/images/2023/03/23/cong-nghe-11-cong-nghe-co-khi-bia-sach-641bce7670731.png",
-        link: "https://www.hoc10.vn/doc-sach/cong-nghe-11-cong-nghe-co-khi/1/166/0/",
+        title: "Công nghệ 11 - Công nghệ chăn nuôi",
+        shortTitle: "CN",
+        color: "bg-yellow-600",
+        link: "https://www.hoc10.vn/doc-sach/cong-nghe-11-cong-nghe-chan-nuoi/1/383/0/",
         grade: 11,
         publisher: "Cánh Diều"
     },
     {
         id: '11-2',
-        title: "Công nghệ 11 - Công nghệ chăn nuôi",
-        cover: "https://www.hoc10.vn/storage/images/2023/03/23/cong-nghe-11-cong-nghe-chan-nuoi-bia-sach-641bce8b7d41f.png",
-        link: "https://www.hoc10.vn/doc-sach/cong-nghe-11-cong-nghe-chan-nuoi/1/167/0/",
+        title: "Công nghệ 11 - Công nghệ cơ khí",
+        shortTitle: "CK",
+        color: "bg-blue-600",
+        link: "https://www.hoc10.vn/doc-sach/cong-nghe-11-cong-nghe-co-khi/1/384/0/",
         grade: 11,
         publisher: "Cánh Diều"
     },
     {
         id: '11-3',
-        title: "Chuyên đề học tập Công nghệ 11 - Công nghệ cơ khí",
-        cover: "https://www.hoc10.vn/storage/images/2023/03/23/chuyen-de-hoc-tap-cong-nghe-11-cong-nghe-co-khi-bia-sach-641bcea06322e.png",
-        link: "https://www.hoc10.vn/doc-sach/chuyen-de-hoc-tap-cong-nghe-11-cong-nghe-co-khi/1/168/0/",
+        title: "Chuyên đề học tập Công nghệ 11 - Công nghệ chăn nuôi",
+        shortTitle: "CĐN",
+        color: "bg-amber-600",
+        link: "https://www.hoc10.vn/doc-sach/cd-cong-nghe-11-chan-nuoi/1/404/0/",
         grade: 11,
         publisher: "Cánh Diều"
     },
     {
         id: '11-4',
-        title: "Chuyên đề học tập Công nghệ 11 - Công nghệ chăn nuôi",
-        cover: "https://www.hoc10.vn/storage/images/2023/03/23/chuyen-de-hoc-tap-cong-nghe-11-cong-nghe-chan-nuoi-bia-sach-641bceb3c3755.png",
-        link: "https://www.hoc10.vn/doc-sach/chuyen-de-hoc-tap-cong-nghe-11-cong-nghe-chan-nuoi/1/169/0/",
+        title: "Chuyên đề học tập Công nghệ 11 - Công nghệ cơ khí",
+        shortTitle: "CĐC",
+        color: "bg-indigo-600",
+        link: "https://www.hoc10.vn/doc-sach/cd-cong-nghe-11-co-khi/1/405/0/",
         grade: 11,
         publisher: "Cánh Diều"
     },
@@ -80,32 +89,36 @@ const booksData: Book[] = [
     {
         id: '12-1',
         title: "Công nghệ 12 - Công nghệ điện - điện tử",
-        cover: "https://www.hoc10.vn/storage/images/2024/03/18/cong-nghe-12-cong-nghe-dien-dien-tu-bia-sach-65f7c32b509f6.png",
-        link: "https://www.hoc10.vn/doc-sach/cong-nghe-12-cong-nghe-dien-dien-tu/1/170/0/",
+        shortTitle: "ĐĐT",
+        color: "bg-red-600",
+        link: "https://www.hoc10.vn/doc-sach/cong-nghe-12-cn-dien,-dien-tu/1/735/0/",
         grade: 12,
         publisher: "Cánh Diều"
     },
     {
         id: '12-2',
-        title: "Công nghệ 12 - Công nghệ cơ khí", // Assuming title
-        cover: "https://www.hoc10.vn/storage/images/2024/03/18/cong-nghe-12-cong-nghe-co-khi-bia-sach-65f7c34b68146.png",
-        link: "https://www.hoc10.vn/doc-sach/cong-nghe-12-cong-nghe-co-khi/1/171/0/", // Guessing ID sequence
+        title: "Công nghệ 12 - Lâm nghiệp - Thủy sản",
+        shortTitle: "LN-TS",
+        color: "bg-teal-600",
+        link: "https://www.hoc10.vn/doc-sach/cong-nghe-12-cn-lam-nghiep,-thuy-san/1/736/0/",
         grade: 12,
         publisher: "Cánh Diều"
     },
     {
         id: '12-3',
         title: "Chuyên đề học tập Công nghệ 12 - Công nghệ điện - điện tử",
-        cover: "https://www.hoc10.vn/storage/images/2024/03/18/chuyen-de-hoc-tap-cong-nghe-12-cong-nghe-dien-dien-tu-bia-sach-65f7c374665a3.png",
-        link: "https://www.hoc10.vn/doc-sach/chuyen-de-hoc-tap-cong-nghe-12-cong-nghe-dien-dien-tu/1/172/0/",
+        shortTitle: "CĐ-ĐĐT",
+        color: "bg-rose-600",
+        link: "https://www.hoc10.vn/doc-sach/chuyen-de-hoc-tap-cong-nghe-12-cn-dien,-dien-tu/1/747/0/",
         grade: 12,
         publisher: "Cánh Diều"
     },
     {
         id: '12-4',
-        title: "Chuyên đề học tập Công nghệ 12 - Công nghệ cơ khí", // Assuming title
-        cover: "https://www.hoc10.vn/storage/images/2024/03/18/chuyen-de-hoc-tap-cong-nghe-12-cong-nghe-co-khi-bia-sach-65f7c38c9c049.png",
-        link: "https://www.hoc10.vn/doc-sach/chuyen-de-hoc-tap-cong-nghe-12-cong-nghe-co-khi/1/173/0/",
+        title: "Chuyên đề học tập Công nghệ 12 - Lâm nghiệp - Thủy sản",
+        shortTitle: "CĐ-LN",
+        color: "bg-emerald-600",
+        link: "https://www.hoc10.vn/doc-sach/chuyen-de-hoc-tap-cong-nghe-12-cn-lam-nghiep,-thuy-san/1/748/0/",
         grade: 12,
         publisher: "Cánh Diều"
     }
@@ -158,44 +171,44 @@ const Product8: React.FC = () => {
                 ))}
             </div>
 
-            {/* Bookshelf Grid */}
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 px-4">
+            {/* Bookshelf List */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 px-4 max-w-6xl mx-auto">
                 {filteredBooks.map(book => (
                     <div
                         key={book.id}
-                        className="group relative bg-white rounded-r-lg rounded-l-sm shadow-md hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 perspective-1000"
+                        className="group bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100 p-4 flex items-center gap-4"
                     >
-                        {/* Book Spine Effect */}
-                        <div className="absolute left-0 top-0 bottom-0 w-3 bg-gradient-to-r from-gray-800 to-gray-600 rounded-l-sm z-10"></div>
+                        {/* Icon/Short Title */}
+                        <div className={`w-16 h-16 flex-shrink-0 rounded-lg ${book.color} flex items-center justify-center shadow-inner`}>
+                            <span className="text-xl font-bold text-white tracking-tight">
+                                {book.shortTitle}
+                            </span>
+                        </div>
 
-                        <div className="p-4 pl-6 h-full flex flex-col">
-                            <div className="relative aspect-[3/4] mb-4 overflow-hidden rounded-lg shadow-inner">
-                                <img
-                                    src={book.cover}
-                                    alt={book.title}
-                                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                                />
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center p-4">
-                                    <button
-                                        onClick={() => setPreviewBook(book)}
-                                        className="bg-white text-amber-700 font-bold py-2 px-4 rounded-full shadow-lg hover:bg-amber-50 transform hover:scale-105 transition-all flex items-center gap-2"
-                                    >
-                                        <span>📖</span> Đọc ngay
-                                    </button>
-                                </div>
-                            </div>
-
-                            <h3 className="font-bold text-gray-800 line-clamp-2 mb-1 flex-grow" title={book.title}>
+                        {/* Content */}
+                        <div className="flex-grow min-w-0">
+                            <h3 className="font-bold text-gray-800 text-lg mb-1 truncate" title={book.title}>
                                 {book.title}
                             </h3>
-                            <div className="flex justify-between items-center mt-2">
-                                <span className="text-xs font-semibold bg-amber-100 text-amber-800 px-2 py-1 rounded">
+                            <div className="flex items-center gap-2 text-sm">
+                                <span className="font-semibold bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full text-xs">
                                     {book.publisher}
                                 </span>
-                                <span className="text-xs text-gray-500 font-medium">
-                                    Lớp {book.grade}
+                                <span className="text-gray-500 font-medium flex items-center gap-1 text-xs">
+                                    <span>🎓</span> Lớp {book.grade}
                                 </span>
                             </div>
+                        </div>
+
+                        {/* Action Button */}
+                        <div className="flex-shrink-0">
+                            <button
+                                onClick={() => setPreviewBook(book)}
+                                className="bg-amber-600 text-white font-bold py-2 px-4 rounded-lg shadow hover:bg-amber-700 hover:shadow-lg transform hover:-translate-y-0.5 transition-all flex items-center gap-2 text-sm"
+                            >
+                                <span>📖</span>
+                                <span className="hidden sm:inline">Đọc</span>
+                            </button>
                         </div>
                     </div>
                 ))}
