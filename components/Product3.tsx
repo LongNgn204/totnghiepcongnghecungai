@@ -535,217 +535,217 @@ ${difficulty === 'Rất khó' ? '- Tập trung vào vận dụng cao.\n- Các b�
                     </button>
                     <button
                       onClick={() => {
-                        const resultText = \`
+                        const resultText = `
                     KẾT QUẢ THI THỬ THPT QUỐC GIA - MÔN CÔNG NGHỆ
-                    \${examTitle}
+                    ${examTitle}
 
-                    Số câu đúng: \${score}/\${questions.length}
-                    Điểm: \${((score / questions.length) * 10).toFixed(1)}/10
-                    Thời gian làm bài: \${timeSpent} phút
+                    Số câu đúng: ${score}/${questions.length}
+                    Điểm: ${((score / questions.length) * 10).toFixed(1)}/10
+                    Thời gian làm bài: ${timeSpent} phút
 
                     CHI TIẾT:
-                    \${questions.map((q, idx) => {
-                      const userAns = userAnswers[q.id];
-                      const isCorrect = userAns === q.answer;
-                      return \`Câu \${q.id}: \${isCorrect ? '✓ ĐÚNG' : '✗ SAI'} - Đáp án: \${q.answer}\`;
-                        }).join('\\n')}
-                    \`;
-                    const blob = new Blob([resultText], {type: 'text/plain' });
-                    const url = URL.createObjectURL(blob);
-                    const a = document.createElement('a');
-                    a.href = url;
-                    a.download = \`KetQua_ThiThu_\${Date.now()}.txt\`;
-                    a.click();
+                    ${questions.map((q, idx) => {
+                          const userAns = userAnswers[q.id];
+                          const isCorrect = userAns === q.answer;
+                          return `Câu ${q.id}: ${isCorrect ? '✓ ĐÚNG' : '✗ SAI'} - Đáp án: ${q.answer}`;
+                        }).join('\n')}
+                    `;
+                        const blob = new Blob([resultText], { type: 'text/plain' });
+                        const url = URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = `KetQua_ThiThu_${Date.now()}.txt`;
+                        a.click();
                       }}
-                    className="bg-indigo-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-indigo-700 transition-all flex items-center gap-2"
+                      className="bg-indigo-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-indigo-700 transition-all flex items-center gap-2"
                     >
-                    📥 Tải kết quả
-                  </button>
-              </>
+                      📥 Tải kết quả
+                    </button>
+                  </>
                 )}
-              <button
-                onClick={handleResetAll}
-                className="bg-gray-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-gray-700 transition-all flex items-center gap-2"
-              >
-                ➕ Tạo đề mới
-              </button>
-            </div>
+                <button
+                  onClick={handleResetAll}
+                  className="bg-gray-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-gray-700 transition-all flex items-center gap-2"
+                >
+                  ➕ Tạo đề mới
+                </button>
+              </div>
             </div>
           )}
 
-      {/* Hướng dẫn */}
-      {!hasGenerated && (
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
-          <h3 className="text-xl font-semibold mb-4 text-gray-800 flex items-center gap-2">
-            ℹ️ Lợi ích của đề thi mô phỏng
-          </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="flex items-start space-x-3">
-              <span className="text-green-500 mt-1">✅</span>
-              <div>
-                <p className="font-semibold text-gray-800">Làm quen format đề thi</p>
-                <p className="text-sm text-gray-600">Cấu trúc giống 95% đề thi thật của Bộ GD&ĐT</p>
-              </div>
-            </div>
-            <div className="flex items-start space-x-3">
-              <span className="text-blue-500 mt-1">⏱️</span>
-              <div>
-                <p className="font-semibold text-gray-800">Rèn kỹ năng quản lý thời gian</p>
-                <p className="text-sm text-gray-600">50 phút cho 24 câu, trung bình 2 phút/câu</p>
-              </div>
-            </div>
-            <div className="flex items-start space-x-3">
-              <span className="text-purple-500 mt-1">📊</span>
-              <div>
-                <p className="font-semibold text-gray-800">Ôn tập kiến thức toàn diện</p>
-                <p className="text-sm text-gray-600">Bao gồm cả 3 lớp 10, 11, 12 theo SGK KNTT & Cánh Diều</p>
-              </div>
-            </div>
-            <div className="flex items-start space-x-3">
-              <span className="text-red-500 mt-1">🏆</span>
-              <div>
-                <p className="font-semibold text-gray-800">Đánh giá năng lực thực tế</p>
-                <p className="text-sm text-gray-600">Xem kết quả ngay, biết điểm mạnh/yếu để cải thiện</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-    </>
-  )
-}
-
-{/* History Tab */ }
-{
-  activeTab === 'history' && (
-    <div className="space-y-6">
-      {/* Overall Statistics */}
-      {examHistory.length > 0 && (
-        <div className="bg-white rounded-xl shadow-sm border border-blue-100 p-6">
-          <h3 className="text-xl font-bold mb-4 flex items-center gap-2 text-gray-800">
-            📊 Thống kê tổng quan
-          </h3>
-          <div className="grid grid-cols-4 gap-4">
-            <div className="bg-blue-50 rounded-xl p-4 text-center border border-blue-100">
-              <div className="text-3xl font-bold text-blue-600">{examHistory.length}</div>
-              <div className="text-sm text-gray-600 mt-1">Đề đã làm</div>
-            </div>
-            <div className="bg-green-50 rounded-xl p-4 text-center border border-green-100">
-              <div className="text-3xl font-bold text-green-600">
-                {(examHistory.reduce((sum, e) => sum + e.percentage, 0) / examHistory.length).toFixed(1)}%
-              </div>
-              <div className="text-sm text-gray-600 mt-1">Điểm TB</div>
-            </div>
-            <div className="bg-purple-50 rounded-xl p-4 text-center border border-purple-100">
-              <div className="text-3xl font-bold text-purple-600">
-                {Math.max(...examHistory.map(e => e.percentage)).toFixed(1)}%
-              </div>
-              <div className="text-sm text-gray-600 mt-1">Cao nhất</div>
-            </div>
-            <div className="bg-orange-50 rounded-xl p-4 text-center border border-orange-100">
-              <div className="text-3xl font-bold text-orange-600">
-                {examHistory.reduce((sum, e) => sum + e.timeSpent, 0)}
-              </div>
-              <div className="text-sm text-gray-600 mt-1">Tổng phút</div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-        <h3 className="text-2xl font-bold mb-6 flex items-center gap-2 text-gray-800">
-          📜 Lịch sử làm bài
-        </h3>
-
-        {examHistory.length === 0 ? (
-          <div className="text-center py-12">
-            <div className="flex justify-center mb-4">
-              <span className="text-6xl">📜</span>
-            </div>
-            <p className="text-gray-600 text-lg">Chưa có lịch sử thi</p>
-            <p className="text-gray-500 text-sm mt-2">Tạo và làm đề thi để xem lịch sử tại đây</p>
-            <button
-              onClick={() => setActiveTab('create')}
-              className="mt-4 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-all flex items-center mx-auto gap-2"
-            >
-              ✨ Tạo đề thi ngay
-            </button>
-          </div>
-        ) : (
-          <div className="grid gap-4">
-            {examHistory.map((exam, idx) => (
-              <div
-                key={exam.id}
-                className="border border-gray-200 rounded-xl p-5 hover:shadow-md transition-all hover:border-blue-300"
-              >
-                <div className="flex items-start justify-between mb-4">
-                  <div className="flex-1">
-                    <h4 className="font-bold text-lg text-gray-800 mb-2">{exam.examTitle}</h4>
-                    <div className="flex items-center gap-4 text-sm text-gray-600 mb-3">
-                      <span className="flex items-center gap-1">
-                        📅 {new Date(exam.createdAt).toLocaleString('vi-VN')}
-                      </span>
-                      <span className="flex items-center gap-1">
-                        ⏱️ {exam.timeSpent} phút
-                      </span>
-                    </div>
-
-                    {/* Progress Bar */}
-                    <div className="mb-3">
-                      <div className="flex justify-between text-xs mb-1">
-                        <span className="text-gray-600">Độ chính xác</span>
-                        <span className={`font-bold ${exam.percentage >= 80 ? 'text-green-600' :
-                          exam.percentage >= 50 ? 'text-yellow-600' : 'text-red-600'
-                          }`}>
-                          {exam.score}/{exam.totalQuestions} ({exam.percentage.toFixed(1)}%)
-                        </span>
-                      </div>
-                      <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
-                        <div
-                          className={`h-full rounded-full transition-all duration-1000 ${exam.percentage >= 80 ? 'bg-green-500' :
-                            exam.percentage >= 50 ? 'bg-yellow-500' :
-                              'bg-red-500'
-                            }`}
-                          style={{ width: `${exam.percentage}%` }}
-                        ></div>
-                      </div>
-                    </div>
+          {/* Hướng dẫn */}
+          {!hasGenerated && (
+            <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+              <h3 className="text-xl font-semibold mb-4 text-gray-800 flex items-center gap-2">
+                ℹ️ Lợi ích của đề thi mô phỏng
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="flex items-start space-x-3">
+                  <span className="text-green-500 mt-1">✅</span>
+                  <div>
+                    <p className="font-semibold text-gray-800">Làm quen format đề thi</p>
+                    <p className="text-sm text-gray-600">Cấu trúc giống 95% đề thi thật của Bộ GD&ĐT</p>
                   </div>
-                  <div className="flex flex-col gap-2 ml-4">
-                    <button
-                      onClick={() => setSelectedExam(exam)}
-                      className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-                      title="Xem chi tiết"
-                    >
-                      👁️
-                    </button>
-                    <button
-                      onClick={() => handleDeleteExam(exam.id)}
-                      className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                      title="Xóa"
-                    >
-                      🗑️
-                    </button>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <span className="text-blue-500 mt-1">⏱️</span>
+                  <div>
+                    <p className="font-semibold text-gray-800">Rèn kỹ năng quản lý thời gian</p>
+                    <p className="text-sm text-gray-600">50 phút cho 24 câu, trung bình 2 phút/câu</p>
+                  </div>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <span className="text-purple-500 mt-1">📊</span>
+                  <div>
+                    <p className="font-semibold text-gray-800">Ôn tập kiến thức toàn diện</p>
+                    <p className="text-sm text-gray-600">Bao gồm cả 3 lớp 10, 11, 12 theo SGK KNTT & Cánh Diều</p>
+                  </div>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <span className="text-red-500 mt-1">🏆</span>
+                  <div>
+                    <p className="font-semibold text-gray-800">Đánh giá năng lực thực tế</p>
+                    <p className="text-sm text-gray-600">Xem kết quả ngay, biết điểm mạnh/yếu để cải thiện</p>
                   </div>
                 </div>
               </div>
-            ))}
-          </div>
-        )}
-      </div>
-    </div>
-  )
-}
+            </div>
+          )}
+        </>
+      )
+      }
 
-{/* Review Modal */ }
-{
-  selectedExam && (
-    <ExamReviewModal
-      exam={selectedExam}
-      onClose={() => setSelectedExam(null)}
-    />
-  )
-}
+      {/* History Tab */}
+      {
+        activeTab === 'history' && (
+          <div className="space-y-6">
+            {/* Overall Statistics */}
+            {examHistory.length > 0 && (
+              <div className="bg-white rounded-xl shadow-sm border border-blue-100 p-6">
+                <h3 className="text-xl font-bold mb-4 flex items-center gap-2 text-gray-800">
+                  📊 Thống kê tổng quan
+                </h3>
+                <div className="grid grid-cols-4 gap-4">
+                  <div className="bg-blue-50 rounded-xl p-4 text-center border border-blue-100">
+                    <div className="text-3xl font-bold text-blue-600">{examHistory.length}</div>
+                    <div className="text-sm text-gray-600 mt-1">Đề đã làm</div>
+                  </div>
+                  <div className="bg-green-50 rounded-xl p-4 text-center border border-green-100">
+                    <div className="text-3xl font-bold text-green-600">
+                      {(examHistory.reduce((sum, e) => sum + e.percentage, 0) / examHistory.length).toFixed(1)}%
+                    </div>
+                    <div className="text-sm text-gray-600 mt-1">Điểm TB</div>
+                  </div>
+                  <div className="bg-purple-50 rounded-xl p-4 text-center border border-purple-100">
+                    <div className="text-3xl font-bold text-purple-600">
+                      {Math.max(...examHistory.map(e => e.percentage)).toFixed(1)}%
+                    </div>
+                    <div className="text-sm text-gray-600 mt-1">Cao nhất</div>
+                  </div>
+                  <div className="bg-orange-50 rounded-xl p-4 text-center border border-orange-100">
+                    <div className="text-3xl font-bold text-orange-600">
+                      {examHistory.reduce((sum, e) => sum + e.timeSpent, 0)}
+                    </div>
+                    <div className="text-sm text-gray-600 mt-1">Tổng phút</div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+              <h3 className="text-2xl font-bold mb-6 flex items-center gap-2 text-gray-800">
+                📜 Lịch sử làm bài
+              </h3>
+
+              {examHistory.length === 0 ? (
+                <div className="text-center py-12">
+                  <div className="flex justify-center mb-4">
+                    <span className="text-6xl">📜</span>
+                  </div>
+                  <p className="text-gray-600 text-lg">Chưa có lịch sử thi</p>
+                  <p className="text-gray-500 text-sm mt-2">Tạo và làm đề thi để xem lịch sử tại đây</p>
+                  <button
+                    onClick={() => setActiveTab('create')}
+                    className="mt-4 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-all flex items-center mx-auto gap-2"
+                  >
+                    ✨ Tạo đề thi ngay
+                  </button>
+                </div>
+              ) : (
+                <div className="grid gap-4">
+                  {examHistory.map((exam, idx) => (
+                    <div
+                      key={exam.id}
+                      className="border border-gray-200 rounded-xl p-5 hover:shadow-md transition-all hover:border-blue-300"
+                    >
+                      <div className="flex items-start justify-between mb-4">
+                        <div className="flex-1">
+                          <h4 className="font-bold text-lg text-gray-800 mb-2">{exam.examTitle}</h4>
+                          <div className="flex items-center gap-4 text-sm text-gray-600 mb-3">
+                            <span className="flex items-center gap-1">
+                              📅 {new Date(exam.createdAt).toLocaleString('vi-VN')}
+                            </span>
+                            <span className="flex items-center gap-1">
+                              ⏱️ {exam.timeSpent} phút
+                            </span>
+                          </div>
+
+                          {/* Progress Bar */}
+                          <div className="mb-3">
+                            <div className="flex justify-between text-xs mb-1">
+                              <span className="text-gray-600">Độ chính xác</span>
+                              <span className={`font-bold ${exam.percentage >= 80 ? 'text-green-600' :
+                                exam.percentage >= 50 ? 'text-yellow-600' : 'text-red-600'
+                                }`}>
+                                {exam.score}/{exam.totalQuestions} ({exam.percentage.toFixed(1)}%)
+                              </span>
+                            </div>
+                            <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+                              <div
+                                className={`h-full rounded-full transition-all duration-1000 ${exam.percentage >= 80 ? 'bg-green-500' :
+                                  exam.percentage >= 50 ? 'bg-yellow-500' :
+                                    'bg-red-500'
+                                  }`}
+                                style={{ width: `${exam.percentage}%` }}
+                              ></div>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="flex flex-col gap-2 ml-4">
+                          <button
+                            onClick={() => setSelectedExam(exam)}
+                            className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                            title="Xem chi tiết"
+                          >
+                            👁️
+                          </button>
+                          <button
+                            onClick={() => handleDeleteExam(exam.id)}
+                            className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                            title="Xóa"
+                          >
+                            🗑️
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        )
+      }
+
+      {/* Review Modal */}
+      {
+        selectedExam && (
+          <ExamReviewModal
+            exam={selectedExam}
+            onClose={() => setSelectedExam(null)}
+          />
+        )
+      }
     </div >
   );
 };
