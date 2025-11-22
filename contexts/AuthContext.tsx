@@ -72,12 +72,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         body: JSON.stringify({ email, password, displayName })
       });
 
-      const data = await response.json();
+      const result = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || 'Đăng ký thất bại');
+        throw new Error(result.error || 'Đăng ký thất bại');
       }
 
+      // Backend returns: { success: true, data: { user, token }, message }
+      const data = result.data || result;
+      
       // Validate response data
       if (!data.user || !data.token) {
         throw new Error('Dữ liệu đăng ký không hợp lệ');
@@ -110,11 +113,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         body: JSON.stringify(payload)
       });
 
-      const data = await response.json();
+      const result = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || 'Đăng nhập thất bại');
+        throw new Error(result.error || 'Đăng nhập thất bại');
       }
+
+      // Backend returns: { success: true, data: { user, token }, message }
+      const data = result.data || result;
 
       // Validate response data
       if (!data.user || !data.token) {
