@@ -6,13 +6,19 @@ export interface GeminiResponse {
   error?: string;
 }
 
+export const AVAILABLE_MODELS = [
+  { id: 'gemini-1.5-pro', name: 'Gemini 1.5 Pro (Recommended)', description: 'Mô hình mạnh mẽ nhất, tốt cho logic phức tạp' },
+  { id: 'gemini-1.5-flash', name: 'Gemini 1.5 Flash', description: 'Phản hồi nhanh, tốt cho tác vụ đơn giản' },
+  { id: 'gemini-1.0-pro', name: 'Gemini 1.0 Pro', description: 'Phiên bản ổn định' },
+];
+
 const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
-const API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-pro:generateContent';
+const BASE_URL = 'https://generativelanguage.googleapis.com/v1beta/models';
 
 /**
  * Gọi Gemini API để tạo nội dung
  */
-export async function generateContent(prompt: string): Promise<GeminiResponse> {
+export async function generateContent(prompt: string, modelId: string = 'gemini-1.5-pro'): Promise<GeminiResponse> {
   if (!API_KEY || API_KEY === 'your_gemini_api_key_here') {
     return {
       text: '',
@@ -22,7 +28,7 @@ export async function generateContent(prompt: string): Promise<GeminiResponse> {
   }
 
   try {
-    const response = await fetch(`${API_URL}?key=${API_KEY}`, {
+    const response = await fetch(`${BASE_URL}/${modelId}:generateContent?key=${API_KEY}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -116,7 +122,8 @@ export async function fileToGenerativePart(file: File) {
  */
 export async function sendChatMessage(
   message: string,
-  files?: File[]
+  files?: File[],
+  modelId: string = 'gemini-1.5-pro'
 ): Promise<GeminiResponse> {
   if (!API_KEY || API_KEY === 'your_gemini_api_key_here') {
     return {
@@ -138,7 +145,7 @@ export async function sendChatMessage(
       }
     }
 
-    const response = await fetch(`${API_URL}?key=${API_KEY}`, {
+    const response = await fetch(`${BASE_URL}/${modelId}:generateContent?key=${API_KEY}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
