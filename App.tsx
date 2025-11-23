@@ -22,6 +22,8 @@ import { Link } from 'react-router-dom';
 
 // Lazy load components
 const Home = React.lazy(() => import('./components/Home'));
+const LandingPage = React.lazy(() => import('./components/LandingPage'));
+const AuthPage = React.lazy(() => import('./components/auth/AuthPage'));
 const Product1 = React.lazy(() => import('./components/Product1'));
 const Product2 = React.lazy(() => import('./components/Product2'));
 const Product3 = React.lazy(() => import('./components/Product3'));
@@ -53,6 +55,7 @@ const App: React.FC = () => {
   // Firebase authentication removed - not needed for this educational app
   const navigate = useNavigate();
   const location = useLocation();
+  const isFullScreenPage = location.pathname === '/' || location.pathname === '/login';
   const [syncStatus, setSyncStatus] = React.useState<'idle' | 'syncing' | 'success' | 'error'>('idle');
   const [lastSyncTime, setLastSyncTime] = React.useState<number>(0);
   const [isOnline, setIsOnline] = React.useState(navigator.onLine);
@@ -139,10 +142,11 @@ const App: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
-      <Header />
+      {!isFullScreenPage && <Header />}
 
       <main className="flex-1">
         {/* Disclaimer Banner */}
+        {!isFullScreenPage && (
         <div className="bg-blue-50 border-b border-blue-100 py-3 px-4">
           <div className="max-w-7xl mx-auto flex items-start gap-3">
             <Info className="text-blue-600 flex-shrink-0 mt-0.5" size={20} />
@@ -193,10 +197,12 @@ const App: React.FC = () => {
             </div>
           </div>
         </div>
+        )}
 
         <Suspense fallback={<LoadingFallback />}>
           <Routes>
-            <Route path="/" element={<Home />} />
+            <Route path="/" element={<LandingPage onStart={() => navigate('/dashboard')} />} />
+            <Route path="/login" element={<AuthPage />} />
             <Route path="/san-pham-1" element={<ProtectedRoute><Product1 /></ProtectedRoute>} />
             <Route path="/san-pham-2" element={<ProtectedRoute><Product2 /></ProtectedRoute>} />
             <Route path="/san-pham-3" element={
@@ -229,6 +235,7 @@ const App: React.FC = () => {
       </main>
 
       {/* Professional Footer */}
+      {!isFullScreenPage && (
       <footer className="bg-white border-t border-gray-200 pt-12 pb-8">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
@@ -324,6 +331,7 @@ const App: React.FC = () => {
           </div>
         </div>
       </footer>
+      )}
     </div>
   );
 };

@@ -1,9 +1,9 @@
 import React from 'react';
-import { QuestionMC, QuestionTF, QuestionLevel } from '../types';
+import { QuestionMC, QuestionTF, QuestionLevel, Question } from '../types';
 
 interface QuestionCardProps {
-  question: QuestionMC | QuestionTF;
-  type: 'mc' | 'tf';
+  question: QuestionMC | QuestionTF | Question;
+  type: 'mc' | 'tf' | 'TRUE_FALSE' | 'MULTIPLE_CHOICE';
   onAnswerChange: (questionId: number, answer: any) => void;
   userAnswer?: any;
   isSubmitted: boolean;
@@ -32,8 +32,8 @@ const QuestionCard: React.FC<QuestionCardProps> = ({ question, type, onAnswerCha
     }
 
     // Logic hiển thị màu sắc sau khi nộp bài (cho MC)
-    if (type === 'mc') {
-      const isCorrect = question.answer === option;
+    if (type === 'mc' || type === 'MULTIPLE_CHOICE') {
+      const isCorrect = qAnswer === option;
       const isSelected = currentAnswer === option;
       if (isCorrect) return 'bg-green-100 dark:bg-green-900 ring-2 ring-green-500 text-green-800 dark:text-green-200';
       if (isSelected && !isCorrect) return 'bg-red-100 dark:bg-red-900 ring-2 ring-red-500 text-red-800 dark:text-red-300';
@@ -65,7 +65,11 @@ const QuestionCard: React.FC<QuestionCardProps> = ({ question, type, onAnswerCha
     return 'bg-gray-100 text-gray-400 opacity-50';
   };
 
-  const questionNumber = type === 'mc' ? `Câu ${question.id}` : `Câu ${question.id}`;
+  const questionNumber = `Câu ${question.id}`;
+
+  // Normalize content and answer
+  const qContent = (question as any).content || (question as any).question;
+  const qAnswer = (question as any).correctAnswer !== undefined ? (question as any).correctAnswer : (question as any).answer;
 
   const handleTFChange = (statementKey: string, value: boolean) => {
     if (isSubmitted) return;
@@ -81,9 +85,9 @@ const QuestionCard: React.FC<QuestionCardProps> = ({ question, type, onAnswerCha
           {question.level}
         </span>
       </div>
-      <p className="text-gray-800 dark:text-gray-200 mb-4 flex-grow font-medium text-base">{question.question}</p>
+      <p className="text-gray-800 dark:text-gray-200 mb-4 flex-grow font-medium text-base">{qContent}</p>
 
-      {type === 'mc' && (
+      {(type === 'mc' || type === 'MULTIPLE_CHOICE') && (
         <div className="space-y-2 mb-4">
           {(question as QuestionMC).options.map((option, index) => (
             <button
@@ -93,22 +97,29 @@ const QuestionCard: React.FC<QuestionCardProps> = ({ question, type, onAnswerCha
               className={`w-full text-left p-3 rounded-lg text-sm transition-all duration-200 cursor-pointer disabled:cursor-not-allowed border border-transparent ${getOptionClass(option, userAnswer)}`}
             >
               <span className="font-bold mr-2">{String.fromCharCode(65 + index)}.</span> {option}
-              {isSubmitted && question.answer === option && <span className="ml-2 float-right text-green-600">✅</span>}
-              {isSubmitted && userAnswer === option && question.answer !== option && <span className="ml-2 float-right text-red-600">❌</span>}
+              {isSubmitted && qAnswer === option && <span className="ml-2 float-right text-green-600">✅</span>}
+              {isSubmitted && userAnswer === option && qAnswer !== option && <span className="ml-2 float-right text-red-600">❌</span>}
             </button>
           ))}
+          {isSubmitted && question.explanation && (
+            <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-900/30 rounded-lg border border-blue-100 dark:border-blue-800">
+              <p className="text-sm text-blue-800 dark:text-blue-200">
+                <strong><i className="fas fa-info-circle mr-2"></i>Giải thích:</strong> {question.explanation}
+              </p>
+            </div>
+          )}
         </div>
       )}
 
-      {type === 'tf' && (
+      {(type === 'tf' || type === 'TRUE_FALSE') && (
         <div className="space-y-4 mb-4">
-          {/* Hiển thị các phát biểu a, b, c, d */}
-          {(question as QuestionTF).statements && (
+          {/* Complex TF: Hiển thị các phát biểu a, b, c, d */}
+          {(question as QuestionTF).statements ? (
             <div className="space-y-3">
               <p className="text-sm font-semibold text-gray-600 dark:text-gray-400 italic">
                 Chọn Đúng (Đ) hoặc Sai (S) cho mỗi phát biểu:
               </p>
-              {Object.entries((question as QuestionTF).statements).map(([key, statement]) => {
+              {Object.entries((question as QuestionTF).statements!).map(([key, statement]) => {
                 const tfQuestion = question as QuestionTF;
                 const explanation = tfQuestion.explanations?.[key as 'a' | 'b' | 'c' | 'd'];
 
@@ -144,6 +155,40 @@ const QuestionCard: React.FC<QuestionCardProps> = ({ question, type, onAnswerCha
                   </div>
                 );
               })}
+            </div>
+          ) : (
+            /* Simple True/False */
+            <div className="flex gap-4 justify-center mt-4">
+              <button
+                onClick={() => onAnswerChange(question.id!, true)}
+                disabled={isSubmitted}
+                className={`px-8 py-3 rounded-xl font-bold text-lg transition-all flex items-center gap-2 ${userAnswer === true
+                    ? 'bg-blue-600 text-white shadow-lg scale-105'
+                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  } ${isSubmitted && qAnswer === true ? 'ring-2 ring-green-500 bg-green-100 text-green-700' : ''} ${isSubmitted && userAnswer === true && qAnswer !== true ? 'ring-2 ring-red-500 bg-red-100 text-red-700' : ''}`}
+              >
+                <span>ĐÚNG</span>
+                {isSubmitted && qAnswer === true && <i className="fas fa-check text-green-600"></i>}
+              </button>
+              <button
+                onClick={() => onAnswerChange(question.id!, false)}
+                disabled={isSubmitted}
+                className={`px-8 py-3 rounded-xl font-bold text-lg transition-all flex items-center gap-2 ${userAnswer === false
+                    ? 'bg-blue-600 text-white shadow-lg scale-105'
+                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  } ${isSubmitted && qAnswer === false ? 'ring-2 ring-green-500 bg-green-100 text-green-700' : ''} ${isSubmitted && userAnswer === false && qAnswer !== false ? 'ring-2 ring-red-500 bg-red-100 text-red-700' : ''}`}
+              >
+                <span>SAI</span>
+                {isSubmitted && qAnswer === false && <i className="fas fa-check text-green-600"></i>}
+              </button>
+            </div>
+          )}
+          
+          {isSubmitted && !((question as QuestionTF).statements) && question.explanation && (
+            <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-900/30 rounded-lg border border-blue-100 dark:border-blue-800">
+              <p className="text-sm text-blue-800 dark:text-blue-200">
+                <strong><i className="fas fa-info-circle mr-2"></i>Giải thích:</strong> {question.explanation}
+              </p>
             </div>
           )}
         </div>

@@ -6,8 +6,9 @@ export interface GeminiResponse {
 }
 
 export const AVAILABLE_MODELS = [
-  { id: 'gemini-1.5-pro', name: 'Gemini 2.5 Pro', description: 'Mô hình mạnh mẽ nhất, hỗ trợ hình ảnh (Next Gen)' },
-  { id: 'gemini-1.5-flash', name: 'Gemini 2.5 Flash', description: 'Phản hồi nhanh, độ trễ thấp (Turbo)' },
+  { id: 'gemini-2.5-pro', name: 'Gemini 2.5 Pro', description: 'Mô hình mạnh mẽ nhất (Next Gen)' },
+  { id: 'gemini-2.5-flash-native-audio-dialog', name: 'Gemini 2.5 Flash Audio', description: 'Hỗ trợ hội thoại âm thanh tự nhiên' },
+  { id: 'gemini-2.0-flash-exp', name: 'Gemini 2.0 Flash (Exp)', description: 'Mô hình thử nghiệm' },
 ];
 
 const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
@@ -16,7 +17,7 @@ const BASE_URL = 'https://generativelanguage.googleapis.com/v1beta/models';
 /**
  * Gọi Gemini API để tạo nội dung
  */
-export async function generateContent(prompt: string, modelId: string = 'gemini-1.5-pro'): Promise<GeminiResponse> {
+export async function generateContent(prompt: string, modelId: string = 'gemini-2.5-pro'): Promise<GeminiResponse> {
   if (!API_KEY || API_KEY === 'your_gemini_api_key_here') {
     return {
       text: '',
@@ -121,7 +122,7 @@ export async function fileToGenerativePart(file: File) {
 export async function sendChatMessage(
   message: string,
   files?: File[],
-  modelId: string = 'gemini-1.5-pro',
+  modelId: string = 'gemini-2.5-pro',
   history: any[] = []
 ): Promise<GeminiResponse> {
   if (!API_KEY || API_KEY === 'your_gemini_api_key_here') {

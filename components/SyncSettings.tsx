@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { RefreshCw, Cloud, Clock, Check, Info, Loader } from 'lucide-react';
 import syncManager from '../utils/syncManager';
 
 const SyncSettings: React.FC = () => {
@@ -46,37 +47,44 @@ const SyncSettings: React.FC = () => {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">
-          <i className="fas fa-sync-alt mr-2 text-blue-500"></i>
+        <h2 className="text-2xl font-bold text-gray-900 mb-2 flex items-center gap-3">
+          <div className="p-2 bg-blue-100 rounded-lg">
+            <RefreshCw className="w-6 h-6 text-blue-600" />
+          </div>
           Cài đặt đồng bộ
         </h2>
-        <p className="text-gray-600">
-          Đồng bộ dữ liệu giữa thiết bị và cloud
+        <p className="text-gray-600 ml-11">
+          Quản lý trạng thái đồng bộ dữ liệu đám mây
         </p>
       </div>
 
       {/* Status */}
-      <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-6 border-2 border-blue-200">
-        <div className="flex items-center justify-between">
-          <div>
-            <p className="text-sm text-gray-600 mb-1">Lần đồng bộ cuối</p>
-            <p className="text-2xl font-bold text-gray-900">
-              {lastSyncDate ? lastSyncDate.toLocaleString('vi-VN') : 'Chưa đồng bộ'}
-            </p>
+      <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-8 border border-blue-100 shadow-sm">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
+          <div className="flex items-center gap-4">
+            <div className="bg-white p-4 rounded-full shadow-sm">
+              <Cloud className="w-8 h-8 text-blue-500" />
+            </div>
+            <div>
+              <p className="text-sm text-blue-600 font-medium mb-1 uppercase tracking-wide">Lần đồng bộ cuối</p>
+              <p className="text-2xl font-bold text-gray-900">
+                {lastSyncDate ? lastSyncDate.toLocaleString('vi-VN') : 'Chưa đồng bộ'}
+              </p>
+            </div>
           </div>
           <button
             onClick={handleSyncNow}
             disabled={saving || !config.enabled}
-            className="bg-blue-600 text-white px-6 py-3 rounded-xl font-semibold hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="bg-blue-600 text-white px-8 py-4 rounded-xl font-bold hover:bg-blue-700 transition-all shadow-lg shadow-blue-500/30 disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none flex items-center gap-3"
           >
             {saving ? (
               <>
-                <i className="fas fa-spinner fa-spin mr-2"></i>
-                Đang đồng bộ...
+                <Loader className="w-5 h-5 animate-spin" />
+                Đang xử lý...
               </>
             ) : (
               <>
-                <i className="fas fa-sync-alt mr-2"></i>
+                <RefreshCw className="w-5 h-5" />
                 Đồng bộ ngay
               </>
             )}
@@ -171,35 +179,31 @@ const SyncSettings: React.FC = () => {
       </div>
 
       {/* Info */}
-      <div className="bg-blue-50 rounded-xl p-6 border-2 border-blue-200">
-        <h3 className="font-bold text-gray-900 mb-3 flex items-center gap-2">
-          <i className="fas fa-info-circle text-blue-600"></i>
-          Thông tin
+      <div className="bg-gray-50 rounded-2xl p-6 border border-gray-200">
+        <h3 className="font-bold text-gray-900 mb-4 flex items-center gap-2">
+          <Info className="w-5 h-5 text-blue-600" />
+          Thông tin bảo mật
         </h3>
-        <ul className="space-y-2 text-sm text-gray-700">
-          <li className="flex items-start gap-2">
-            <i className="fas fa-check text-green-600 mt-1"></i>
-            <span>Dữ liệu được mã hóa và lưu trữ an toàn trên Cloudflare</span>
+        <ul className="space-y-3 text-sm text-gray-600">
+          <li className="flex items-start gap-3">
+            <Check className="w-5 h-5 text-green-500 mt-0.5 shrink-0" />
+            <span>Dữ liệu được mã hóa đầu cuối và lưu trữ an toàn trên Cloudflare R2.</span>
           </li>
-          <li className="flex items-start gap-2">
-            <i className="fas fa-check text-green-600 mt-1"></i>
-            <span>Đồng bộ: Đề thi, Flashcards, Lịch sử chat, Tiến độ học tập</span>
+          <li className="flex items-start gap-3">
+            <Check className="w-5 h-5 text-green-500 mt-0.5 shrink-0" />
+            <span>Đồng bộ thời gian thực: Đề thi, Flashcards, Lịch sử chat, Tiến độ.</span>
           </li>
-          <li className="flex items-start gap-2">
-            <i className="fas fa-check text-green-600 mt-1"></i>
-            <span>Hoạt động offline, tự động đồng bộ khi có mạng</span>
-          </li>
-          <li className="flex items-start gap-2">
-            <i className="fas fa-check text-green-600 mt-1"></i>
-            <span>Truy cập dữ liệu từ bất kỳ thiết bị nào</span>
+          <li className="flex items-start gap-3">
+            <Check className="w-5 h-5 text-green-500 mt-0.5 shrink-0" />
+            <span>Chế độ Offline-first: Tiếp tục học ngay cả khi mất mạng.</span>
           </li>
         </ul>
       </div>
 
       {saving && (
-        <div className="fixed bottom-4 left-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg animate-fade-in">
-          <i className="fas fa-check-circle mr-2"></i>
-          Đã lưu cài đặt
+        <div className="fixed bottom-6 left-6 bg-gray-900 text-white px-6 py-4 rounded-2xl shadow-2xl animate-fade-in flex items-center gap-3 z-50">
+          <Check className="w-5 h-5 text-green-400" />
+          <span className="font-medium">Đã lưu cài đặt thành công</span>
         </div>
       )}
     </div>

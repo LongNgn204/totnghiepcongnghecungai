@@ -66,6 +66,29 @@ const APITester: React.FC = () => {
     { name: 'Leaderboard', method: 'GET', endpoint: '/api/leaderboard', body: '{}' },
     { name: 'Update User', method: 'POST', endpoint: '/api/management/update-user', body: '{\n  "targetUserId": "USER_ID_HERE",\n  "data": {\n    "displayName": "New Name",\n    "bio": "Updated Bio"\n  }\n}' },
     { name: 'Change Password', method: 'POST', endpoint: '/api/management/change-password', body: '{\n  "targetUserId": "USER_ID_HERE",\n  "newPassword": "newpassword123"\n}' },
+    {
+      name: 'Create T/F Exam',
+      method: 'POST',
+      endpoint: '/api/exams',
+      body: JSON.stringify({
+        title: "Đề kiểm tra 15 phút - Công nghệ 12",
+        questions: [
+          {
+            type: "TRUE_FALSE",
+            content: "Theo sách Cánh Diều, Transistor là linh kiện thụ động.",
+            correctAnswer: false,
+            explanation: "Transistor là linh kiện tích cực, có khả năng khuếch đại tín hiệu."
+          },
+          {
+            type: "MULTIPLE_CHOICE",
+            content: "Công dụng của điện trở là gì?",
+            "options": ["Cản trở dòng điện", "Khuếch đại", "Chỉnh lưu", "Phát quang"],
+            correctAnswer: "Cản trở dòng điện",
+            explanation: "Điện trở có tác dụng cản trở dòng điện trong mạch."
+          }
+        ]
+      }, null, 2)
+    }
   ];
 
   return (

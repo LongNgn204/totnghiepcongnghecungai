@@ -13,6 +13,29 @@ export interface QuestionMC {
   level: QuestionLevel;
 }
 
+export type QuestionType = 'MULTIPLE_CHOICE' | 'TRUE_FALSE';
+
+export interface Question {
+  id: number;
+  type: QuestionType;
+  content: string;
+  correctAnswer: string | boolean;
+  options?: string[];
+  level?: QuestionLevel;
+  requirement?: string;
+  // Legacy/Complex TF support
+  statements?: { [key: string]: string };
+  answers?: { [key: string]: boolean };
+  explanations?: { [key: string]: string };
+  explanation?: string;
+}
+
+export interface SuggestedQuestion {
+  id?: number;
+  content: string;
+  type: QuestionType;
+}
+
 export interface QuestionTF {
   id: number;
   question: string;

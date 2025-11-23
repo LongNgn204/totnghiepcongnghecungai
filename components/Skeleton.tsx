@@ -15,8 +15,8 @@ const Skeleton: React.FC<SkeletonProps> = ({
   width,
   height
 }) => {
-  const baseClasses = 'bg-gray-200 dark:bg-gray-700';
-  const animationClass = animation === 'pulse' ? 'animate-pulse' : 'animate-wave';
+  const baseClasses = 'bg-gray-200 dark:bg-gray-700/50';
+  const animationClass = animation === 'pulse' ? 'animate-pulse duration-2000' : 'animate-wave'; // Smoother animation
   
   const variantClasses = {
     text: 'h-4 rounded',
@@ -64,20 +64,28 @@ export const QuestionSkeleton: React.FC = () => {
 // Skeleton for Exam Content
 export const ExamSkeleton: React.FC = () => {
   return (
-    <div className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg space-y-6 animate-pulse">
-      {/* Title */}
-      <div className="text-center space-y-2">
-        <Skeleton width="60%" height="28px" className="mx-auto rounded" />
-        <Skeleton width="40%" height="16px" className="mx-auto rounded" />
+    <div className="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-lg space-y-8 animate-pulse border border-gray-100 dark:border-gray-700">
+      {/* Exam Header Card */}
+      <div className="border-b border-gray-100 dark:border-gray-700 pb-6 text-center space-y-3">
+        <Skeleton width="70%" height="32px" className="mx-auto rounded-lg" />
+        <div className="flex justify-center gap-4 mt-2">
+           <Skeleton width="100px" height="20px" className="rounded-full" />
+           <Skeleton width="100px" height="20px" className="rounded-full" />
+        </div>
       </div>
       
       {/* Section Header */}
-      <Skeleton width="50%" height="24px" className="rounded" />
+      <div className="flex items-center gap-3">
+        <Skeleton width="30px" height="30px" variant="circular" />
+        <Skeleton width="40%" height="24px" className="rounded-lg" />
+      </div>
       
       {/* Questions */}
-      <div className="space-y-6">
-        {[1, 2, 3, 4].map(i => (
-          <QuestionSkeleton key={i} />
+      <div className="space-y-8">
+        {[1, 2, 3].map(i => (
+          <div key={i} className="bg-gray-50 dark:bg-gray-700/30 p-6 rounded-xl border border-gray-100 dark:border-gray-700">
+             <QuestionSkeleton />
+          </div>
         ))}
       </div>
     </div>

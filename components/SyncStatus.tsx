@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Cloud, CloudOff, RefreshCw, CheckCircle, WifiOff, X } from 'lucide-react';
 import syncManager from '../utils/syncManager';
 
 const SyncStatus: React.FC = () => {
@@ -74,66 +75,89 @@ const SyncStatus: React.FC = () => {
 
   if (!enabled) {
     return (
-      <div className="fixed bottom-4 right-4 bg-gray-100 rounded-lg shadow-lg p-3 max-w-xs z-50">
-        <div className="flex items-center justify-between gap-3">
-          <div className="flex items-center gap-2 text-gray-600">
-            <i className="fas fa-cloud-slash"></i>
-            <span className="text-sm">Sync tắt</span>
+      <div className="fixed bottom-4 right-4 z-50 group">
+        <div className="bg-gray-100/80 backdrop-blur-md rounded-full shadow-lg border border-gray-200 p-2 flex items-center gap-2 transition-all duration-300 hover:pr-4">
+          <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-500">
+            <CloudOff className="w-4 h-4" />
           </div>
-          <button
-            onClick={handleToggle}
-            className="text-blue-600 hover:text-blue-700 text-sm font-semibold"
-          >
-            Bật
-          </button>
+          <div className="w-0 overflow-hidden group-hover:w-auto group-hover:opacity-100 opacity-0 transition-all duration-300 whitespace-nowrap flex items-center gap-2">
+            <span className="text-xs font-medium text-gray-500">Đã tắt đồng bộ</span>
+            <button
+              onClick={handleToggle}
+              className="text-blue-600 hover:text-blue-700 text-xs font-bold hover:underline"
+            >
+              Bật lại
+            </button>
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="fixed bottom-4 right-4 bg-white rounded-lg shadow-xl p-3 max-w-xs border-2 border-gray-200 z-50">
-      <div className="flex items-center justify-between gap-3">
-        {/* Status */}
-        <div className="flex-1">
+    <div className="fixed bottom-4 right-4 z-50 group">
+      <div className={`bg-white/90 backdrop-blur-xl rounded-full shadow-xl border transition-all duration-300 p-1.5 flex items-center gap-3 ${
+        syncing ? 'border-blue-200 pr-4 shadow-blue-500/20' :
+        !online ? 'border-amber-200 pr-4 shadow-amber-500/20' :
+        'border-gray-100 hover:pr-4 hover:shadow-lg'
+      }`}>
+        
+        {/* Icon Indicator */}
+        <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 ${
+          syncing ? 'bg-blue-50 text-blue-600 rotate-180' :
+          !online ? 'bg-amber-50 text-amber-500' :
+          'bg-green-50 text-green-600'
+        }`}>
           {syncing ? (
-            <div className="flex items-center gap-2 text-blue-600">
-              <i className="fas fa-sync-alt animate-spin"></i>
-              <span className="text-sm font-semibold">Đang đồng bộ...</span>
-            </div>
+            <RefreshCw className="w-4 h-4 animate-spin" />
           ) : !online ? (
-            <div className="flex items-center gap-2 text-orange-600">
-              <i className="fas fa-wifi-slash"></i>
-              <span className="text-sm font-semibold">Offline</span>
-            </div>
+            <WifiOff className="w-4 h-4" />
           ) : (
-            <div className="flex items-center gap-2 text-green-600">
-              <i className="fas fa-check-circle"></i>
-              <div>
-                <p className="text-sm font-semibold">Đã đồng bộ</p>
-                <p className="text-xs text-gray-500">{formatTime(lastSync)}</p>
-              </div>
-            </div>
+            <CheckCircle className="w-4 h-4" />
           )}
         </div>
 
-        {/* Actions */}
-        <div className="flex items-center gap-2">
-          <button
-            onClick={handleSync}
-            disabled={syncing || !online}
-            className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-            title="Đồng bộ ngay"
-          >
-            <i className="fas fa-sync-alt"></i>
-          </button>
-          <button
-            onClick={handleToggle}
-            className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
-            title="Tắt đồng bộ"
-          >
-            <i className="fas fa-times"></i>
-          </button>
+        {/* Content - Auto expand on hover or important state */}
+        <div className={`flex items-center gap-3 overflow-hidden transition-all duration-300 ${
+          syncing || !online ? 'w-auto opacity-100' : 'w-0 opacity-0 group-hover:w-auto group-hover:opacity-100'
+        }`}>
+          <div className="flex flex-col whitespace-nowrap">
+            <span className={`text-xs font-bold ${
+              syncing ? 'text-blue-600' :
+              !online ? 'text-amber-600' :
+              'text-gray-700'
+            }`}>
+              {syncing ? 'Đang đồng bộ...' :
+               !online ? 'Mất kết nối' :
+               'Đã đồng bộ'}
+            </span>
+            {!syncing && online && (
+              <span className="text-[10px] text-gray-400 font-medium">{formatTime(lastSync)}</span>
+            )}
+          </div>
+
+          {/* Actions */}
+          <div className="flex items-center border-l border-gray-200 pl-2 ml-1 gap-1">
+            <button
+              onClick={handleSync}
+              disabled={syncing || !online}
+              className={`p-1.5 rounded-lg transition-all ${
+                syncing || !online
+                  ? 'text-gray-300 cursor-not-allowed'
+                  : 'text-gray-400 hover:text-blue-600 hover:bg-blue-50'
+              }`}
+              title="Đồng bộ ngay"
+            >
+              <RefreshCw className={`w-3.5 h-3.5 ${syncing ? 'animate-spin' : ''}`} />
+            </button>
+            <button
+              onClick={handleToggle}
+              className="p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all"
+              title="Tắt đồng bộ"
+            >
+              <X className="w-3.5 h-3.5" />
+            </button>
+          </div>
         </div>
       </div>
     </div>

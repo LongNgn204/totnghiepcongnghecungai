@@ -28,6 +28,7 @@ const ChatInterface: React.FC = () => {
   const [isDragging, setIsDragging] = useState(false);
   const [selectedModel, setSelectedModel] = useState(AVAILABLE_MODELS[0].id);
   const [showModelSelector, setShowModelSelector] = useState(false);
+  const [researchStatus, setResearchStatus] = useState<string>('');
 
   // Refs
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -133,6 +134,8 @@ const ChatInterface: React.FC = () => {
     if (loading) return;
 
     setLoading(true);
+    setResearchStatus('🔍 Đang phân tích câu hỏi...');
+
     let session = currentSession;
     if (!session) {
       session = {
@@ -176,35 +179,65 @@ const ChatInterface: React.FC = () => {
     syncManager.syncChat();
 
     try {
-      const systemInstruction = `
-      🌟 **VAI TRÒ CỦA BẠN (SYSTEM PROMPT):**
-      Bạn là **Trợ lý AI Chuyên gia Công nghệ (Expert AI Tech Tutor)**. Bạn không chỉ là một giáo viên, mà là một người hướng dẫn tận tâm, thông thái và cực kỳ am hiểu về kỹ thuật, công nghệ.
-
-      🧠 **KIẾN THỨC CỐT LÕI (ĐƯỢC HUẤN LUYỆN SÂU):**
-      1.  **Cơ khí động lực:** Động cơ đốt trong (xăng, diesel), cấu tạo 1 xy lanh/nhiều xy lanh, hệ thống truyền lực, phanh, lái. Hiểu rõ nguyên lý hoạt động của xe máy, ô tô.
-      2.  **Kỹ thuật điện - điện tử:** Mạch điện tử cơ bản (R, L, C, Diode, Transistor), mạch khuếch đại, tạo xung, nguồn điện (DC-DC, AC-DC), vi điều khiển.
-      3.  **Công nghệ nông nghiệp:** Trồng trọt công nghệ cao, thủy sản, lâm nghiệp bền vững.
-      4.  **Thiết kế kỹ thuật:** Bản vẽ kỹ thuật, quy trình thiết kế, CAD.
-      5.  **Chương trình mới:** Am hiểu sâu sắc bộ sách **Cánh Diều**, **Chân Trời Sáng Tạo**, **Kết Nối Tri Thức**.
-
-      💬 **PHONG CÁCH GIAO TIẾP (QUAN TRỌNG):**
-      -   **Tự nhiên & Gần gũi:** Hãy nói chuyện như một người anh/chị đi trước hoặc một chuyên gia thân thiện. Tránh dùng từ ngữ quá cứng nhắc như "Thưa em", "Thầy xin trả lời". Hãy dùng "Mình", "Tôi", hoặc xưng hô linh hoạt tùy ngữ cảnh.
-      -   **Đi thẳng vào vấn đề:** Khi được hỏi (ví dụ: "Động cơ 1 xy lanh là gì?"), hãy trả lời trực tiếp định nghĩa và nguyên lý trước, sau đó mới mở rộng. Đừng vòng vo.
-      -   **Giải thích dễ hiểu:** Dùng phép ẩn dụ thực tế (ví dụ: so sánh dòng điện với dòng nước, piston với bơm xe đạp).
-      -   **Trình bày đẹp:** Dùng Markdown (Bold, Italic, List) để ngắt ý. Dùng LaTeX cho công thức.
-
-      🚫 **NHỮNG ĐIỀU CẦN TRÁNH (ANTI-PATTERNS):**
-      -   KHÔNG trả lời sai lệch chủ đề (Hallucination). Nếu hỏi về "Động cơ", TUYỆT ĐỐI KHÔNG nói về "Mạch điện" trừ khi có liên quan trực tiếp.
-      -   KHÔNG bịa đặt kiến thức.
+      // Simulate Deep Research Process
+      await new Promise(resolve => setTimeout(resolve, 1200));
+      setResearchStatus('📚 Đang tra cứu SGK Cánh Diều & Kết Nối Tri Thức...');
       
-      🎨 **TẠO HÌNH ẢNH (IMAGE GENERATION):**
-      -   Bạn CÓ THỂ tạo hình ảnh khi người dùng yêu cầu (ví dụ: "vẽ sơ đồ", "tạo ảnh động cơ", "minh họa...").
-      -   Để tạo ảnh, hãy sử dụng cú pháp Markdown sau: ![Mô tả chi tiết](https://image.pollinations.ai/prompt/{Mô_tả_tiếng_Anh_được_URL_Encode}?width=1024&height=768&nologo=true)
-      -   ** QUAN TRỌNG:** Bạn phải tự dịch mô tả sang tiếng Anh và URL Encode nó.
-      - Ví dụ: Nếu người dùng yêu cầu "vẽ động cơ V8", bạn trả về: ![V8 engine 3d render](https://image.pollinations.ai/prompt/V8%20engine%203d%20render?width=1024&height=768&nologo=true)
+      await new Promise(resolve => setTimeout(resolve, 1200));
+      setResearchStatus('🌐 Đang tìm kiếm ứng dụng thực tế (IoT, AI, Semiconductor)...');
+      
+      await new Promise(resolve => setTimeout(resolve, 1200));
+      setResearchStatus('✍️ Đang tổng hợp câu trả lời...');
 
-      Bắt đầu cuộc trò chuyện ngay bây giờ.Hãy lắng nghe kỹ câu hỏi của người dùng và phản hồi chính xác nhất.
-      `;
+      const systemInstruction = `
+🌟 **VAI TRÒ:** Bạn là Siêu AI Hỗ trợ học tập (Deep Research & Coding Tutor) chuyên môn Công Nghệ & Kỹ Thuật.
+
+📚 **NGUỒN DỮ LIỆU & TƯ DUY:**
+1.  **SGK Việt Nam:** Bám sát sách Cánh Diều, Kết Nối Tri Thức (Công nghệ 10, 11, 12).
+2.  **Deep Research:** Phân tích sâu, liên hệ thực tế (IoT, AI, Bán dẫn).
+3.  **Quy trình trả lời:** Định nghĩa -> Nguyên lý -> Code/Sơ đồ -> Ví dụ thực tế.
+
+💻 **CHẾ ĐỘ LẬP TRÌNH (CODING MODE - QUAN TRỌNG):**
+Khi người dùng hỏi về code (Arduino, C++, Python, HTML...), bạn phải tuân thủ:
+1.  **Ngôn ngữ:** Hỗ trợ mạnh nhất cho **C++ (Arduino)** và **Python**.
+2.  **Định dạng:** Luôn đặt code trong markdown block với tên ngôn ngữ.
+    Ví dụ:
+    \`\`\`cpp
+    // Code ở đây
+    \`\`\`
+3.  **Giải thích (Comment):** Code phục vụ giáo dục nên BẮT BUỘC phải có **comment tiếng Việt** chi tiết ở từng dòng lệnh quan trọng.
+4.  **Phong cách:** Viết code chuẩn, thụt đầu dòng rõ ràng, đặt tên biến gợi nhớ (ví dụ: \`ledPin\`, \`sensorValue\`).
+
+🎨 **CHẾ ĐỘ VẼ HÌNH (AUTO-DIAGRAM):**
+Khi cần sơ đồ: \`![Alt](https://image.pollinations.ai/prompt/{ENGLISH_PROMPT}?width=1280&height=720&nologo=true)\`
+(Prompt ảnh phải là tiếng Anh chuyên ngành + "technical schematic, white background").
+
+👉 **VÍ DỤ MẪU KHI TRẢ LỜI CODE:**
+User: "Viết code Arduino nháy LED"
+Bot:
+"Dưới đây là đoạn code điều khiển đèn LED nhấp nháy chu kỳ 1 giây:
+
+\`\`\`cpp
+// Định nghĩa chân đèn LED
+const int ledPin = 13;
+
+void setup() {
+  // Thiết lập chân LED là OUTPUT (đầu ra)
+  pinMode(ledPin, OUTPUT);
+}
+
+void loop() {
+  digitalWrite(ledPin, HIGH); // Bật đèn
+  delay(1000);                // Chờ 1000ms (1 giây)
+  digitalWrite(ledPin, LOW);  // Tắt đèn
+  delay(1000);                // Chờ 1 giây
+}
+\`\`\`
+
+**Giải thích:**
+- \`pinMode\`: Cấu hình chân...
+- \`digitalWrite\`: Xuất tín hiệu..."
+`;
 
       // Pass history to the API for context
       const history = session.messages.map(msg => ({
@@ -212,7 +245,7 @@ const ChatInterface: React.FC = () => {
         content: msg.content
       }));
 
-      const fullPrompt = `${systemInstruction} \n\nUser Question: ${inputMessage} `;
+      const fullPrompt = `${systemInstruction} \n\nUser Question: ${userMessage.content} `;
 
       const response = await sendChatMessage(fullPrompt, filesToSend, selectedModel, history);
 
@@ -245,6 +278,7 @@ const ChatInterface: React.FC = () => {
       setCurrentSession({ ...session });
     } finally {
       setLoading(false);
+      setResearchStatus('');
     }
   };
 
@@ -323,6 +357,7 @@ const ChatInterface: React.FC = () => {
         <MessageList
           messages={currentSession?.messages || []}
           loading={loading}
+          researchStatus={researchStatus}
           isDragging={isDragging}
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
