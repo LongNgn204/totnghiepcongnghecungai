@@ -30,11 +30,11 @@ const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
   return (
     <div className="flex flex-col items-center justify-center p-8 gap-4">
       {/* Spinner */}
-      <div className={`${sizeClasses[size]} border-4 border-${color}-200 dark:border-${color}-800 border-t-${color}-600 dark:border-t-${color}-400 rounded-full animate-spin`}></div>
+      <div className={`${sizeClasses[size]} border-4 border-${color}-200 ${color}-800 border-t-${color}-600 ${color}-400 rounded-full animate-spin`}></div>
       
       {/* Text */}
       {text && (
-        <p className={`${textSizes[size]} text-gray-600 dark:text-gray-400 font-medium animate-pulse`}>
+        <p className={`${textSizes[size]} text-gray-600  font-medium animate-pulse`}>
           {text}
         </p>
       )}
@@ -42,7 +42,7 @@ const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
       {/* Progress Bar */}
       {showProgress && progress !== undefined && (
         <>
-          <div className="w-64 bg-gray-200 dark:bg-gray-700 rounded-full h-2.5 overflow-hidden">
+          <div className="w-64 bg-gray-200  rounded-full h-2.5 overflow-hidden">
             <div 
               className="bg-gradient-to-r from-blue-500 to-purple-600 h-full rounded-full transition-all duration-300 ease-out relative overflow-hidden"
               style={{ width: `${Math.min(100, Math.max(0, progress))}%` }}
@@ -50,7 +50,7 @@ const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
               <div className="absolute inset-0 bg-white/20 animate-pulse"></div>
             </div>
           </div>
-          <p className="text-sm text-gray-600 dark:text-gray-400 font-semibold">
+          <p className="text-sm text-gray-600  font-semibold">
             {Math.round(progress)}%
           </p>
         </>

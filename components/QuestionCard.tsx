@@ -9,194 +9,187 @@ interface QuestionCardProps {
   isSubmitted: boolean;
 }
 
-const getLevelColor = (level: QuestionLevel) => {
-  switch (level) {
-    case QuestionLevel.KNOW:
-      return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300';
-    case QuestionLevel.UNDERSTAND:
-      return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300';
-    case QuestionLevel.APPLY:
-      return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300';
-    default:
-      return 'bg-gray-100 text-gray-800 dark:bg-gray-600 dark:text-gray-200';
-  }
-};
+const QuestionCard: React.FC<QuestionCardProps> = ({
+  question,
+  type,
+  onAnswerChange,
+  userAnswer,
+  isSubmitted
+}) => {
+  const isMC = type === 'mc' || type === 'MULTIPLE_CHOICE';
 
-const QuestionCard: React.FC<QuestionCardProps> = ({ question, type, onAnswerChange, userAnswer, isSubmitted }) => {
-
-  const getOptionClass = (option: string | boolean, currentAnswer?: string | boolean) => {
-    if (!isSubmitted) {
-      return currentAnswer === option
-        ? 'bg-blue-100 dark:bg-blue-900 ring-2 ring-blue-500'
-        : 'bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600';
+  const getLevelBadge = (level?: string) => {
+    switch (level) {
+      case QuestionLevel.KNOW:
+      case 'Nhận biết':
+        return <span className="bg-gray-100  text-gray-800  text-xs px-2 py-1 rounded">NB</span>;
+      case QuestionLevel.UNDERSTAND:
+      case 'Thông hiểu':
+        return <span className="bg-blue-100  text-blue-800  text-xs px-2 py-1 rounded">TH</span>;
+      case QuestionLevel.APPLY:
+      case 'Vận dụng':
+        return <span className="bg-yellow-100  text-yellow-800  text-xs px-2 py-1 rounded">VD</span>;
+      case QuestionLevel.ANALYZE:
+      case 'Vận dụng cao':
+        return <span className="bg-red-100  text-red-800  text-xs px-2 py-1 rounded">VDC</span>;
+      default:
+        return null;
     }
-
-    // Logic hiển thị màu sắc sau khi nộp bài (cho MC)
-    if (type === 'mc' || type === 'MULTIPLE_CHOICE') {
-      const isCorrect = qAnswer === option;
-      const isSelected = currentAnswer === option;
-      if (isCorrect) return 'bg-green-100 dark:bg-green-900 ring-2 ring-green-500 text-green-800 dark:text-green-200';
-      if (isSelected && !isCorrect) return 'bg-red-100 dark:bg-red-900 ring-2 ring-red-500 text-red-800 dark:text-red-300';
-      return 'bg-gray-50 dark:bg-gray-700';
-    }
-    return '';
   };
 
-  const getTFButtonClass = (isTrue: boolean, statementKey: string) => {
-    const currentAnswer = userAnswer?.[statementKey];
-    const isSelected = currentAnswer === isTrue;
+  const renderMCOptions = () => {
+    const q = question as QuestionMC;
+    return (
+      <div className="space-y-3">
+        {q.options?.map((option, index) => {
+          const isSelected = userAnswer === option;
+          const isCorrect = q.answer === option;
 
-    if (!isSubmitted) {
-      return isSelected
-        ? (isTrue ? 'bg-blue-600 text-white' : 'bg-blue-600 text-white')
-        : 'bg-gray-100 text-gray-600 hover:bg-gray-200';
-    }
+          let className = "w-full text-left p-4 rounded-xl border transition-all flex items-start gap-3 ";
 
-    // Sau khi nộp bài
-    const tfQuestion = question as QuestionTF;
-    const correctAnswer = tfQuestion.answers?.[statementKey as 'a' | 'b' | 'c' | 'd'];
+          if (isSubmitted) {
+            if (isCorrect) {
+              className += "bg-green-50  border-green-200  text-green-800 ";
+            } else if (isSelected) {
+              className += "bg-red-50  border-red-200  text-red-800 ";
+            } else {
+              className += "bg-white  border-gray-200  text-gray-500  opacity-60";
+            }
+          } else {
+            if (isSelected) {
+              className += "bg-blue-50  border-blue-200  text-blue-800  shadow-sm";
+            } else {
+              className += "bg-white  border-gray-200  text-gray-700  hover:bg-gray-50 :bg-slate-800 hover:border-gray-300 :border-slate-700";
+            }
+          }
 
-    if (correctAnswer === isTrue) {
-      return 'bg-green-500 text-white'; // Đáp án đúng
-    }
-    if (isSelected && correctAnswer !== isTrue) {
-      return 'bg-red-500 text-white'; // Chọn sai
-    }
-    return 'bg-gray-100 text-gray-400 opacity-50';
+          return (
+            <button
+              key={index}
+              onClick={() => !isSubmitted && onAnswerChange(q.id, option)}
+              disabled={isSubmitted}
+              className={className}
+            >
+              <div className={`w-6 h-6 rounded-full border flex items-center justify-center flex-shrink-0 mt-0.5 ${isSelected || (isSubmitted && isCorrect)
+                  ? 'border-current'
+                  : 'border-gray-300 '
+                }`}>
+                {String.fromCharCode(65 + index)}
+              </div>
+              <span>{option}</span>
+              {isSubmitted && isCorrect && <span className="ml-auto text-green-600 ">✓</span>}
+              {isSubmitted && isSelected && !isCorrect && <span className="ml-auto text-red-600 ">✗</span>}
+            </button>
+          );
+        })}
+      </div>
+    );
   };
 
-  const questionNumber = `Câu ${question.id}`;
+  const renderTFStatements = () => {
+    const q = question as QuestionTF;
+    const statements = q.statements || {};
+    const answers = q.answers || {};
+    const explanations = q.explanations || {};
 
-  // Normalize content and answer
-  const qContent = (question as any).content || (question as any).question;
-  const qAnswer = (question as any).correctAnswer !== undefined ? (question as any).correctAnswer : (question as any).answer;
+    return (
+      <div className="space-y-4">
+        <div className="grid grid-cols-12 gap-4 mb-2 px-4 text-sm font-bold text-gray-500 ">
+          <div className="col-span-8">Phát biểu</div>
+          <div className="col-span-2 text-center">Đúng</div>
+          <div className="col-span-2 text-center">Sai</div>
+        </div>
+        {Object.entries(statements).map(([key, statement]) => {
+          const userAns = userAnswer?.[key];
+          const correctAns = answers[key as keyof typeof answers];
 
-  const handleTFChange = (statementKey: string, value: boolean) => {
-    if (isSubmitted) return;
-    const currentAnswers = userAnswer || {};
-    onAnswerChange(question.id, { ...currentAnswers, [statementKey]: value });
+          return (
+            <div key={key} className="bg-white  rounded-xl border border-gray-200  overflow-hidden">
+              <div className="grid grid-cols-12 gap-4 p-4 items-center">
+                <div className="col-span-8 text-gray-800 ">
+                  <span className="font-bold mr-2">{key})</span>
+                  {statement}
+                </div>
+                <div className="col-span-2 flex justify-center">
+                  <button
+                    onClick={() => !isSubmitted && onAnswerChange(q.id, { ...userAnswer, [key]: true })}
+                    disabled={isSubmitted}
+                    className={`w-8 h-8 rounded-full border-2 flex items-center justify-center transition-all ${userAns === true
+                        ? 'bg-blue-600 border-blue-600 text-white'
+                        : 'border-gray-300  hover:border-blue-400'
+                      } ${isSubmitted && correctAns === true ? 'ring-2 ring-green-500 ring-offset-2 ' : ''}`}
+                  >
+                    Đ
+                  </button>
+                </div>
+                <div className="col-span-2 flex justify-center">
+                  <button
+                    onClick={() => !isSubmitted && onAnswerChange(q.id, { ...userAnswer, [key]: false })}
+                    disabled={isSubmitted}
+                    className={`w-8 h-8 rounded-full border-2 flex items-center justify-center transition-all ${userAns === false
+                        ? 'bg-blue-600 border-blue-600 text-white'
+                        : 'border-gray-300  hover:border-blue-400'
+                      } ${isSubmitted && correctAns === false ? 'ring-2 ring-green-500 ring-offset-2 ' : ''}`}
+                  >
+                    S
+                  </button>
+                </div>
+              </div>
+
+              {isSubmitted && (
+                <div className={`px-4 py-3 text-sm border-t ${userAns === correctAns
+                    ? 'bg-green-50  border-green-100  text-green-800 '
+                    : 'bg-red-50  border-red-100  text-red-800 '
+                  }`}>
+                  <div className="font-bold mb-1">
+                    {userAns === correctAns ? '✓ Chính xác' : '✗ Chưa chính xác'} - Đáp án: {correctAns ? 'Đúng' : 'Sai'}
+                  </div>
+                  {explanations[key as keyof typeof explanations] && (
+                    <div>{explanations[key as keyof typeof explanations]}</div>
+                  )}
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    );
   };
 
   return (
-    <div className="bg-white dark:bg-gray-800 p-5 rounded-lg shadow-md flex flex-col h-full transition-all duration-300 border border-gray-100 hover:shadow-lg">
-      <div className="flex justify-between items-start mb-3">
-        <p className="font-bold text-lg text-blue-600 dark:text-blue-400">{questionNumber}</p>
-        <span className={`px-2 py-1 text-xs font-semibold rounded-full ${getLevelColor(question.level)}`}>
-          {question.level}
-        </span>
+    <div className="bg-white  p-6 rounded-2xl shadow-sm border border-gray-200  h-full flex flex-col">
+      <div className="flex justify-between items-start mb-4">
+        <div className="flex items-center gap-2">
+          <span className="bg-blue-100  text-blue-800  font-bold px-3 py-1 rounded-lg text-sm">
+            Câu {question.id}
+          </span>
+          {getLevelBadge(question.level)}
+        </div>
       </div>
-      <p className="text-gray-800 dark:text-gray-200 mb-4 flex-grow font-medium text-base">{qContent}</p>
 
-      {(type === 'mc' || type === 'MULTIPLE_CHOICE') && (
-        <div className="space-y-2 mb-4">
-          {(question as QuestionMC).options.map((option, index) => (
-            <button
-              key={index}
-              disabled={isSubmitted}
-              onClick={() => onAnswerChange(question.id, option)}
-              className={`w-full text-left p-3 rounded-lg text-sm transition-all duration-200 cursor-pointer disabled:cursor-not-allowed border border-transparent ${getOptionClass(option, userAnswer)}`}
-            >
-              <span className="font-bold mr-2">{String.fromCharCode(65 + index)}.</span> {option}
-              {isSubmitted && qAnswer === option && <span className="ml-2 float-right text-green-600">✅</span>}
-              {isSubmitted && userAnswer === option && qAnswer !== option && <span className="ml-2 float-right text-red-600">❌</span>}
-            </button>
-          ))}
-          {isSubmitted && question.explanation && (
-            <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-900/30 rounded-lg border border-blue-100 dark:border-blue-800">
-              <p className="text-sm text-blue-800 dark:text-blue-200">
-                <strong><i className="fas fa-info-circle mr-2"></i>Giải thích:</strong> {question.explanation}
-              </p>
-            </div>
-          )}
+      <div className="mb-6 text-lg font-medium text-gray-900  leading-relaxed">
+        {question.question}
+      </div>
+
+      <div className="flex-grow">
+        {isMC ? renderMCOptions() : renderTFStatements()}
+      </div>
+
+      {isSubmitted && !((question as QuestionTF).statements) && (question as any).explanation && (
+        <div className="mt-6 p-4 bg-blue-50  rounded-xl border border-blue-100  animate-fade-in">
+          <p className="text-blue-800 ">
+            <strong>💡 Giải thích:</strong> {(question as any).explanation}
+          </p>
         </div>
       )}
 
-      {(type === 'tf' || type === 'TRUE_FALSE') && (
-        <div className="space-y-4 mb-4">
-          {/* Complex TF: Hiển thị các phát biểu a, b, c, d */}
-          {(question as QuestionTF).statements ? (
-            <div className="space-y-3">
-              <p className="text-sm font-semibold text-gray-600 dark:text-gray-400 italic">
-                Chọn Đúng (Đ) hoặc Sai (S) cho mỗi phát biểu:
-              </p>
-              {Object.entries((question as QuestionTF).statements!).map(([key, statement]) => {
-                const tfQuestion = question as QuestionTF;
-                const explanation = tfQuestion.explanations?.[key as 'a' | 'b' | 'c' | 'd'];
-
-                return (
-                  <div key={key} className="bg-gray-50 dark:bg-gray-700/50 p-3 rounded-lg border border-gray-100 dark:border-gray-600">
-                    <div className="flex flex-col sm:flex-row sm:items-center gap-3">
-                      <span className="font-bold text-blue-600 dark:text-blue-400 w-6">{key})</span>
-                      <p className="text-sm text-gray-800 dark:text-gray-200 flex-1">{statement}</p>
-
-                      <div className="flex gap-2 shrink-0">
-                        <button
-                          onClick={() => handleTFChange(key, true)}
-                          disabled={isSubmitted}
-                          className={`w-10 h-10 rounded-full font-bold text-sm transition-all flex items-center justify-center shadow-sm ${getTFButtonClass(true, key)}`}
-                        >
-                          Đ
-                        </button>
-                        <button
-                          onClick={() => handleTFChange(key, false)}
-                          disabled={isSubmitted}
-                          className={`w-10 h-10 rounded-full font-bold text-sm transition-all flex items-center justify-center shadow-sm ${getTFButtonClass(false, key)}`}
-                        >
-                          S
-                        </button>
-                      </div>
-                    </div>
-
-                    {isSubmitted && explanation && (
-                      <div className="mt-2 ml-9 text-xs text-gray-600 bg-white p-2 rounded border border-gray-100">
-                        <strong>Giải thích:</strong> {explanation}
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          ) : (
-            /* Simple True/False */
-            <div className="flex gap-4 justify-center mt-4">
-              <button
-                onClick={() => onAnswerChange(question.id!, true)}
-                disabled={isSubmitted}
-                className={`px-8 py-3 rounded-xl font-bold text-lg transition-all flex items-center gap-2 ${userAnswer === true
-                    ? 'bg-blue-600 text-white shadow-lg scale-105'
-                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                  } ${isSubmitted && qAnswer === true ? 'ring-2 ring-green-500 bg-green-100 text-green-700' : ''} ${isSubmitted && userAnswer === true && qAnswer !== true ? 'ring-2 ring-red-500 bg-red-100 text-red-700' : ''}`}
-              >
-                <span>ĐÚNG</span>
-                {isSubmitted && qAnswer === true && <i className="fas fa-check text-green-600"></i>}
-              </button>
-              <button
-                onClick={() => onAnswerChange(question.id!, false)}
-                disabled={isSubmitted}
-                className={`px-8 py-3 rounded-xl font-bold text-lg transition-all flex items-center gap-2 ${userAnswer === false
-                    ? 'bg-blue-600 text-white shadow-lg scale-105'
-                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                  } ${isSubmitted && qAnswer === false ? 'ring-2 ring-green-500 bg-green-100 text-green-700' : ''} ${isSubmitted && userAnswer === false && qAnswer !== false ? 'ring-2 ring-red-500 bg-red-100 text-red-700' : ''}`}
-              >
-                <span>SAI</span>
-                {isSubmitted && qAnswer === false && <i className="fas fa-check text-green-600"></i>}
-              </button>
-            </div>
-          )}
-          
-          {isSubmitted && !((question as QuestionTF).statements) && question.explanation && (
-            <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-900/30 rounded-lg border border-blue-100 dark:border-blue-800">
-              <p className="text-sm text-blue-800 dark:text-blue-200">
-                <strong><i className="fas fa-info-circle mr-2"></i>Giải thích:</strong> {question.explanation}
-              </p>
-            </div>
-          )}
+      {question.requirement && (
+        <div className="mt-6 pt-4 border-t border-gray-100 ">
+          <p className="text-xs text-gray-500  italic">
+            YCCĐ: {question.requirement}
+          </p>
         </div>
       )}
-
-      <div className="mt-auto pt-4 border-t border-gray-200 dark:border-gray-700">
-        <p className="text-xs text-gray-500 dark:text-gray-400"><em>YCCĐ: {question.requirement}</em></p>
-      </div>
     </div>
   );
 };

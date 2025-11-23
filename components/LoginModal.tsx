@@ -228,6 +228,21 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
                             </div>
                         )}
 
+                        {/* Remember Me - Login only */}
+                        {mode === 'login' && (
+                            <div className="flex items-center gap-2">
+                                <input
+                                    type="checkbox"
+                                    id="rememberMe"
+                                    defaultChecked={true}
+                                    className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
+                                />
+                                <label htmlFor="rememberMe" className="text-sm text-gray-700 cursor-pointer select-none">
+                                    Giữ đăng nhập (30 ngày)
+                                </label>
+                            </div>
+                        )}
+
                         {/* Submit Button */}
                         <button
                             type="submit"

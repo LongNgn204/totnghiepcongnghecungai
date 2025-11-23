@@ -39,7 +39,7 @@ class SyncManager {
     }
     return {
       autoSync: true,
-      syncInterval: 1 * 60 * 1000, // 1 minute
+      syncInterval: 30 * 1000, // 30 seconds
       enabled: true,
     };
   }
@@ -228,6 +228,15 @@ class SyncManager {
     this.isSyncPaused = true;
     this.stopAutoSync();
     console.warn('[Sync] Sync paused due to 401 Unauthorized');
+  }
+
+  resumeSync(): void {
+    this.isSyncPaused = false;
+    console.log('[Sync] Resuming sync...');
+    if (this.config.autoSync && this.config.enabled) {
+      this.startAutoSync();
+      this.syncAll();
+    }
   }
 
   // ============= STATUS =============

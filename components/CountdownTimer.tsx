@@ -78,9 +78,9 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({
   };
 
   const getColorClass = () => {
-    if (timeLeft <= 300) return 'text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/30 border-red-500'; // <= 5 mins
-    if (timeLeft <= 600) return 'text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/30 border-amber-500'; // <= 10 mins
-    return 'text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/30 border-green-500';
+    if (timeLeft <= 300) return 'text-red-600  bg-red-50  border-red-500'; // <= 5 mins
+    if (timeLeft <= 600) return 'text-amber-600  bg-amber-50  border-amber-500'; // <= 10 mins
+    return 'text-green-600  bg-green-50  border-green-500';
   };
 
   const getIconClass = () => {
@@ -113,7 +113,7 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({
 
         {/* Progress Bar */}
         <div className="flex-1 max-w-xs">
-          <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+          <div className="h-3 bg-gray-200  rounded-full overflow-hidden">
             <div 
               className={`h-full transition-all duration-1000 ease-linear ${
                 timeLeft <= 300 
@@ -134,7 +134,7 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({
         <div className="flex items-center gap-2">
           <button
             onClick={toggleTimer}
-            className="px-4 py-2 bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-lg transition-all font-semibold text-sm"
+            className="px-4 py-2 bg-white  rounded-lg shadow-md hover:shadow-lg transition-all font-semibold text-sm"
             title={isRunning ? 'Tạm dừng' : 'Tiếp tục'}
           >
             <i className={`fas ${isRunning ? 'fa-pause' : 'fa-play'} mr-2`}></i>
@@ -142,7 +142,7 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({
           </button>
           <button
             onClick={resetTimer}
-            className="px-4 py-2 bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-lg transition-all font-semibold text-sm"
+            className="px-4 py-2 bg-white  rounded-lg shadow-md hover:shadow-lg transition-all font-semibold text-sm"
             title="Đặt lại"
           >
             <i className="fas fa-redo mr-2"></i>
@@ -153,7 +153,7 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({
 
       {/* Warning Messages */}
       {timeLeft <= 300 && timeLeft > 0 && (
-        <div className="mt-3 pt-3 border-t-2 border-red-300 dark:border-red-700 text-center animate-pulse">
+        <div className="mt-3 pt-3 border-t-2 border-red-300  text-center animate-pulse">
           <p className="text-sm font-bold">
             🚨 Chỉ còn {Math.floor(timeLeft / 60)} phút! Hãy nộp bài sớm để tránh mất điểm!
           </p>
@@ -161,7 +161,7 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({
       )}
 
       {timeLeft === 0 && (
-        <div className="mt-3 pt-3 border-t-2 border-red-300 dark:border-red-700 text-center">
+        <div className="mt-3 pt-3 border-t-2 border-red-300  text-center">
           <p className="text-sm font-bold animate-bounce">
             ⏰ HẾT GIỜ! Bài thi đã được tự động nộp.
           </p>

@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { toast } from 'react-hot-toast';
 import {
     ChatSession,
     ChatMessage,
@@ -186,7 +187,10 @@ Khi người dùng cần hình ảnh (sơ đồ mạch, cấu tạo máy, lưu �
 
             const response = await sendChatMessage(fullPrompt, attachedFiles, selectedModel, history);
 
-            if (!response.success) throw new Error(response.error || 'Có lỗi xảy ra');
+            if (!response.success) {
+                toast.error(response.error || 'Có lỗi xảy ra khi gửi tin nhắn');
+                throw new Error(response.error || 'Có lỗi xảy ra');
+            }
 
             const aiMessage: ChatMessage = {
                 id: generateId(),
@@ -205,11 +209,13 @@ Khi người dùng cần hình ảnh (sơ đồ mạch, cấu tạo máy, lưu �
             setCurrentSession({ ...session });
             await loadChatHistory();
         } catch (error) {
+            const errorMsg = error instanceof Error ? error.message : 'Không thể gửi tin nhắn';
+            toast.error(errorMsg);
             const errorMessage: ChatMessage = {
                 id: generateId(),
                 timestamp: Date.now(),
                 role: 'assistant',
-                content: `❌ Lỗi: ${error instanceof Error ? error.message : 'Không thể gửi tin nhắn'} `
+                content: `❌ Lỗi: ${errorMsg} `
             };
             session.messages.push(errorMessage);
             setCurrentSession({ ...session });

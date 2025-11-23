@@ -110,9 +110,9 @@ const ExamHistory: React.FC = () => {
   };
 
   const getScoreBgColor = (percentage: number) => {
-    if (percentage >= 80) return 'bg-green-50 border-green-200';
-    if (percentage >= 50) return 'bg-yellow-50 border-yellow-200';
-    return 'bg-red-50 border-red-200';
+    if (percentage >= 80) return 'bg-green-50  border-green-200 ';
+    if (percentage >= 50) return 'bg-yellow-50  border-yellow-200 ';
+    return 'bg-red-50  border-red-200 ';
   };
 
   return (
@@ -136,48 +136,48 @@ const ExamHistory: React.FC = () => {
       {/* Statistics */}
       {stats && stats.totalExams > 0 && (
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-          <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 text-center hover:shadow-md transition-all">
+          <div className="bg-white  p-6 rounded-2xl shadow-sm border border-gray-200  text-center hover:shadow-md transition-all">
             <FileText className="w-8 h-8 text-blue-500 mx-auto mb-2" />
-            <div className="text-2xl font-bold text-gray-900">{stats.totalExams}</div>
-            <div className="text-sm text-gray-500 font-medium">Đề đã làm</div>
+            <div className="text-2xl font-bold text-gray-900 ">{stats.totalExams}</div>
+            <div className="text-sm text-gray-500  font-medium">Đề đã làm</div>
           </div>
-          <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 text-center hover:shadow-md transition-all">
+          <div className="bg-white  p-6 rounded-2xl shadow-sm border border-gray-200  text-center hover:shadow-md transition-all">
             <TrendingUp className="w-8 h-8 text-green-500 mx-auto mb-2" />
-            <div className="text-2xl font-bold text-gray-900">{stats.averageScore.toFixed(1)}%</div>
-            <div className="text-sm text-gray-500 font-medium">Điểm TB</div>
+            <div className="text-2xl font-bold text-gray-900 ">{stats.averageScore.toFixed(1)}%</div>
+            <div className="text-sm text-gray-500  font-medium">Điểm TB</div>
           </div>
-          <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 text-center hover:shadow-md transition-all">
+          <div className="bg-white  p-6 rounded-2xl shadow-sm border border-gray-200  text-center hover:shadow-md transition-all">
             <Trophy className="w-8 h-8 text-yellow-500 mx-auto mb-2" />
-            <div className="text-2xl font-bold text-gray-900">{stats.bestScore.toFixed(1)}%</div>
-            <div className="text-sm text-gray-500 font-medium">Cao nhất</div>
+            <div className="text-2xl font-bold text-gray-900 ">{stats.bestScore.toFixed(1)}%</div>
+            <div className="text-sm text-gray-500  font-medium">Cao nhất</div>
           </div>
-          <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 text-center hover:shadow-md transition-all">
+          <div className="bg-white  p-6 rounded-2xl shadow-sm border border-gray-200  text-center hover:shadow-md transition-all">
             <Clock className="w-8 h-8 text-purple-500 mx-auto mb-2" />
-            <div className="text-2xl font-bold text-gray-900">{stats.totalTimeSpent}</div>
-            <div className="text-sm text-gray-500 font-medium">Phút học</div>
+            <div className="text-2xl font-bold text-gray-900 ">{stats.totalTimeSpent}</div>
+            <div className="text-sm text-gray-500  font-medium">Phút học</div>
           </div>
-          <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 text-center hover:shadow-md transition-all">
+          <div className="bg-white  p-6 rounded-2xl shadow-sm border border-gray-200  text-center hover:shadow-md transition-all">
             <Factory className="w-8 h-8 text-indigo-500 mx-auto mb-2" />
-            <div className="text-2xl font-bold text-gray-900">{stats.industrialCount}</div>
-            <div className="text-sm text-gray-500 font-medium">Công nghiệp</div>
+            <div className="text-2xl font-bold text-gray-900 ">{stats.industrialCount}</div>
+            <div className="text-sm text-gray-500  font-medium">Công nghiệp</div>
           </div>
-          <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 text-center hover:shadow-md transition-all">
+          <div className="bg-white  p-6 rounded-2xl shadow-sm border border-gray-200  text-center hover:shadow-md transition-all">
             <Tractor className="w-8 h-8 text-green-500 mx-auto mb-2" />
-            <div className="text-2xl font-bold text-gray-900">{stats.agricultureCount}</div>
-            <div className="text-sm text-gray-500 font-medium">Nông nghiệp</div>
+            <div className="text-2xl font-bold text-gray-900 ">{stats.agricultureCount}</div>
+            <div className="text-sm text-gray-500  font-medium">Nông nghiệp</div>
           </div>
         </div>
       )}
 
       {/* Filters & Actions */}
-      <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-200">
+      <div className="bg-white  p-6 rounded-2xl shadow-sm border border-gray-200 ">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div className="flex flex-wrap gap-2">
             <button
               onClick={() => setFilter('all')}
               className={`px-4 py-2 rounded-xl font-bold transition-all flex items-center gap-2 ${filter === 'all'
                 ? 'bg-blue-600 text-white shadow-md'
-                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                : 'bg-gray-100  text-gray-600  hover:bg-gray-200 :bg-slate-700'
                 }`}
             >
               <FileText className="w-4 h-4" />
@@ -187,7 +187,7 @@ const ExamHistory: React.FC = () => {
               onClick={() => setFilter('industrial')}
               className={`px-4 py-2 rounded-xl font-bold transition-all flex items-center gap-2 ${filter === 'industrial'
                 ? 'bg-indigo-600 text-white shadow-md'
-                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                : 'bg-gray-100  text-gray-600  hover:bg-gray-200 :bg-slate-700'
                 }`}
             >
               <Factory className="w-4 h-4" />
@@ -197,7 +197,7 @@ const ExamHistory: React.FC = () => {
               onClick={() => setFilter('agriculture')}
               className={`px-4 py-2 rounded-xl font-bold transition-all flex items-center gap-2 ${filter === 'agriculture'
                 ? 'bg-green-600 text-white shadow-md'
-                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                : 'bg-gray-100  text-gray-600  hover:bg-gray-200 :bg-slate-700'
                 }`}
             >
               <Tractor className="w-4 h-4" />
@@ -209,7 +209,7 @@ const ExamHistory: React.FC = () => {
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as 'date' | 'score')}
-              className="px-4 py-2 border border-gray-300 rounded-xl bg-white text-gray-700 font-medium focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="px-4 py-2 border border-gray-300  rounded-xl bg-white  text-gray-700  font-medium focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             >
               <option value="date">Sắp xếp: Mới nhất</option>
               <option value="score">Sắp xếp: Điểm cao nhất</option>
@@ -230,14 +230,14 @@ const ExamHistory: React.FC = () => {
 
       {/* Exam List */}
       {sortedHistory.length === 0 ? (
-        <div className="bg-white p-16 rounded-2xl shadow-sm border border-gray-200 text-center">
-          <div className="bg-gray-50 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
-            <FileText className="w-10 h-10 text-gray-300" />
+        <div className="bg-white  p-16 rounded-2xl shadow-sm border border-gray-200  text-center">
+          <div className="bg-gray-50  w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
+            <FileText className="w-10 h-10 text-gray-300 " />
           </div>
-          <h3 className="text-xl font-bold text-gray-900 mb-2">
+          <h3 className="text-xl font-bold text-gray-900  mb-2">
             Chưa có đề thi nào
           </h3>
-          <p className="text-gray-500 mb-8">
+          <p className="text-gray-500  mb-8">
             Bắt đầu làm đề thi để xem lịch sử và theo dõi tiến độ học tập
           </p>
           <div className="flex justify-center gap-4">
@@ -262,38 +262,38 @@ const ExamHistory: React.FC = () => {
           {sortedHistory.map((exam) => (
             <div
               key={exam.id}
-              className={`bg-white p-6 rounded-2xl shadow-sm hover:shadow-md transition-all border-2 ${exam.isSubmitted ? 'border-green-200' : 'border-gray-200'
+              className={`bg-white  p-6 rounded-2xl shadow-sm hover:shadow-md transition-all border-2 ${exam.isSubmitted ? 'border-green-200 ' : 'border-gray-200 '
                 }`}
             >
               <div className="flex flex-wrap items-start justify-between gap-4">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-2 flex-wrap">
                     <span className={`px-3 py-1 rounded-full text-sm font-bold flex items-center gap-1 ${exam.examType === 'industrial'
-                      ? 'bg-indigo-100 text-indigo-700'
-                      : 'bg-green-100 text-green-700'
+                      ? 'bg-indigo-100  text-indigo-700 '
+                      : 'bg-green-100  text-green-700 '
                       }`}>
                       {exam.examType === 'industrial' ? <Factory className="w-3 h-3" /> : <Tractor className="w-3 h-3" />}
                       {exam.examType === 'industrial' ? 'Công nghiệp' : 'Nông nghiệp'}
                     </span>
                     {!exam.isSubmitted && (
-                      <span className="px-3 py-1 rounded-full text-sm font-bold bg-yellow-100 text-yellow-700 flex items-center gap-1">
+                      <span className="px-3 py-1 rounded-full text-sm font-bold bg-yellow-100  text-yellow-700  flex items-center gap-1">
                         <Edit className="w-3 h-3" />
                         Chưa nộp
                       </span>
                     )}
                     {exam.isSubmitted && (
-                      <span className="px-3 py-1 rounded-full text-sm font-bold bg-green-100 text-green-700 flex items-center gap-1">
+                      <span className="px-3 py-1 rounded-full text-sm font-bold bg-green-100  text-green-700  flex items-center gap-1">
                         <CheckCircle className="w-3 h-3" />
                         Đã hoàn thành
                       </span>
                     )}
                   </div>
 
-                  <h3 className="text-lg font-bold text-gray-900 mb-2 line-clamp-2">
+                  <h3 className="text-lg font-bold text-gray-900  mb-2 line-clamp-2">
                     {exam.examTitle}
                   </h3>
 
-                  <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600">
+                  <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600 ">
                     <span className="flex items-center gap-1">
                       <Calendar className="w-4 h-4" />
                       {new Date(exam.createdAt).toLocaleDateString('vi-VN', {
@@ -352,12 +352,12 @@ const ExamHistory: React.FC = () => {
       {/* Delete Confirm Modal */}
       {showDeleteConfirm && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl p-8 max-w-md w-full shadow-2xl animate-scale-in">
-            <h3 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+          <div className="bg-white  rounded-2xl p-8 max-w-md w-full shadow-2xl animate-scale-in">
+            <h3 className="text-2xl font-bold text-gray-900  mb-4 flex items-center gap-2">
               <AlertTriangle className="w-6 h-6 text-red-500" />
               Xác nhận xóa
             </h3>
-            <p className="text-gray-600 mb-6">
+            <p className="text-gray-600  mb-6">
               Bạn có chắc muốn xóa <strong>tất cả {history.length} đề thi</strong> trong lịch sử?
               Hành động này không thể hoàn tác!
             </p>
@@ -371,7 +371,7 @@ const ExamHistory: React.FC = () => {
               </button>
               <button
                 onClick={() => setShowDeleteConfirm(false)}
-                className="flex-1 px-6 py-3 bg-gray-200 text-gray-700 rounded-xl hover:bg-gray-300 transition-all font-bold"
+                className="flex-1 px-6 py-3 bg-gray-200  text-gray-700  rounded-xl hover:bg-gray-300 :bg-slate-600 transition-all font-bold"
               >
                 Hủy
               </button>

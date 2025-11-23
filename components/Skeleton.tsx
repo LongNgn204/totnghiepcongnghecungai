@@ -15,7 +15,7 @@ const Skeleton: React.FC<SkeletonProps> = ({
   width,
   height
 }) => {
-  const baseClasses = 'bg-gray-200 dark:bg-gray-700/50';
+  const baseClasses = 'bg-gray-200 ';
   const animationClass = animation === 'pulse' ? 'animate-pulse duration-2000' : 'animate-wave'; // Smoother animation
   
   const variantClasses = {
@@ -39,7 +39,7 @@ const Skeleton: React.FC<SkeletonProps> = ({
 // Skeleton for Question Card
 export const QuestionSkeleton: React.FC = () => {
   return (
-    <div className="border-l-4 border-gray-300 dark:border-gray-600 pl-4 space-y-3 animate-pulse">
+    <div className="border-l-4 border-gray-300  pl-4 space-y-3 animate-pulse">
       {/* Question number and text */}
       <div className="space-y-2">
         <Skeleton width="30%" height="20px" className="rounded" />
@@ -64,9 +64,9 @@ export const QuestionSkeleton: React.FC = () => {
 // Skeleton for Exam Content
 export const ExamSkeleton: React.FC = () => {
   return (
-    <div className="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-lg space-y-8 animate-pulse border border-gray-100 dark:border-gray-700">
+    <div className="bg-white  p-8 rounded-2xl shadow-lg space-y-8 animate-pulse border border-gray-100 ">
       {/* Exam Header Card */}
-      <div className="border-b border-gray-100 dark:border-gray-700 pb-6 text-center space-y-3">
+      <div className="border-b border-gray-100  pb-6 text-center space-y-3">
         <Skeleton width="70%" height="32px" className="mx-auto rounded-lg" />
         <div className="flex justify-center gap-4 mt-2">
            <Skeleton width="100px" height="20px" className="rounded-full" />
@@ -83,7 +83,7 @@ export const ExamSkeleton: React.FC = () => {
       {/* Questions */}
       <div className="space-y-8">
         {[1, 2, 3].map(i => (
-          <div key={i} className="bg-gray-50 dark:bg-gray-700/30 p-6 rounded-xl border border-gray-100 dark:border-gray-700">
+          <div key={i} className="bg-gray-50  p-6 rounded-xl border border-gray-100 ">
              <QuestionSkeleton />
           </div>
         ))}
@@ -113,7 +113,7 @@ export const ChatMessageSkeleton: React.FC = () => {
 // Skeleton for Statistics Card
 export const StatCardSkeleton: React.FC = () => {
   return (
-    <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md space-y-3 animate-pulse">
+    <div className="bg-white  p-6 rounded-lg shadow-md space-y-3 animate-pulse">
       <Skeleton width="60%" height="20px" className="rounded" />
       <Skeleton width="40%" height="32px" className="rounded" />
       <Skeleton width="80%" height="14px" className="rounded" />

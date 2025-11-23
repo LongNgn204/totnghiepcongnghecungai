@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
+import { toast } from 'react-hot-toast';
 
 export default function AuthPage() {
   const [isLogin, setIsLogin] = useState(true);
@@ -15,7 +16,7 @@ export default function AuthPage() {
             <i className="fas fa-graduation-cap text-4xl text-white"></i>
           </div>
           <h1 className="text-3xl font-bold text-gray-800">Ôn Thi THPT</h1>
-          <p className="text-gray-600">Công Nghệ - Kết nối tri thức</p>
+          <p className="text-gray-600">Công Nghệ Cánh Diều- Kết nối tri thức</p>
         </div>
 
         {/* Toggle Login/Register */}
@@ -56,21 +57,19 @@ function LoginForm() {
     username: '',
     password: ''
   });
-  const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
     setLoading(true);
 
     try {
       await login(formData.username, formData.password);
       navigate('/dashboard');
     } catch (error: any) {
-      setError(error.message);
+      // Error is handled by AuthContext toast
     } finally {
       setLoading(false);
     }
@@ -78,13 +77,6 @@ function LoginForm() {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
-      {error && (
-        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-center gap-2">
-          <i className="fas fa-exclamation-circle"></i>
-          <span>{error}</span>
-        </div>
-      )}
-
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">
           <i className="fas fa-user mr-2 text-blue-500"></i>
@@ -155,7 +147,6 @@ function RegisterForm({ setIsLogin }: { setIsLogin: (val: boolean) => void }) {
     confirmPassword: '',
     displayName: ''
   });
-  const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
   const { register } = useAuth();
@@ -163,45 +154,44 @@ function RegisterForm({ setIsLogin }: { setIsLogin: (val: boolean) => void }) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
 
     // Validation
     if (formData.password !== formData.confirmPassword) {
-      setError('Mật khẩu xác nhận không khớp');
+      toast.error('Mật khẩu xác nhận không khớp');
       return;
     }
 
     if (formData.password.length < 6) {
-      setError('Mật khẩu phải có ít nhất 6 ký tự');
+      toast.error('Mật khẩu phải có ít nhất 6 ký tự');
       return;
     }
 
     if (formData.username.length < 3) {
-      setError('Username phải có ít nhất 3 ký tự');
+      toast.error('Username phải có ít nhất 3 ký tự');
       return;
     }
 
     if (!formData.email.includes('@')) {
-      setError('Email không hợp lệ');
+      toast.error('Email không hợp lệ');
       return;
     }
 
     setLoading(true);
 
     try {
-      await register({
-        username: formData.username,
-        email: formData.email,
-        password: formData.password,
-        displayName: formData.displayName
-      });
+      await register(
+        formData.username,
+        formData.email,
+        formData.password,
+        formData.displayName
+      );
       
       setSuccess(true);
       setTimeout(() => {
         navigate('/dashboard');
       }, 1500);
     } catch (error: any) {
-      setError(error.message);
+      // Error handled by AuthContext
     } finally {
       setLoading(false);
     }
@@ -221,13 +211,6 @@ function RegisterForm({ setIsLogin }: { setIsLogin: (val: boolean) => void }) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      {error && (
-        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-center gap-2">
-          <i className="fas fa-exclamation-circle"></i>
-          <span className="text-sm">{error}</span>
-        </div>
-      )}
-
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">
           <i className="fas fa-user mr-2 text-blue-500"></i>

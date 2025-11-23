@@ -77,7 +77,7 @@ const formatMarkdown = (text: string): string => {
         trust: true
       })}</div>`;
     } catch (e) {
-      return `<div class="math-error bg-red-100 dark:bg-red-900 p-2 rounded">Error rendering: ${equation}</div>`;
+      return `<div class="math-error bg-red-100  p-2 rounded">Error rendering: ${equation}</div>`;
     }
   });
 

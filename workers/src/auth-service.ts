@@ -35,14 +35,15 @@ export async function requireAuth(request: any, db: any): Promise<string> {
   const authHeader = request.headers.get('Authorization');
 
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    console.log('AUTH FAIL: No Bearer token');
     throw new Error('UNAUTHORIZED: No token provided');
   }
 
   const token = authHeader.substring(7);
   const userId = decodeToken(token);
-  console.log('Decoded userId:', userId);
-
+  
   if (!userId) {
+    console.log('AUTH FAIL: Invalid token format', token);
     throw new Error('UNAUTHORIZED: Invalid token');
   }
 
@@ -51,19 +52,22 @@ export async function requireAuth(request: any, db: any): Promise<string> {
     'SELECT id, is_active FROM auth_users WHERE id = ?'
   ).bind(userId).first();
 
-  if (!user || !user.is_active) {
-    throw new Error('UNAUTHORIZED: User not found or inactive');
+  if (!user) {
+    console.log('AUTH FAIL: User not found', userId);
+    throw new Error('UNAUTHORIZED: User not found');
+  }
+  if (!user.is_active) {
+    console.log('AUTH FAIL: User inactive', userId);
+    throw new Error('UNAUTHORIZED: User inactive');
   }
 
   // Verify session exists and not expired
-  console.log('requireAuth token:', token);
   const session = await db.prepare(
     'SELECT id FROM auth_sessions WHERE token = ? AND expires_at > ?'
   ).bind(token, Date.now()).first();
-  console.log('session query result:', session);
 
   if (!session) {
-    console.log('Session not found or expired for token');
+    console.log('AUTH FAIL: Session expired or not found for token', token.substring(0, 10) + '...');
     throw new Error('UNAUTHORIZED: Session expired');
   }
 

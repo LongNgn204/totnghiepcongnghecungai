@@ -27,7 +27,7 @@ const ExamReview: React.FC = () => {
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
           <i className="fas fa-spinner fa-spin text-4xl text-blue-600 mb-4"></i>
-          <p className="text-gray-600 dark:text-gray-400">Đang tải...</p>
+          <p className="text-gray-600 ">Đang tải...</p>
         </div>
       </div>
     );
@@ -35,12 +35,12 @@ const ExamReview: React.FC = () => {
 
   if (!exam) {
     return (
-      <div className="bg-white dark:bg-gray-800 p-12 rounded-lg shadow text-center">
+      <div className="bg-white  p-12 rounded-lg shadow text-center">
         <i className="fas fa-exclamation-circle text-6xl text-red-500 mb-4"></i>
-        <h3 className="text-xl font-semibold text-gray-700 dark:text-gray-300 mb-2">
+        <h3 className="text-xl font-semibold text-gray-700  mb-2">
           Không tìm thấy đề thi
         </h3>
-        <p className="text-gray-600 dark:text-gray-400 mb-6">
+        <p className="text-gray-600  mb-6">
           Đề thi này có thể đã bị xóa hoặc không tồn tại
         </p>
         <Link
@@ -91,46 +91,46 @@ const ExamReview: React.FC = () => {
 
       {/* Score Summary */}
       {exam.isSubmitted && (
-        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
-          <h3 className="text-xl font-bold mb-4 text-gray-800 dark:text-white">
+        <div className="bg-white  p-6 rounded-lg shadow-lg">
+          <h3 className="text-xl font-bold mb-4 text-gray-800 ">
             <i className="fas fa-chart-bar mr-2"></i>Kết quả
           </h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="text-center p-4 bg-blue-50 dark:bg-blue-900 rounded-lg">
-              <div className="text-3xl font-bold text-blue-600 dark:text-blue-400">
+            <div className="text-center p-4 bg-blue-50  rounded-lg">
+              <div className="text-3xl font-bold text-blue-600 ">
                 {exam.score}/{exam.totalQuestions}
               </div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">Số câu đúng</div>
+              <div className="text-sm text-gray-600 ">Số câu đúng</div>
             </div>
-            <div className="text-center p-4 bg-green-50 dark:bg-green-900 rounded-lg">
-              <div className="text-3xl font-bold text-green-600 dark:text-green-400">
+            <div className="text-center p-4 bg-green-50  rounded-lg">
+              <div className="text-3xl font-bold text-green-600 ">
                 {((exam.score / exam.totalQuestions) * 10).toFixed(1)}
               </div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">Điểm (thang 10)</div>
+              <div className="text-sm text-gray-600 ">Điểm (thang 10)</div>
             </div>
-            <div className="text-center p-4 bg-purple-50 dark:bg-purple-900 rounded-lg">
-              <div className="text-3xl font-bold text-purple-600 dark:text-purple-400">
+            <div className="text-center p-4 bg-purple-50  rounded-lg">
+              <div className="text-3xl font-bold text-purple-600 ">
                 {exam.percentage.toFixed(1)}%
               </div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">Tỷ lệ đúng</div>
+              <div className="text-sm text-gray-600 ">Tỷ lệ đúng</div>
             </div>
-            <div className="text-center p-4 bg-orange-50 dark:bg-orange-900 rounded-lg">
-              <div className="text-3xl font-bold text-orange-600 dark:text-orange-400">
+            <div className="text-center p-4 bg-orange-50  rounded-lg">
+              <div className="text-3xl font-bold text-orange-600 ">
                 {exam.timeSpent} phút
               </div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">Thời gian</div>
+              <div className="text-sm text-gray-600 ">Thời gian</div>
             </div>
           </div>
         </div>
       )}
 
       {/* Exam Title */}
-      <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
+      <div className="bg-white  p-6 rounded-lg shadow-lg">
         <div className="text-center border-b-2 pb-4 mb-6">
-          <h3 className="text-2xl font-bold text-gray-800 dark:text-white mb-2">
+          <h3 className="text-2xl font-bold text-gray-800  mb-2">
             {exam.examTitle}
           </h3>
-          <p className="text-gray-600 dark:text-gray-400">
+          <p className="text-gray-600 ">
             <i className="fas fa-book mr-2"></i>28 câu hỏi (24 TN + 4 Đ/S)
             <span className="mx-3">|</span>
             <i className="fas fa-clock mr-2"></i>Thời gian: 50 phút
@@ -139,7 +139,7 @@ const ExamReview: React.FC = () => {
 
         {/* Phần I: Multiple Choice */}
         <div className="mb-8">
-          <h4 className="text-xl font-bold mb-4 text-blue-600 dark:text-blue-400">
+          <h4 className="text-xl font-bold mb-4 text-blue-600 ">
             PHẦN I: Trắc nghiệm 4 lựa chọn (Câu 1-24)
           </h4>
           <div className="space-y-6">
@@ -159,7 +159,7 @@ const ExamReview: React.FC = () => {
 
         {/* Phần II: True/False */}
         <div className="mb-8">
-          <h4 className="text-xl font-bold mb-4 text-green-600 dark:text-green-400">
+          <h4 className="text-xl font-bold mb-4 text-green-600 ">
             PHẦN II: Trắc nghiệm Đúng/Sai (Câu 25-28)
           </h4>
           <div className="space-y-6">
@@ -178,7 +178,7 @@ const ExamReview: React.FC = () => {
         </div>
 
         {/* Actions */}
-        <div className="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700 flex flex-wrap justify-center gap-4">
+        <div className="mt-8 pt-6 border-t border-gray-200  flex flex-wrap justify-center gap-4">
           <button
             onClick={() => window.print()}
             className="px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-all"

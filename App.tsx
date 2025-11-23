@@ -2,13 +2,16 @@ import React, { Suspense } from 'react';
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import { ChatProvider } from './contexts/ChatContext';
 import MainLayout from './layouts/MainLayout';
+import ChatLayout from './layouts/ChatLayout';
 import ErrorBoundary from './components/ErrorBoundary';
 import ProtectedRoute from './components/ProtectedRoute';
 import { Loader2 } from 'lucide-react';
+import { Toaster } from 'react-hot-toast';
 
 // Lazy load components
 const LandingPage = React.lazy(() => import('./components/LandingPage'));
 const ChatInterface = React.lazy(() => import('./components/ChatInterface'));
+const Product1 = React.lazy(() => import('./components/Product1'));
 const AuthPage = React.lazy(() => import('./components/auth/AuthPage'));
 const Product2 = React.lazy(() => import('./components/Product2'));
 const Product3 = React.lazy(() => import('./components/Product3'));
@@ -19,7 +22,6 @@ const Product7 = React.lazy(() => import('./components/Product7'));
 const Product8 = React.lazy(() => import('./components/Product8'));
 const Dashboard = React.lazy(() => import('./components/Dashboard'));
 const Flashcards = React.lazy(() => import('./components/Flashcards'));
-const Leaderboard = React.lazy(() => import('./components/Leaderboard'));
 const ExamHistory = React.lazy(() => import('./components/ExamHistory'));
 const Profile = React.lazy(() => import('./components/Profile'));
 const PWASettings = React.lazy(() => import('./components/PWASettings'));
@@ -29,7 +31,7 @@ const NotFound = React.lazy(() => import('./components/NotFound'));
 
 const LoadingFallback = () => (
   <div className="min-h-screen flex items-center justify-center bg-gray-50">
-    <div className="flex flex-col items-center gap-4">
+    <div className="flex flex-col items-center gap-4 animate-fade-in">
       <Loader2 className="w-12 h-12 text-blue-600 animate-spin" />
       <p className="text-gray-500 font-medium">Đang tải dữ liệu...</p>
     </div>
@@ -39,7 +41,6 @@ const LoadingFallback = () => (
 const App: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const isFullScreenPage = location.pathname === '/' || location.pathname === '/login';
 
   // Scroll to top on route change
   React.useEffect(() => {
@@ -48,18 +49,26 @@ const App: React.FC = () => {
 
   return (
     <ChatProvider>
+      <Toaster position="top-right" reverseOrder={false} />
       <Suspense fallback={<LoadingFallback />}>
         <Routes>
           {/* Landing Page (No Layout) */}
           <Route path="/" element={<LandingPage onStart={() => navigate('/chat')} />} />
           <Route path="/login" element={<AuthPage />} />
 
+          {/* Chat Route (ChatLayout - Full Screen for bare chat) */}
+          <Route path="/chat" element={
+            <ChatLayout>
+              <ProtectedRoute><ChatInterface /></ProtectedRoute>
+            </ChatLayout>
+          } />
+
           {/* Main App Routes (Wrapped in MainLayout) */}
           <Route path="/*" element={
             <MainLayout>
               <Routes>
-                <Route path="/chat" element={<ProtectedRoute><ChatInterface /></ProtectedRoute>} />
-                <Route path="/san-pham-1" element={<ProtectedRoute><ChatInterface /></ProtectedRoute>} />
+                {/* Product 1 - Chat AI with header and instructions */}
+                <Route path="/san-pham-1" element={<ProtectedRoute><Product1 /></ProtectedRoute>} />
                 <Route path="/san-pham-2" element={<ProtectedRoute><Product2 /></ProtectedRoute>} />
                 <Route path="/san-pham-3" element={
                   <ProtectedRoute>
@@ -75,7 +84,6 @@ const App: React.FC = () => {
                 <Route path="/product8" element={<ProtectedRoute><Product8 /></ProtectedRoute>} />
                 <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
                 <Route path="/flashcards" element={<ProtectedRoute><Flashcards /></ProtectedRoute>} />
-                <Route path="/leaderboard" element={<ProtectedRoute><Leaderboard /></ProtectedRoute>} />
                 <Route path="/history" element={<ProtectedRoute><ExamHistory /></ProtectedRoute>} />
                 <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
                 <Route path="/settings" element={<ProtectedRoute><PWASettings /></ProtectedRoute>} />

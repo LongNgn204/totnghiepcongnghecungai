@@ -415,6 +415,29 @@ router.get('/api/exams/:id', async (request, env: Env) => {
   }
 });
 
+// Get exam statistics
+router.get('/api/exams/stats', async (request, env: Env) => {
+  try {
+    const userId = await requireAuth(request, env.DB);
+
+    const stats = await env.DB.prepare(
+      `SELECT 
+        COUNT(*) as total_exams,
+        AVG(score) as avg_score,
+        SUM(duration) as total_duration
+       FROM exams WHERE user_id = ?`
+    ).bind(userId).first();
+
+    return successResponse({
+      totalExams: stats?.total_exams || 0,
+      avgScore: stats?.avg_score || 0,
+      totalDuration: stats?.total_duration || 0
+    });
+  } catch (error: any) {
+    return errorResponse(error.message);
+  }
+});
+
 router.delete('/api/exams/:id', async (request, env: Env) => {
   try {
     const userId = await requireAuth(request, env.DB);

@@ -357,21 +357,21 @@ ${difficulty === 'Rất khó' ? '- Tập trung vào mức độ VẬN DỤNG và
             </div>
 
             {/* Form nhập liệu */}
-            <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-200">
-                <h3 className="text-xl font-bold mb-6 border-b border-gray-100 pb-4 flex items-center gap-2 text-gray-900">
+            <div className="bg-white  p-8 rounded-2xl shadow-sm border border-gray-200 ">
+                <h3 className="text-xl font-bold mb-6 border-b border-gray-100  pb-4 flex items-center gap-2 text-gray-900 ">
                     <span className="text-blue-600">⚙️</span>
                     Cấu hình tạo câu hỏi
                 </h3>
                 <div className="space-y-6">
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                            <label className="block text-sm font-medium text-gray-700  mb-2">
                                 Chọn lớp
                             </label>
                             <select
                                 value={grade}
                                 onChange={(e) => setGrade(e.target.value)}
-                                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all bg-gray-50"
+                                className="w-full px-4 py-3 border border-gray-300  rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all bg-gray-50  "
                                 disabled={loading}
                             >
                                 <option value="10">Lớp 10</option>
@@ -380,13 +380,13 @@ ${difficulty === 'Rất khó' ? '- Tập trung vào mức độ VẬN DỤNG và
                             </select>
                         </div>
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                            <label className="block text-sm font-medium text-gray-700  mb-2">
                                 Độ khó
                             </label>
                             <select
                                 value={difficulty}
                                 onChange={(e) => setDifficulty(e.target.value)}
-                                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all bg-gray-50"
+                                className="w-full px-4 py-3 border border-gray-300  rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all bg-gray-50  "
                                 disabled={loading}
                             >
                                 <option value="Dễ">Dễ (Cơ bản)</option>
@@ -395,7 +395,7 @@ ${difficulty === 'Rất khó' ? '- Tập trung vào mức độ VẬN DỤNG và
                             </select>
                         </div>
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                            <label className="block text-sm font-medium text-gray-700  mb-2">
                                 Số câu 4 lựa chọn
                             </label>
                             <input
@@ -404,12 +404,12 @@ ${difficulty === 'Rất khó' ? '- Tập trung vào mức độ VẬN DỤNG và
                                 onChange={(e) => setNumMC(e.target.value)}
                                 min="1"
                                 max="20"
-                                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all bg-gray-50"
+                                className="w-full px-4 py-3 border border-gray-300  rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all bg-gray-50  "
                                 disabled={loading}
                             />
                         </div>
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                            <label className="block text-sm font-medium text-gray-700  mb-2">
                                 Số câu Đúng/Sai
                             </label>
                             <input
@@ -418,13 +418,13 @@ ${difficulty === 'Rất khó' ? '- Tập trung vào mức độ VẬN DỤNG và
                                 onChange={(e) => setNumTF(e.target.value)}
                                 min="1"
                                 max="20"
-                                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all bg-gray-50"
+                                className="w-full px-4 py-3 border border-gray-300  rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all bg-gray-50  "
                                 disabled={loading}
                             />
                         </div>
                     </div>
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <label className="block text-sm font-medium text-gray-700  mb-2">
                             Chủ đề cần tạo câu hỏi (ví dụ: Công nghệ điện, Mạch điện ba pha, Động cơ đốt trong...)
                         </label>
                         <input
@@ -432,7 +432,7 @@ ${difficulty === 'Rất khó' ? '- Tập trung vào mức độ VẬN DỤNG và
                             value={topic}
                             onChange={(e) => setTopic(e.target.value)}
                             placeholder="Nhập chủ đề..."
-                            className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all bg-gray-50"
+                            className="w-full px-4 py-3 border border-gray-300  rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all bg-gray-50  "
                             disabled={loading}
                         />
                     </div>
@@ -465,7 +465,7 @@ ${difficulty === 'Rất khó' ? '- Tập trung vào mức độ VẬN DỤNG và
                         {hasGenerated && (
                             <button
                                 onClick={handleResetAll}
-                                className="bg-white text-gray-700 font-bold py-4 px-6 rounded-xl border border-gray-300 hover:bg-gray-50 transition-all flex items-center justify-center shadow-sm hover:shadow-md"
+                                className="bg-white  text-gray-700  font-bold py-4 px-6 rounded-xl border border-gray-300  hover:bg-gray-50 :bg-slate-700 transition-all flex items-center justify-center shadow-sm hover:shadow-md"
                             >
                                 <span className="mr-2">🔄</span>
                                 Làm mới
@@ -476,20 +476,20 @@ ${difficulty === 'Rất khó' ? '- Tập trung vào mức độ VẬN DỤNG và
             </div>
 
             {isSubmitted && (
-                <div className="bg-white p-6 rounded-xl shadow-lg text-center sticky top-24 z-40 border border-blue-100 animate-fade-in-down">
-                    <h3 className="text-2xl font-bold text-gray-800 flex items-center justify-center gap-3">
+                <div className="bg-white  p-6 rounded-xl shadow-lg text-center sticky top-24 z-40 border border-blue-100  animate-fade-in-down">
+                    <h3 className="text-2xl font-bold text-gray-800  flex items-center justify-center gap-3">
                         <span className="text-yellow-500 text-3xl">🏆</span>
-                        Kết quả: <span className="text-blue-600 text-3xl">{score}</span> / <span className="text-gray-500">{maxScore}</span>
+                        Kết quả: <span className="text-blue-600  text-3xl">{score}</span> / <span className="text-gray-500 ">{maxScore}</span>
                     </h3>
-                    <p className="text-gray-600 mt-2">Bạn đã hoàn thành bài kiểm tra. Hãy xem lại kết quả chi tiết bên dưới.</p>
+                    <p className="text-gray-600  mt-2">Bạn đã hoàn thành bài kiểm tra. Hãy xem lại kết quả chi tiết bên dưới.</p>
                 </div>
             )}
 
             {/* Hiển thị câu hỏi khi đã tạo */}
             {hasGenerated && mcQuestionsData.length > 0 && (
-                <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-200">
-                    <div className="flex justify-between items-center mb-6 border-b border-gray-100 pb-4">
-                        <h3 className="text-xl font-bold flex items-center gap-2 text-gray-900">
+                <div className="bg-white  p-8 rounded-2xl shadow-sm border border-gray-200 ">
+                    <div className="flex justify-between items-center mb-6 border-b border-gray-100  pb-4">
+                        <h3 className="text-xl font-bold flex items-center gap-2 text-gray-900 ">
                             <span className="text-blue-600">📋</span>
                             Hệ thống câu hỏi trắc nghiệm
                         </h3>
@@ -502,7 +502,7 @@ ${difficulty === 'Rất khó' ? '- Tập trung vào mức độ VẬN DỤNG và
                         </button>
                     </div>
 
-                    <h4 className="text-lg font-bold mt-6 mb-4 text-blue-800 bg-blue-50 p-3 rounded-lg inline-block">A. Trắc nghiệm nhiều lựa chọn</h4>
+                    <h4 className="text-lg font-bold mt-6 mb-4 text-blue-800  bg-blue-50  p-3 rounded-lg inline-block">A. Trắc nghiệm nhiều lựa chọn</h4>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         {mcQuestionsData.map(q =>
                             <QuestionCard
@@ -517,7 +517,7 @@ ${difficulty === 'Rất khó' ? '- Tập trung vào mức độ VẬN DỤNG và
 
                     {tfQuestionsData.length > 0 && (
                         <>
-                            <h4 className="text-lg font-bold mt-10 mb-4 text-blue-800 bg-blue-50 p-3 rounded-lg inline-block">B. Trắc nghiệm Đúng/Sai</h4>
+                            <h4 className="text-lg font-bold mt-10 mb-4 text-blue-800  bg-blue-50  p-3 rounded-lg inline-block">B. Trắc nghiệm Đúng/Sai</h4>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 {tfQuestionsData.map(q =>
                                     <QuestionCard
@@ -538,7 +538,7 @@ ${difficulty === 'Rất khó' ? '- Tập trung vào mức độ VẬN DỤNG và
                                 <span className="mr-2">✅</span> Kiểm tra đáp án
                             </button>
                         ) : (
-                            <button onClick={handleResetAnswers} className="bg-white text-blue-600 font-bold py-4 px-12 rounded-xl border-2 border-blue-600 hover:bg-blue-50 transition-all flex items-center shadow-md">
+                            <button onClick={handleResetAnswers} className="bg-white  text-blue-600  font-bold py-4 px-12 rounded-xl border-2 border-blue-600  hover:bg-blue-50 :bg-blue-900/20 transition-all flex items-center shadow-md">
                                 <span className="mr-2">🔄</span> Làm lại
                             </button>
                         )}
@@ -548,31 +548,31 @@ ${difficulty === 'Rất khó' ? '- Tập trung vào mức độ VẬN DỤNG và
 
             {/* Hướng dẫn sử dụng */}
             {!hasGenerated && (
-                <div className="bg-blue-50 p-8 rounded-2xl border border-blue-100">
-                    <h3 className="text-xl font-bold mb-4 text-blue-900 flex items-center gap-2">
+                <div className="bg-blue-50  p-8 rounded-2xl border border-blue-100 ">
+                    <h3 className="text-xl font-bold mb-4 text-blue-900  flex items-center gap-2">
                         <span className="text-2xl">ℹ️</span>
                         Hướng dẫn sử dụng
                     </h3>
-                    <ul className="space-y-3 text-blue-800">
-                        <li className="flex items-center gap-3 bg-white p-3 rounded-lg shadow-sm border border-blue-100">
+                    <ul className="space-y-3 text-blue-800 ">
+                        <li className="flex items-center gap-3 bg-white  p-3 rounded-lg shadow-sm border border-blue-100 ">
                             <div className="bg-blue-100 p-1 rounded-full">
                                 <span className="text-blue-600 text-xs">✓</span>
                             </div>
                             Chọn lớp học và số lượng câu hỏi mong muốn
                         </li>
-                        <li className="flex items-center gap-3 bg-white p-3 rounded-lg shadow-sm border border-blue-100">
+                        <li className="flex items-center gap-3 bg-white  p-3 rounded-lg shadow-sm border border-blue-100 ">
                             <div className="bg-blue-100 p-1 rounded-full">
                                 <span className="text-blue-600 text-xs">✓</span>
                             </div>
                             Nhập chủ đề cần tạo câu hỏi (ví dụ: "Công nghệ điện", "Mạch điện ba pha"...)
                         </li>
-                        <li className="flex items-center gap-3 bg-white p-3 rounded-lg shadow-sm border border-blue-100">
+                        <li className="flex items-center gap-3 bg-white  p-3 rounded-lg shadow-sm border border-blue-100 ">
                             <div className="bg-blue-100 p-1 rounded-full">
                                 <span className="text-blue-600 text-xs">✓</span>
                             </div>
                             Nhấn "Tạo câu hỏi với AI" và chờ AI xử lý
                         </li>
-                        <li className="flex items-center gap-3 bg-white p-3 rounded-lg shadow-sm border border-blue-100">
+                        <li className="flex items-center gap-3 bg-white  p-3 rounded-lg shadow-sm border border-blue-100 ">
                             <div className="bg-blue-100 p-1 rounded-full">
                                 <span className="text-blue-600 text-xs">✓</span>
                             </div>

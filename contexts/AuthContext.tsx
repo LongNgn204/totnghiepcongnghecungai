@@ -1,6 +1,7 @@
 // AuthContext.tsx - Handles authentication state and integrates sync pause on 401
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { syncManager } from '../utils/syncManager';
+import { toast } from 'react-hot-toast';
 
 interface User {
   id: string;
@@ -19,7 +20,7 @@ interface AuthContextType {
   token: string | null;
   loading: boolean;
   login: (identifier: string, password: string) => Promise<void>;
-  register: (email: string, password: string, displayName: string) => Promise<void>;
+  register: (username: string, email: string, password: string, displayName: string) => Promise<void>;
   logout: () => void;
   updateProfile: (data: Partial<User>) => Promise<void>;
   isAuthenticated: boolean;
@@ -65,13 +66,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             localStorage.setItem('user_data', JSON.stringify(userData));
           } else if (response.status === 401) {
             // Only logout if explicitly unauthorized (token expired/invalid)
-            console.warn('Token expired or invalid, logging out...');
-            localStorage.removeItem('auth_token');
-            localStorage.removeItem('user_data');
-            localStorage.removeItem('user_id');
-            syncManager.pauseSync();
-            setUser(null);
-            setToken(null);
+            console.warn('Token expired or invalid (Server returned 401)');
+            // TEMPORARY FIX: Do not auto-logout on refresh to keep local state
+            // localStorage.removeItem('auth_token');
+            // localStorage.removeItem('user_data');
+            // localStorage.removeItem('user_id');
+            // syncManager.pauseSync();
+            // setUser(null);
+            // setToken(null);
+            // toast.error('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.');
           }
           // If other error (500, network), keep the local user state (optimistic)
         } catch (error) {
@@ -89,21 +92,29 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     verifyAuth();
   }, []);
 
-  const register = async (email: string, password: string, displayName: string) => {
+  const register = async (username: string, email: string, password: string, displayName: string) => {
     const response = await fetch(`${API_URL}/api/auth/register`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password, displayName }),
+      body: JSON.stringify({ username, email, password, displayName }),
     });
     const result = await response.json();
-    if (!response.ok) throw new Error(result.error || 'Đăng ký thất bại');
+    if (!response.ok) {
+      toast.error(result.error || 'Đăng ký thất bại');
+      throw new Error(result.error || 'Đăng ký thất bại');
+    }
     const data = result.data || result;
-    if (!data.user || !data.token) throw new Error('Dữ liệu đăng ký không hợp lệ');
+    if (!data.user || !data.token) {
+      toast.error('Dữ liệu đăng ký không hợp lệ');
+      throw new Error('Dữ liệu đăng ký không hợp lệ');
+    }
     setUser(data.user);
     setToken(data.token);
+    toast.success('Đăng ký thành công!');
     localStorage.setItem('auth_token', data.token);
     localStorage.setItem('user_data', JSON.stringify(data.user));
     localStorage.setItem('user_id', data.user.id);
+    syncManager.resumeSync();
   };
 
   const login = async (identifier: string, password: string) => {
@@ -115,14 +126,22 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       body: JSON.stringify(payload),
     });
     const result = await response.json();
-    if (!response.ok) throw new Error(result.error || 'Đăng nhập thất bại');
+    if (!response.ok) {
+      toast.error(result.error || 'Đăng nhập thất bại');
+      throw new Error(result.error || 'Đăng nhập thất bại');
+    }
     const data = result.data || result;
-    if (!data.user || !data.token) throw new Error('Dữ liệu đăng nhập không hợp lệ');
+    if (!data.user || !data.token) {
+      toast.error('Dữ liệu đăng nhập không hợp lệ');
+      throw new Error('Dữ liệu đăng nhập không hợp lệ');
+    }
     setUser(data.user);
     setToken(data.token);
+    toast.success('Đăng nhập thành công!');
     localStorage.setItem('auth_token', data.token);
     localStorage.setItem('user_data', JSON.stringify(data.user));
     localStorage.setItem('user_id', data.user.id);
+    syncManager.resumeSync();
   };
 
   const logout = () => {
@@ -142,6 +161,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     localStorage.removeItem('user_id');
     // Ensure sync is paused after explicit logout
     syncManager.pauseSync();
+    toast.success('Đã đăng xuất');
   };
 
   const updateProfile = async (data: Partial<User>) => {
@@ -155,9 +175,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       body: JSON.stringify(data),
     });
     const result = await response.json();
-    if (!response.ok) throw new Error(result.error || 'Cập nhật thất bại');
+    if (!response.ok) {
+      toast.error(result.error || 'Cập nhật thất bại');
+      throw new Error(result.error || 'Cập nhật thất bại');
+    }
     setUser(result.user);
     localStorage.setItem('user_data', JSON.stringify(result.user));
+    toast.success('Cập nhật thông tin thành công!');
   };
 
   return (
