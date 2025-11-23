@@ -12,6 +12,46 @@ CREATE TABLE IF NOT EXISTS users (
 );
 CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
 
+-- Auth Users (New Auth System)
+CREATE TABLE IF NOT EXISTS auth_users (
+  id TEXT PRIMARY KEY,
+  username TEXT,
+  email TEXT UNIQUE,
+  password_hash TEXT,
+  display_name TEXT,
+  avatar TEXT,
+  bio TEXT,
+  created_at INTEGER,
+  last_login INTEGER,
+  is_active INTEGER DEFAULT 1,
+  is_admin INTEGER DEFAULT 0
+);
+CREATE INDEX IF NOT EXISTS idx_auth_users_email ON auth_users(email);
+CREATE INDEX IF NOT EXISTS idx_auth_users_username ON auth_users(username);
+
+-- Auth Sessions
+CREATE TABLE IF NOT EXISTS auth_sessions (
+  id TEXT PRIMARY KEY,
+  user_id TEXT NOT NULL,
+  token TEXT NOT NULL,
+  expires_at INTEGER NOT NULL,
+  created_at INTEGER NOT NULL,
+  FOREIGN KEY (user_id) REFERENCES auth_users(id) ON DELETE CASCADE
+);
+CREATE INDEX IF NOT EXISTS idx_auth_sessions_token ON auth_sessions(token);
+
+-- Password Reset Tokens
+CREATE TABLE IF NOT EXISTS password_reset_tokens (
+  id TEXT PRIMARY KEY,
+  user_id TEXT NOT NULL,
+  token TEXT NOT NULL,
+  expires_at INTEGER NOT NULL,
+  created_at INTEGER NOT NULL,
+  used INTEGER DEFAULT 0,
+  FOREIGN KEY (user_id) REFERENCES auth_users(id) ON DELETE CASCADE
+);
+
+
 -- Exams table (Đề thi đã làm)
 CREATE TABLE IF NOT EXISTS exams (
   id TEXT PRIMARY KEY,

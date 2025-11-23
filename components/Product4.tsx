@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { generateContent } from '../utils/geminiAPI';
 import { saveExamToHistory, getExamHistory, ExamHistory, deleteExamFromHistory } from '../utils/examStorage';
+import syncManager from '../utils/syncManager';
 import QuestionCard from './QuestionCard';
 import LoadingSpinner from './LoadingSpinner';
 import { ExamSkeleton } from './Skeleton';
@@ -218,6 +219,7 @@ ${difficulty === 'Rất khó' ? '- Tập trung vào vận dụng cao.\n- Các b�
       createdAt: new Date().toISOString(),
       isSubmitted: true
     });
+    syncManager.syncExams();
 
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -251,6 +253,7 @@ ${difficulty === 'Rất khó' ? '- Tập trung vào vận dụng cao.\n- Các b�
   const handleDeleteExam = (id: string) => {
     if (window.confirm('Bạn có chắc chắn muốn xóa đề thi này không?')) {
       deleteExamFromHistory(id);
+      syncManager.syncExams();
       setExamHistory(prev => prev.filter(e => e.id !== id));
     }
   };
@@ -443,7 +446,7 @@ ${difficulty === 'Rất khó' ? '- Tập trung vào vận dụng cao.\n- Các b�
                     {questions.filter(q => q.type === 'mc').map(q => (
                       <div key={q.id} className="border-l-4 border-blue-500 pl-4">
                         <QuestionCard
-                          question={q}
+                          question={q as any}
                           type="mc"
                           onAnswerChange={handleAnswerChange}
                           userAnswer={userAnswers[q.id]}
@@ -463,7 +466,7 @@ ${difficulty === 'Rất khó' ? '- Tập trung vào vận dụng cao.\n- Các b�
                     {questions.filter(q => q.type === 'tf').map(q => (
                       <div key={q.id} className="border-l-4 border-green-500 pl-4">
                         <QuestionCard
-                          question={q}
+                          question={q as any}
                           type="tf"
                           onAnswerChange={handleAnswerChange}
                           userAnswer={userAnswers[q.id]}

@@ -11,6 +11,7 @@ import {
   searchChats,
   exportChatToText
 } from '../utils/chatStorage';
+import syncManager from '../utils/syncManager';
 import ChatSidebar from './ChatSidebar';
 import MessageList from './MessageList';
 import ChatInput from './ChatInput';
@@ -80,6 +81,7 @@ const ChatInterface: React.FC = () => {
     e.stopPropagation();
     if (confirm('Bạn có chắc muốn xóa cuộc trò chuyện này?')) {
       await deleteChatSession(id);
+      syncManager.syncChat();
       await loadChatHistory();
       if (currentSession?.id === id) setCurrentSession(null);
     }
@@ -171,6 +173,7 @@ const ChatInterface: React.FC = () => {
 
     // Save user message immediately
     await saveChatSession(session);
+    syncManager.syncChat();
 
     try {
       const systemInstruction = `
@@ -227,6 +230,7 @@ const ChatInterface: React.FC = () => {
 
       // Save AI message
       await saveChatSession(session);
+      syncManager.syncChat();
 
       setCurrentSession({ ...session });
       await loadChatHistory();

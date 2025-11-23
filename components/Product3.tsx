@@ -3,6 +3,7 @@ import { generateContent } from '../utils/geminiAPI';
 import QuestionCard from './QuestionCard';
 import { QuestionMC, QuestionTF, QuestionLevel } from '../types';
 import { saveExamToHistory, getExamHistory, ExamHistory, deleteExamFromHistory } from '../utils/examStorage';
+import syncManager from '../utils/syncManager';
 import LoadingSpinner from './LoadingSpinner';
 import { ExamSkeleton } from './Skeleton';
 import CountdownTimer from './CountdownTimer';
@@ -239,6 +240,7 @@ ${difficulty === 'Rất khó' ? '- Tập trung vào vận dụng cao.\n- Các b�
       createdAt: new Date().toISOString(),
       isSubmitted: true
     });
+    syncManager.syncExams();
 
     // Save to backend if logged in
     if (user) {
@@ -302,6 +304,7 @@ ${difficulty === 'Rất khó' ? '- Tập trung vào vận dụng cao.\n- Các b�
   const handleDeleteExam = (id: string) => {
     if (window.confirm('Bạn có chắc chắn muốn xóa đề thi này không?')) {
       deleteExamFromHistory(id);
+      syncManager.syncExams();
       setExamHistory(prev => prev.filter(e => e.id !== id));
     }
   };

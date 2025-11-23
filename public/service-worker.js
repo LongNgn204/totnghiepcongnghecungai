@@ -1,7 +1,7 @@
 // Service Worker for PWA offline functionality
-const CACHE_NAME = 'ai-hoc-tap-v1';
-const STATIC_CACHE = 'static-v1';
-const DYNAMIC_CACHE = 'dynamic-v1';
+const CACHE_NAME = 'ai-hoc-tap-v2';
+const STATIC_CACHE = 'static-v2';
+const DYNAMIC_CACHE = 'dynamic-v2';
 
 // Files to cache on install
 const STATIC_FILES = [
@@ -13,13 +13,13 @@ const STATIC_FILES = [
 // Install event - cache static files
 self.addEventListener('install', (event) => {
   console.log('[Service Worker] Installing...');
+  self.skipWaiting(); // Force activation immediately
   event.waitUntil(
     caches.open(STATIC_CACHE).then((cache) => {
       console.log('[Service Worker] Caching static files');
       return cache.addAll(STATIC_FILES);
     })
   );
-  self.skipWaiting();
 });
 
 // Activate event - clean up old caches
@@ -37,7 +37,7 @@ self.addEventListener('activate', (event) => {
       );
     })
   );
-  return self.clients.claim();
+  return self.clients.claim(); // Take control immediately
 });
 
 // Fetch event - network first, then cache
@@ -50,16 +50,28 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // API requests - network first, cache fallback
+  // 1. Auth Endpoints - STRICTLY NETWORK ONLY
+  // This fixes the issue where auth status (401/200) gets cached incorrectly
+  if (url.pathname.includes('/auth/')) {
+    // Do not verify with cache, do not save to cache.
+    // Just let the browser perform the fetch.
+    return; 
+  }
+
+  // 2. API requests - Network First, Cache Fallback
   if (url.pathname.includes('/api/') || url.pathname.includes('generativelanguage')) {
     event.respondWith(
       fetch(request)
         .then((response) => {
-          // Clone response to cache it
-          const responseClone = response.clone();
-          caches.open(DYNAMIC_CACHE).then((cache) => {
-            cache.put(request, responseClone);
-          });
+          // Check if valid response to cache
+          // Only cache GET requests and successful 200 OK responses
+          // Do NOT cache 401, 403, 500, etc.
+          if (request.method === 'GET' && response && response.status === 200) {
+            const responseClone = response.clone();
+            caches.open(DYNAMIC_CACHE).then((cache) => {
+              cache.put(request, responseClone);
+            });
+          }
           return response;
         })
         .catch(() => {
@@ -68,7 +80,7 @@ self.addEventListener('fetch', (event) => {
             if (cachedResponse) {
               return cachedResponse;
             }
-            // Return offline page or error
+            // Return offline JSON
             return new Response(
               JSON.stringify({ error: 'Offline - No cached data available' }),
               {
@@ -82,16 +94,20 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Static files - cache first, network fallback
+  // 3. Static files - Cache First, Network Fallback (Stale-While-Revalidate logic)
   event.respondWith(
     caches.match(request).then((cachedResponse) => {
       if (cachedResponse) {
         // Return cached version and update cache in background
         fetch(request)
           .then((networkResponse) => {
-            caches.open(DYNAMIC_CACHE).then((cache) => {
-              cache.put(request, networkResponse);
-            });
+            // Only update cache if successful
+            if (networkResponse && networkResponse.status === 200 && request.method === 'GET') {
+                const responseClone = networkResponse.clone();
+                caches.open(DYNAMIC_CACHE).then((cache) => {
+                    cache.put(request, responseClone);
+                });
+            }
           })
           .catch(() => {});
         return cachedResponse;
@@ -108,7 +124,9 @@ self.addEventListener('fetch', (event) => {
           // Clone response to cache it
           const responseClone = response.clone();
           caches.open(DYNAMIC_CACHE).then((cache) => {
-            cache.put(request, responseClone);
+            if (request.method === 'GET') {
+              cache.put(request, responseClone);
+            }
           });
 
           return response;
@@ -219,4 +237,3 @@ function getFromIndexedDB(storeName) {
   });
 }
 
-console.log('[Service Worker] Loaded');

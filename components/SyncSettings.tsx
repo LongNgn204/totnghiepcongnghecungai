@@ -142,8 +142,10 @@ const SyncSettings: React.FC = () => {
                 <h3 className="text-lg font-bold text-gray-900 mb-3">
                   Tần suất đồng bộ
                 </h3>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                   {[
+                    { minutes: 0.5, label: '30 giây' },
+                    { minutes: 1, label: '1 phút' },
                     { minutes: 5, label: '5 phút' },
                     { minutes: 15, label: '15 phút' },
                     { minutes: 30, label: '30 phút' },

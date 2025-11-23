@@ -30,25 +30,26 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8787';
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
-  const [token, setToken] = useState<string | null>(null);
+  // Initialize state directly from localStorage to prevent flash of login screen
+  const [user, setUser] = useState<User | null>(() => {
+    try {
+      const storedUser = localStorage.getItem('user_data');
+      return storedUser ? JSON.parse(storedUser) : null;
+    } catch (e) {
+      console.error('Error parsing stored user:', e);
+      return null;
+    }
+  });
+  
+  const [token, setToken] = useState<string | null>(() => localStorage.getItem('auth_token'));
   const [loading, setLoading] = useState(true);
 
-  // Auto‑login with stored token on mount
+  // Verify token on mount
   useEffect(() => {
-    const initAuth = async () => {
+    const verifyAuth = async () => {
       const storedToken = localStorage.getItem('auth_token');
-      const storedUser = localStorage.getItem('user_data');
 
       if (storedToken) {
-        setToken(storedToken);
-        if (storedUser) {
-          try {
-            setUser(JSON.parse(storedUser));
-          } catch (e) {
-            console.error('Error parsing stored user:', e);
-          }
-        }
         try {
           const response = await fetch(`${API_URL}/api/auth/me`, {
             headers: {
@@ -56,13 +57,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
               'Content-Type': 'application/json',
             },
           });
+          
           if (response.ok) {
             const result = await response.json();
             const userData = result.data || result;
             setUser(userData);
             localStorage.setItem('user_data', JSON.stringify(userData));
           } else if (response.status === 401) {
-            // Token invalid – clear storage and pause background sync
+            // Only logout if explicitly unauthorized (token expired/invalid)
+            console.warn('Token expired or invalid, logging out...');
             localStorage.removeItem('auth_token');
             localStorage.removeItem('user_data');
             localStorage.removeItem('user_id');
@@ -70,13 +73,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             setUser(null);
             setToken(null);
           }
+          // If other error (500, network), keep the local user state (optimistic)
         } catch (error) {
-          console.error('Error verifying token:', error);
+          console.error('Error verifying token (network/server error):', error);
+          // Do NOT logout on network error, keep user logged in offline
         }
+      } else {
+        // No token found
+        setUser(null);
+        setToken(null);
       }
       setLoading(false);
     };
-    initAuth();
+
+    verifyAuth();
   }, []);
 
   const register = async (email: string, password: string, displayName: string) => {

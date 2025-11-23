@@ -18,6 +18,11 @@ export function jsonResponse(data: any, status = 200): Response {
 }
 
 export function errorResponse(message: string, status = 500): Response {
+  // Auto-detect status for auth errors to ensure client handles them correctly
+  if (status === 500 && (message.includes('UNAUTHORIZED') || message.includes('Unauthorized'))) {
+    status = 401;
+  }
+
   return jsonResponse(
     {
       error: message,

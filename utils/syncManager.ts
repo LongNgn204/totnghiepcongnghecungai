@@ -39,7 +39,7 @@ class SyncManager {
     }
     return {
       autoSync: true,
-      syncInterval: 5 * 60 * 1000, // 5 minutes
+      syncInterval: 1 * 60 * 1000, // 1 minute
       enabled: true,
     };
   }

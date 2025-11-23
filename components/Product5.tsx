@@ -16,6 +16,7 @@ import {
   getDeckStats,
   syncDecksFromBackend
 } from '../utils/flashcardStorage';
+import syncManager from '../utils/syncManager';
 
 const Product5: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'decks' | 'study' | 'create' | 'ai'>('decks');
@@ -72,6 +73,7 @@ const Product5: React.FC = () => {
     );
 
     saveDeck(newDeck);
+    syncManager.syncFlashcards();
     loadDecks();
     setShowCreateDeck(false);
     setDeckForm({ title: '', description: '', category: 'Công nghiệp', grade: '12' });
@@ -80,6 +82,7 @@ const Product5: React.FC = () => {
   const handleDeleteDeck = (deckId: string) => {
     if (confirm('Bạn có chắc muốn xóa bộ thẻ này?')) {
       deleteDeck(deckId);
+      syncManager.syncFlashcards();
       loadDecks();
       if (selectedDeck?.id === deckId) {
         setSelectedDeck(null);
@@ -100,6 +103,7 @@ const Product5: React.FC = () => {
       difficulty: cardForm.difficulty,
       tags: cardForm.tags
     });
+    syncManager.syncFlashcards();
 
     const updatedDeck = getDeck(selectedDeck.id);
     if (updatedDeck) {
@@ -149,6 +153,7 @@ const Product5: React.FC = () => {
     if (!selectedDeck || !studyCards[currentCardIndex]) return;
 
     recordReview(selectedDeck.id, studyCards[currentCardIndex].id, correct);
+    syncManager.syncFlashcards();
 
     if (currentCardIndex < studyCards.length - 1) {
       setCurrentCardIndex(currentCardIndex + 1);
