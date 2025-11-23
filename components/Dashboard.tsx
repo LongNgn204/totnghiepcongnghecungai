@@ -259,7 +259,6 @@ const Dashboard: React.FC = () => {
             <QuickAction to="/san-pham-2" image="/images/icon-create-questions.png" label="Tạo Đề" color="bg-green-50 hover:bg-green-100 text-green-600" />
             <QuickAction to="/san-pham-3" image="/images/icon-industrial-tech.png" label="Công Nghiệp" color="bg-purple-50 hover:bg-purple-100 text-purple-600" />
             <QuickAction to="/san-pham-4" image="/images/icon-agricultural-tech.png" label="Nông Nghiệp" color="bg-teal-50 hover:bg-teal-100 text-teal-600" />
-            <QuickAction to="/flashcards" image="/images/icon-flashcards.png" label="Flashcards" color="bg-pink-50 hover:bg-pink-100 text-pink-600" />
             <QuickAction to="/product8" image="/images/icon-bookshelf.png" label="Tủ Sách" color="bg-orange-50 hover:bg-orange-100 text-orange-600" />
           </div>
         </div>

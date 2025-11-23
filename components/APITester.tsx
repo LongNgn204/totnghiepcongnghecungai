@@ -64,6 +64,8 @@ const APITester: React.FC = () => {
     { name: 'Exam Stats', method: 'GET', endpoint: '/api/exams/stats', body: '{}' },
     { name: 'Progress Stats', method: 'GET', endpoint: '/api/progress/stats', body: '{}' },
     { name: 'Leaderboard', method: 'GET', endpoint: '/api/leaderboard', body: '{}' },
+    { name: 'Update User', method: 'POST', endpoint: '/api/management/update-user', body: '{\n  "targetUserId": "USER_ID_HERE",\n  "data": {\n    "displayName": "New Name",\n    "bio": "Updated Bio"\n  }\n}' },
+    { name: 'Change Password', method: 'POST', endpoint: '/api/management/change-password', body: '{\n  "targetUserId": "USER_ID_HERE",\n  "newPassword": "newpassword123"\n}' },
   ];
 
   return (

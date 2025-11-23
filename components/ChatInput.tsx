@@ -84,19 +84,31 @@ const ChatInput: React.FC<ChatInputProps> = ({
         {showMenu && (
           <div ref={menuRef} className="absolute bottom-24 left-4 md:left-auto bg-[#1e1f20] text-white rounded-xl shadow-2xl p-2 w-64 z-50 animate-fade-in-up origin-bottom-left">
             <div className="space-y-1">
-              <button className="w-full flex items-center gap-3 px-4 py-3 hover:bg-[#2f3031] rounded-lg transition-colors text-left group">
+              <button
+                onClick={() => { onInputChange('Hãy tạo hình ảnh: '); setShowMenu(false); }}
+                className="w-full flex items-center gap-3 px-4 py-3 hover:bg-[#2f3031] rounded-lg transition-colors text-left group"
+              >
                 <span className="text-xl group-hover:scale-110 transition-transform">🍌</span>
                 <span className="font-medium">Tạo hình ảnh</span>
               </button>
-              <button className="w-full flex items-center gap-3 px-4 py-3 hover:bg-[#2f3031] rounded-lg transition-colors text-left group">
+              <button
+                onClick={() => { onInputChange('Mở chế độ Canvas: '); setShowMenu(false); }}
+                className="w-full flex items-center gap-3 px-4 py-3 hover:bg-[#2f3031] rounded-lg transition-colors text-left group"
+              >
                 <span className="text-xl group-hover:scale-110 transition-transform">📝</span>
                 <span className="font-medium">Canvas</span>
               </button>
-              <button className="w-full flex items-center gap-3 px-4 py-3 hover:bg-[#2f3031] rounded-lg transition-colors text-left group">
+              <button
+                onClick={() => { onInputChange('Hãy hướng dẫn tôi học về chủ đề: '); setShowMenu(false); }}
+                className="w-full flex items-center gap-3 px-4 py-3 hover:bg-[#2f3031] rounded-lg transition-colors text-left group"
+              >
                 <span className="text-xl group-hover:scale-110 transition-transform">📖</span>
                 <span className="font-medium">Học có hướng dẫn</span>
               </button>
-              <button className="w-full flex items-center gap-3 px-4 py-3 hover:bg-[#2f3031] rounded-lg transition-colors text-left group">
+              <button
+                onClick={() => { onInputChange('Kích hoạt chế độ xem động cho: '); setShowMenu(false); }}
+                className="w-full flex items-center gap-3 px-4 py-3 hover:bg-[#2f3031] rounded-lg transition-colors text-left group"
+              >
                 <span className="text-xl group-hover:scale-110 transition-transform">⚡</span>
                 <span className="font-medium">Chế độ xem động</span>
                 <span className="ml-auto bg-blue-600 text-[10px] px-1.5 py-0.5 rounded text-white font-bold">Labs</span>
@@ -165,8 +177,8 @@ const ChatInput: React.FC<ChatInputProps> = ({
             onClick={onSendMessage}
             disabled={loading || (!inputMessage.trim() && attachedFiles.length === 0)}
             className={`p-2.5 rounded-full mb-0.5 transition-all ${inputMessage.trim() || attachedFiles.length > 0
-                ? 'bg-blue-600 text-white hover:bg-blue-700 shadow-sm'
-                : 'bg-transparent text-gray-400 cursor-not-allowed'
+              ? 'bg-blue-600 text-white hover:bg-blue-700 shadow-sm'
+              : 'bg-transparent text-gray-400 cursor-not-allowed'
               }`}
           >
             {loading ? (

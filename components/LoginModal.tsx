@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { X, Mail, Lock, User, LogIn, UserPlus, AlertCircle, CheckCircle } from 'lucide-react';
 
@@ -9,6 +10,7 @@ interface LoginModalProps {
 
 const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
     const { login, register } = useAuth();
+    const navigate = useNavigate();
     const [mode, setMode] = useState<'login' | 'register'>('login');
     const [formData, setFormData] = useState({
         email: '',
@@ -46,6 +48,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
                 setTimeout(() => {
                     onClose();
                     resetForm();
+                    navigate('/dashboard');
                 }, 1500);
             } else {
                 await login(formData.email, formData.password);
@@ -53,6 +56,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
                 setTimeout(() => {
                     onClose();
                     resetForm();
+                    navigate('/dashboard');
                 }, 1000);
             }
         } catch (err: any) {
@@ -110,8 +114,8 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
                         <button
                             onClick={() => mode !== 'login' && switchMode()}
                             className={`flex-1 py-2 rounded-lg font-bold text-sm transition-all ${mode === 'login'
-                                    ? 'bg-white text-blue-600 shadow-sm'
-                                    : 'text-gray-600 hover:text-gray-900'
+                                ? 'bg-white text-blue-600 shadow-sm'
+                                : 'text-gray-600 hover:text-gray-900'
                                 }`}
                         >
                             Đăng Nhập
@@ -119,8 +123,8 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
                         <button
                             onClick={() => mode !== 'register' && switchMode()}
                             className={`flex-1 py-2 rounded-lg font-bold text-sm transition-all ${mode === 'register'
-                                    ? 'bg-white text-blue-600 shadow-sm'
-                                    : 'text-gray-600 hover:text-gray-900'
+                                ? 'bg-white text-blue-600 shadow-sm'
+                                : 'text-gray-600 hover:text-gray-900'
                                 }`}
                         >
                             Đăng Ký

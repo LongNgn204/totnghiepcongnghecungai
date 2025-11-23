@@ -21,6 +21,10 @@ import {
   requireAuth,
   hashPassword
 } from './auth-service';
+import {
+  updateUserData,
+  changeUserPassword as changeUserPasswordAdmin
+} from './management/data-manager';
 
 export interface Env {
   DB: D1Database;
@@ -1050,6 +1054,42 @@ router.get('/api/sync/changes', async (request, env: Env) => {
     result.sessions = sessionsRes.results;
 
     return successResponse(result);
+  } catch (error: any) {
+    return errorResponse(error.message);
+  }
+});
+
+// ============= MANAGEMENT =============
+
+router.post('/api/management/update-user', async (request, env: Env) => {
+  try {
+    const userId = await requireAuth(request, env.DB);
+    const body: any = await request.json();
+
+    // In a real app, you might want to check for Admin role here
+    // const user = await getUserById(env.DB, userId);
+    // if (user.role !== 'admin') return unauthorizedResponse('Admin access required');
+
+    const { targetUserId, data } = body;
+    const idToUpdate = targetUserId || userId; // Allow updating self if no target provided
+
+    const updatedUser = await updateUserData(env.DB, idToUpdate, data);
+    return successResponse(updatedUser, 'User data updated successfully');
+  } catch (error: any) {
+    return errorResponse(error.message);
+  }
+});
+
+router.post('/api/management/change-password', async (request, env: Env) => {
+  try {
+    const userId = await requireAuth(request, env.DB);
+    const body: any = await request.json();
+
+    const { targetUserId, newPassword } = body;
+    const idToUpdate = targetUserId || userId;
+
+    await changeUserPasswordAdmin(env.DB, idToUpdate, newPassword);
+    return successResponse(null, 'Password changed successfully');
   } catch (error: any) {
     return errorResponse(error.message);
   }

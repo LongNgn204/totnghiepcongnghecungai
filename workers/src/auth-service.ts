@@ -122,7 +122,7 @@ export async function registerUser(db: any, data: {
 
   // Generate token
   const token = generateToken(userId);
-  const expiresAt = now + (7 * 24 * 60 * 60 * 1000); // 7 days
+  const expiresAt = now + (30 * 24 * 60 * 60 * 1000); // 30 days
 
   await db.prepare(
     'INSERT INTO auth_sessions (id, user_id, token, expires_at, created_at) VALUES (?, ?, ?, ?, ?)'
@@ -169,7 +169,7 @@ export async function loginUser(db: any, identifier: string, password: string) {
   // Generate new token
   const token = generateToken(user.id);
   const now = Date.now();
-  const expiresAt = now + (7 * 24 * 60 * 60 * 1000); // 7 days
+  const expiresAt = now + (30 * 24 * 60 * 60 * 1000); // 30 days
 
   await db.prepare(
     'INSERT INTO auth_sessions (id, user_id, token, expires_at, created_at) VALUES (?, ?, ?, ?, ?)'

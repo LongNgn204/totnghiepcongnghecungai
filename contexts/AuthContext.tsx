@@ -59,21 +59,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           });
 
           if (response.ok) {
-            const data = await response.json();
-            setUser(data.user);
+            const result = await response.json();
+            // Backend returns: { success: true, data: { user data } }
+            const userData = result.data || result;
+            setUser(userData);
             // Update stored user data
-            localStorage.setItem('user_data', JSON.stringify(data.user));
+            localStorage.setItem('user_data', JSON.stringify(userData));
           } else {
-            // Token invalid, clear it
-            // localStorage.removeItem('auth_token');
-            // localStorage.removeItem('user_data');
-            // setUser(null);
-            // setToken(null);
-            // Keep the local state for now to prevent flashing, let the API calls fail if needed
-            // or maybe we should logout? Let's logout to be safe if token is definitely invalid
+            // Token invalid, logout
             if (response.status === 401) {
               localStorage.removeItem('auth_token');
               localStorage.removeItem('user_data');
+              localStorage.removeItem('user_id');
               setUser(null);
               setToken(null);
             }
