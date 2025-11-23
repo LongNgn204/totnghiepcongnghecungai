@@ -1,7 +1,9 @@
 import React from 'react';
-import { Bot, User, FileText, Image as ImageIcon, Copy, Check, Sparkles } from 'lucide-react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import { Bot, User, FileText, Copy, Sparkles } from 'lucide-react';
 import { ChatMessage } from '../utils/chatStorage';
-import MessageContent from './MessageContent';
+import CodeBlock from './CodeBlock';
 
 interface MessageListProps {
   messages: ChatMessage[];
@@ -69,29 +71,66 @@ const MessageList: React.FC<MessageListProps> = ({
               className={`flex gap-4 ${message.role === 'user' ? 'flex-row-reverse' : 'flex-row'} animate-slide-up`}
             >
               {/* Avatar */}
-              <div className={`flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center shadow-md transition-transform hover:scale-105 ${
-                message.role === 'user'
+              <div className={`flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center shadow-md transition-transform hover:scale-105 ${message.role === 'user'
                   ? 'bg-gradient-to-br from-blue-600 to-indigo-600 text-white ring-2 ring-blue-100'
                   : 'bg-white border border-gray-100 text-blue-600 ring-2 ring-purple-50'
-              }`}>
+                }`}>
                 {message.role === 'user' ? <User size={20} /> : <Bot size={20} />}
               </div>
 
               {/* Message Bubble */}
               <div className={`flex flex-col max-w-[85%] md:max-w-[75%] group ${message.role === 'user' ? 'items-end' : 'items-start'}`}>
-                <div className={`relative px-6 py-5 rounded-2xl shadow-sm transition-all duration-200 ${
-                  message.role === 'user'
-                    ? 'bg-gradient-to-br from-blue-600 to-blue-700 text-white rounded-tr-none shadow-blue-500/20'
-                    : 'bg-white border border-gray-100 text-gray-800 rounded-tl-none hover:shadow-md shadow-gray-200/50'
-                }`}>
+                <div className={`relative px-6 py-5 shadow-sm transition-all duration-200 ${message.role === 'user'
+                    ? 'bg-blue-600 text-white rounded-2xl rounded-tr-sm shadow-blue-500/20'
+                    : 'bg-white/80 backdrop-blur border border-gray-100 text-gray-800 rounded-2xl rounded-tl-sm shadow-sm hover:shadow-md'
+                  }`}>
                   {message.role === 'assistant' && (
                     <div className="flex items-center gap-2 mb-3 pb-2 border-b border-gray-50">
                       <span className="text-xs font-bold uppercase tracking-wider text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full">Gemini AI</span>
                     </div>
                   )}
 
-                  <div className={message.role === 'user' ? 'text-white/95 font-medium leading-relaxed' : 'leading-relaxed'}>
-                    <MessageContent content={message.content} />
+                  <div className={`prose ${message.role === 'user' ? 'prose-invert' : 'prose-slate'} max-w-none`}>
+                    <ReactMarkdown
+                      remarkPlugins={[remarkGfm]}
+                      components={{
+                        code({ node, inline, className, children, ...props }: any) {
+                          const match = /language-(\w+)/.exec(className || '');
+                          return !inline && match ? (
+                            <CodeBlock code={String(children).replace(/\n$/, '')} language={match[1]} />
+                          ) : (
+                            <code className={`${className} bg-black/10 px-1.5 py-0.5 rounded text-sm font-mono`} {...props}>
+                              {children}
+                            </code>
+                          );
+                        },
+                        img({ src, alt }) {
+                          return (
+                            <div className="my-4 relative group/img">
+                              <img
+                                src={src}
+                                alt={alt}
+                                className="rounded-xl shadow-lg max-w-full h-auto mx-auto border border-gray-200"
+                              />
+                              <div className="absolute inset-0 rounded-xl ring-1 ring-black/5 pointer-events-none" />
+                            </div>
+                          );
+                        },
+                        p: ({ children }) => <p className="mb-4 last:mb-0 leading-relaxed">{children}</p>,
+                        ul: ({ children }) => <ul className="list-disc pl-4 mb-4 space-y-1">{children}</ul>,
+                        ol: ({ children }) => <ol className="list-decimal pl-4 mb-4 space-y-1">{children}</ol>,
+                        li: ({ children }) => <li className="mb-1">{children}</li>,
+                        h1: ({ children }) => <h1 className="text-2xl font-bold mb-4 mt-6 border-b pb-2">{children}</h1>,
+                        h2: ({ children }) => <h2 className="text-xl font-bold mb-3 mt-5">{children}</h2>,
+                        h3: ({ children }) => <h3 className="text-lg font-bold mb-2 mt-4">{children}</h3>,
+                        blockquote: ({ children }) => <blockquote className="border-l-4 border-blue-500 pl-4 italic my-4 bg-gray-50 py-2 pr-2 rounded-r">{children}</blockquote>,
+                        table: ({ children }) => <div className="overflow-x-auto my-4 rounded-lg border border-gray-200"><table className="min-w-full divide-y divide-gray-200">{children}</table></div>,
+                        th: ({ children }) => <th className="px-4 py-2 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{children}</th>,
+                        td: ({ children }) => <td className="px-4 py-2 whitespace-nowrap text-sm border-t border-gray-100">{children}</td>,
+                      }}
+                    >
+                      {message.content}
+                    </ReactMarkdown>
                   </div>
 
                   {message.attachments && message.attachments.length > 0 && (

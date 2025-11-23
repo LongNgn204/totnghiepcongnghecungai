@@ -1,4 +1,5 @@
 import React, { ChangeEvent, ClipboardEvent, RefObject, useState, useEffect, useRef } from 'react';
+import { Send, Mic, Paperclip, Image as ImageIcon, Plus, X } from 'lucide-react';
 
 interface ChatInputProps {
   inputMessage: string;
@@ -78,118 +79,128 @@ const ChatInput: React.FC<ChatInputProps> = ({
   };
 
   return (
-    <div className="bg-white p-4 pb-6 relative">
-      <div className="max-w-4xl mx-auto">
+    <div className="absolute bottom-6 left-4 right-4 z-30">
+      <div className="max-w-4xl mx-auto relative">
         {/* Floating Menu */}
         {showMenu && (
-          <div ref={menuRef} className="absolute bottom-24 left-4 md:left-auto bg-[#1e1f20] text-white rounded-xl shadow-2xl p-2 w-64 z-50 animate-fade-in-up origin-bottom-left">
+          <div ref={menuRef} className="absolute bottom-full left-0 mb-4 bg-white/90 backdrop-blur-xl border border-white/50 rounded-2xl shadow-2xl p-2 w-64 z-50 animate-fade-in-up origin-bottom-left">
             <div className="space-y-1">
               <button
                 onClick={() => { onInputChange('Hãy tạo hình ảnh: '); setShowMenu(false); }}
-                className="w-full flex items-center gap-3 px-4 py-3 hover:bg-[#2f3031] rounded-lg transition-colors text-left group"
+                className="w-full flex items-center gap-3 px-4 py-3 hover:bg-blue-50 rounded-xl transition-colors text-left group"
               >
                 <span className="text-xl group-hover:scale-110 transition-transform">🍌</span>
-                <span className="font-medium">Tạo hình ảnh</span>
+                <span className="font-medium text-gray-700">Tạo hình ảnh</span>
               </button>
               <button
                 onClick={() => { onInputChange('Mở chế độ Canvas: '); setShowMenu(false); }}
-                className="w-full flex items-center gap-3 px-4 py-3 hover:bg-[#2f3031] rounded-lg transition-colors text-left group"
+                className="w-full flex items-center gap-3 px-4 py-3 hover:bg-blue-50 rounded-xl transition-colors text-left group"
               >
                 <span className="text-xl group-hover:scale-110 transition-transform">📝</span>
-                <span className="font-medium">Canvas</span>
+                <span className="font-medium text-gray-700">Canvas</span>
               </button>
               <button
                 onClick={() => { onInputChange('Hãy hướng dẫn tôi học về chủ đề: '); setShowMenu(false); }}
-                className="w-full flex items-center gap-3 px-4 py-3 hover:bg-[#2f3031] rounded-lg transition-colors text-left group"
+                className="w-full flex items-center gap-3 px-4 py-3 hover:bg-blue-50 rounded-xl transition-colors text-left group"
               >
                 <span className="text-xl group-hover:scale-110 transition-transform">📖</span>
-                <span className="font-medium">Học có hướng dẫn</span>
-              </button>
-              <button
-                onClick={() => { onInputChange('Kích hoạt chế độ xem động cho: '); setShowMenu(false); }}
-                className="w-full flex items-center gap-3 px-4 py-3 hover:bg-[#2f3031] rounded-lg transition-colors text-left group"
-              >
-                <span className="text-xl group-hover:scale-110 transition-transform">⚡</span>
-                <span className="font-medium">Chế độ xem động</span>
-                <span className="ml-auto bg-blue-600 text-[10px] px-1.5 py-0.5 rounded text-white font-bold">Labs</span>
+                <span className="font-medium text-gray-700">Học có hướng dẫn</span>
               </button>
             </div>
           </div>
         )}
 
+        {/* File Previews */}
         {attachedFiles.length > 0 && (
-          <div className="mb-3 flex flex-wrap gap-3">
+          <div className="absolute bottom-full left-0 mb-4 w-full flex gap-2 overflow-x-auto pb-2 px-1">
             {attachedFiles.map((file, idx) => (
-              <div key={idx} className="relative bg-gray-100 border border-gray-200 px-3 py-1.5 rounded-lg flex items-center gap-2 animate-pulse">
-                <span className="text-sm text-gray-700 truncate max-w-[150px]">{file.name}</span>
-                <button onClick={() => onRemoveFile(idx)} className="text-gray-400 hover:text-red-500 transition-colors rounded-full p-0.5">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                </button>
+              <div key={idx} className="relative group flex-shrink-0 bg-white/90 backdrop-blur border border-white/50 p-2 rounded-xl shadow-lg animate-fade-in-up">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center text-blue-500">
+                    {file.type.startsWith('image/') ? <ImageIcon size={20} /> : <Paperclip size={20} />}
+                  </div>
+                  <div className="max-w-[120px]">
+                    <p className="text-xs font-medium text-gray-700 truncate">{file.name}</p>
+                    <p className="text-[10px] text-gray-400">{(file.size / 1024).toFixed(1)} KB</p>
+                  </div>
+                  <button
+                    onClick={() => onRemoveFile(idx)}
+                    className="p-1 hover:bg-red-50 text-gray-400 hover:text-red-500 rounded-full transition-colors"
+                  >
+                    <X size={14} />
+                  </button>
+                </div>
               </div>
             ))}
           </div>
         )}
 
-        <div className="relative flex items-end gap-2 bg-[#f0f4f9] rounded-[2rem] p-2 pl-2 transition-all focus-within:bg-white focus-within:shadow-md focus-within:ring-1 focus-within:ring-gray-200">
+        {/* Input Bar */}
+        <div className="glass-panel rounded-full p-2 pl-2 flex items-end gap-2 shadow-2xl shadow-blue-900/5 ring-1 ring-white/50">
+          {/* Plus Button */}
           <button
             onClick={() => setShowMenu(!showMenu)}
-            className={`p-2.5 rounded-full transition-all mb-0.5 ${showMenu ? 'bg-gray-200 text-gray-800' : 'text-gray-600 hover:bg-gray-200 bg-gray-100'}`}
-            title="Thêm"
+            className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-200 ${showMenu ? 'bg-gray-200 text-gray-800 rotate-45' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+              }`}
           >
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+            <Plus size={20} />
           </button>
 
           <input type="file" ref={fileInputRef} onChange={onFileSelect} multiple className="hidden" />
 
-          <button
-            onClick={() => fileInputRef.current?.click()}
-            className="p-2.5 text-gray-500 hover:text-gray-800 hover:bg-gray-200 rounded-full transition-all mb-0.5"
-            title="Đính kèm ảnh/file"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path></svg>
-          </button>
+          {/* Input Field */}
+          <div className="flex-1 min-h-[44px] relative">
+            <textarea
+              value={inputMessage}
+              onChange={(e) => onInputChange(e.target.value)}
+              onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); onSendMessage(); } }}
+              onPaste={onPaste}
+              placeholder="Hỏi Gemini về Công nghệ..."
+              className="w-full h-full bg-transparent border-0 focus:ring-0 p-2.5 max-h-32 resize-none text-gray-800 placeholder-gray-400 text-[15px] leading-relaxed"
+              rows={1}
+              disabled={loading}
+              style={{ height: 'auto', overflowY: 'auto' }}
+            />
+          </div>
 
-          <textarea
-            value={inputMessage}
-            onChange={(e) => onInputChange(e.target.value)}
-            onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); onSendMessage(); } }}
-            onPaste={onPaste}
-            placeholder="Nhập câu hỏi cho Gemini..."
-            className="flex-1 bg-transparent border-0 focus:ring-0 p-3 max-h-32 min-h-[48px] resize-none text-gray-800 placeholder-gray-500"
-            rows={1}
-            disabled={loading}
-            style={{ height: 'auto', overflowY: 'auto' }}
-          />
+          {/* Actions */}
+          <div className="flex items-center gap-1 pr-1 pb-1">
+            <button
+              onClick={() => fileInputRef.current?.click()}
+              className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-full transition-all"
+              title="Đính kèm"
+            >
+              <Paperclip size={20} />
+            </button>
 
-          <button
-            onClick={toggleListening}
-            className={`p-2.5 rounded-full mb-0.5 transition-all ${isListening ? 'bg-red-500 text-white animate-pulse shadow-lg' : 'text-gray-500 hover:bg-gray-200 hover:text-gray-800'}`}
-            title="Nhập bằng giọng nói"
-          >
-            {isListening ? (
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="1" y1="1" x2="23" y2="23"></line><path d="M9 9v3a3 3 0 0 0 5.12 2.12M15 9.34V4a3 3 0 0 0-5.94-.6"></path><path d="M17 16.95A7 7 0 0 1 5 12v-2m14 0v2a7 7 0 0 1-.11 1.23"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg>
-            ) : (
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg>
-            )}
-          </button>
+            <button
+              onClick={toggleListening}
+              className={`p-2 rounded-full transition-all ${isListening ? 'bg-red-50 text-red-500 animate-pulse' : 'text-gray-400 hover:text-blue-600 hover:bg-blue-50'
+                }`}
+              title="Giọng nói"
+            >
+              <Mic size={20} />
+            </button>
 
-          <button
-            onClick={onSendMessage}
-            disabled={loading || (!inputMessage.trim() && attachedFiles.length === 0)}
-            className={`p-2.5 rounded-full mb-0.5 transition-all ${inputMessage.trim() || attachedFiles.length > 0
-              ? 'bg-blue-600 text-white hover:bg-blue-700 shadow-sm'
-              : 'bg-transparent text-gray-400 cursor-not-allowed'
-              }`}
-          >
-            {loading ? (
-              <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-            ) : (
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
-            )}
-          </button>
+            <button
+              onClick={onSendMessage}
+              disabled={loading || (!inputMessage.trim() && attachedFiles.length === 0)}
+              className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 shadow-lg ${inputMessage.trim() || attachedFiles.length > 0
+                  ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white hover:shadow-blue-500/30 hover:scale-105'
+                  : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                }`}
+            >
+              {loading ? (
+                <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+              ) : (
+                <Send size={18} className={inputMessage.trim() ? 'ml-0.5' : ''} />
+              )}
+            </button>
+          </div>
         </div>
-        <p className="text-[11px] text-center text-gray-400 mt-3">
-          Gemini có thể đưa ra thông tin không chính xác, kể cả về con người, vì vậy hãy kiểm tra lại các câu trả lời.
+
+        <p className="text-[10px] text-center text-gray-400 mt-2 font-medium">
+          Gemini có thể đưa ra thông tin không chính xác, hãy kiểm tra lại.
         </p>
       </div>
     </div>
