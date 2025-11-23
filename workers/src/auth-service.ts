@@ -40,6 +40,7 @@ export async function requireAuth(request: any, db: any): Promise<string> {
 
   const token = authHeader.substring(7);
   const userId = decodeToken(token);
+  console.log('Decoded userId:', userId);
 
   if (!userId) {
     throw new Error('UNAUTHORIZED: Invalid token');
@@ -55,11 +56,14 @@ export async function requireAuth(request: any, db: any): Promise<string> {
   }
 
   // Verify session exists and not expired
+  console.log('requireAuth token:', token);
   const session = await db.prepare(
     'SELECT id FROM auth_sessions WHERE token = ? AND expires_at > ?'
   ).bind(token, Date.now()).first();
+  console.log('session query result:', session);
 
   if (!session) {
+    console.log('Session not found or expired for token');
     throw new Error('UNAUTHORIZED: Session expired');
   }
 

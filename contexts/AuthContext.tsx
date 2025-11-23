@@ -1,4 +1,6 @@
+// AuthContext.tsx - Handles authentication state and integrates sync pause on 401
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { syncManager } from '../utils/syncManager';
 
 interface User {
   id: string;
@@ -32,7 +34,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [token, setToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // Auto-login with stored token
+  // Auto‑login with stored token on mount
   useEffect(() => {
     const initAuth = async () => {
       const storedToken = localStorage.getItem('auth_token');
@@ -40,7 +42,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       if (storedToken) {
         setToken(storedToken);
-        // Optimistically set user if available
         if (storedUser) {
           try {
             setUser(JSON.parse(storedUser));
@@ -48,180 +49,120 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             console.error('Error parsing stored user:', e);
           }
         }
-
         try {
-          // Verify token and get latest user info
           const response = await fetch(`${API_URL}/api/auth/me`, {
             headers: {
-              'Authorization': `Bearer ${storedToken}`,
-              'Content-Type': 'application/json'
-            }
+              Authorization: `Bearer ${storedToken}`,
+              'Content-Type': 'application/json',
+            },
           });
-
           if (response.ok) {
             const result = await response.json();
-            // Backend returns: { success: true, data: { user data } }
             const userData = result.data || result;
             setUser(userData);
-            // Update stored user data
             localStorage.setItem('user_data', JSON.stringify(userData));
-          } else {
-            // Token invalid, logout
-            if (response.status === 401) {
-              localStorage.removeItem('auth_token');
-              localStorage.removeItem('user_data');
-              localStorage.removeItem('user_id');
-              setUser(null);
-              setToken(null);
-            }
+          } else if (response.status === 401) {
+            // Token invalid – clear storage and pause background sync
+            localStorage.removeItem('auth_token');
+            localStorage.removeItem('user_data');
+            localStorage.removeItem('user_id');
+            syncManager.pauseSync();
+            setUser(null);
+            setToken(null);
           }
         } catch (error) {
           console.error('Error verifying token:', error);
-          // Don't logout on network error, keep offline access if possible
         }
       }
       setLoading(false);
     };
-
     initAuth();
   }, []);
 
   const register = async (email: string, password: string, displayName: string) => {
-    try {
-      const response = await fetch(`${API_URL}/api/auth/register`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ email, password, displayName })
-      });
-
-      const result = await response.json();
-
-      if (!response.ok) {
-        throw new Error(result.error || 'Đăng ký thất bại');
-      }
-
-      // Backend returns: { success: true, data: { user, token }, message }
-      const data = result.data || result;
-
-      // Validate response data
-      if (!data.user || !data.token) {
-        throw new Error('Dữ liệu đăng ký không hợp lệ');
-      }
-
-      // Auto login after register
-      setUser(data.user);
-      setToken(data.token);
-      localStorage.setItem('auth_token', data.token);
-      localStorage.setItem('user_data', JSON.stringify(data.user));
-      localStorage.setItem('user_id', data.user.id);
-    } catch (error: any) {
-      console.error('Register error:', error);
-      throw new Error(error.message || 'Đăng ký thất bại');
-    }
+    const response = await fetch(`${API_URL}/api/auth/register`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password, displayName }),
+    });
+    const result = await response.json();
+    if (!response.ok) throw new Error(result.error || 'Đăng ký thất bại');
+    const data = result.data || result;
+    if (!data.user || !data.token) throw new Error('Dữ liệu đăng ký không hợp lệ');
+    setUser(data.user);
+    setToken(data.token);
+    localStorage.setItem('auth_token', data.token);
+    localStorage.setItem('user_data', JSON.stringify(data.user));
+    localStorage.setItem('user_id', data.user.id);
   };
 
   const login = async (identifier: string, password: string) => {
-    try {
-      // Determine if identifier is email or username
-      const isEmail = identifier.includes('@');
-      const payload = isEmail
-        ? { email: identifier, password }
-        : { username: identifier, password };
-
-      const response = await fetch(`${API_URL}/api/auth/login`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(payload)
-      });
-
-      const result = await response.json();
-
-      if (!response.ok) {
-        throw new Error(result.error || 'Đăng nhập thất bại');
-      }
-
-      // Backend returns: { success: true, data: { user, token }, message }
-      const data = result.data || result;
-
-      // Validate response data
-      if (!data.user || !data.token) {
-        throw new Error('Dữ liệu đăng nhập không hợp lệ');
-      }
-
-      setUser(data.user);
-      setToken(data.token);
-      localStorage.setItem('auth_token', data.token);
-      localStorage.setItem('user_data', JSON.stringify(data.user));
-      localStorage.setItem('user_id', data.user.id);
-    } catch (error: any) {
-      console.error('Login error:', error);
-      throw new Error(error.message || 'Đăng nhập thất bại');
-    }
+    const isEmail = identifier.includes('@');
+    const payload = isEmail ? { email: identifier, password } : { username: identifier, password };
+    const response = await fetch(`${API_URL}/api/auth/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    const result = await response.json();
+    if (!response.ok) throw new Error(result.error || 'Đăng nhập thất bại');
+    const data = result.data || result;
+    if (!data.user || !data.token) throw new Error('Dữ liệu đăng nhập không hợp lệ');
+    setUser(data.user);
+    setToken(data.token);
+    localStorage.setItem('auth_token', data.token);
+    localStorage.setItem('user_data', JSON.stringify(data.user));
+    localStorage.setItem('user_id', data.user.id);
   };
 
-  const logout = async () => {
-    try {
-      if (token) {
-        await fetch(`${API_URL}/api/auth/logout`, {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          }
-        });
-      }
-    } catch (error) {
-      console.error('Logout error:', error);
-    } finally {
-      setUser(null);
-      setToken(null);
-      localStorage.removeItem('auth_token');
-      localStorage.removeItem('user_data');
-      localStorage.removeItem('user_id');
+  const logout = () => {
+    if (token) {
+      fetch(`${API_URL}/api/auth/logout`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      }).catch(err => console.error('Logout error:', err));
     }
+    setUser(null);
+    setToken(null);
+    localStorage.removeItem('auth_token');
+    localStorage.removeItem('user_data');
+    localStorage.removeItem('user_id');
+    // Ensure sync is paused after explicit logout
+    syncManager.pauseSync();
   };
 
   const updateProfile = async (data: Partial<User>) => {
     if (!token) throw new Error('Not authenticated');
-
-    try {
-      const response = await fetch(`${API_URL}/api/auth/profile`, {
-        method: 'PUT',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-      });
-
-      const result = await response.json();
-
-      if (!response.ok) {
-        throw new Error(result.error || 'Cập nhật thất bại');
-      }
-
-      setUser(result.user);
-      localStorage.setItem('user_data', JSON.stringify(result.user));
-    } catch (error: any) {
-      throw new Error(error.message || 'Cập nhật thất bại');
-    }
+    const response = await fetch(`${API_URL}/api/auth/profile`, {
+      method: 'PUT',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
+    const result = await response.json();
+    if (!response.ok) throw new Error(result.error || 'Cập nhật thất bại');
+    setUser(result.user);
+    localStorage.setItem('user_data', JSON.stringify(result.user));
   };
 
   return (
-    <AuthContext.Provider value={{
-      user,
-      token,
-      loading,
-      login,
-      register,
-      logout,
-      updateProfile,
-      isAuthenticated: !!user
-    }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        token,
+        loading,
+        login,
+        register,
+        logout,
+        updateProfile,
+        isAuthenticated: !!user,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

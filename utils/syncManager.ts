@@ -1,9 +1,9 @@
 // Sync Manager - Đồng bộ localStorage với backend
 
 import { api } from './apiClient';
-import { getExamHistory, saveExamToHistory, type ExamHistory } from './examStorage';
-import { getAllDecks, saveDeck, type FlashcardDeck } from './flashcardStorage';
-import { getChatHistory, saveChatSession, type ChatSession } from './chatStorage';
+import { getExamHistory, saveExamToHistory } from './examStorage';
+import { getAllDecks, saveDeck } from './flashcardStorage';
+import { getChatHistory, saveChatSession } from './chatStorage';
 import { recordStudySession } from './studyProgress';
 
 interface SyncConfig {
@@ -13,6 +13,7 @@ interface SyncConfig {
 }
 
 class SyncManager {
+  private isSyncPaused: boolean = false;
   private config: SyncConfig;
   private syncInProgress = false;
   private lastSyncTime = 0;
@@ -23,8 +24,7 @@ class SyncManager {
     if (this.config.autoSync && this.config.enabled) {
       this.startAutoSync();
     }
-
-    // Sync khi online
+    // Sync when back online
     window.addEventListener('online', () => {
       if (this.config.enabled) {
         this.syncAll();
@@ -39,7 +39,7 @@ class SyncManager {
     }
     return {
       autoSync: true,
-      syncInterval: 5 * 60 * 1000, // 5 phút
+      syncInterval: 5 * 60 * 1000, // 5 minutes
       enabled: true,
     };
   }
@@ -47,7 +47,6 @@ class SyncManager {
   saveConfig(config: Partial<SyncConfig>): void {
     this.config = { ...this.config, ...config };
     localStorage.setItem('sync_config', JSON.stringify(this.config));
-
     if (this.config.autoSync && this.config.enabled) {
       this.startAutoSync();
     } else {
@@ -60,23 +59,14 @@ class SyncManager {
   }
 
   // ============= SYNC EXAMS =============
-
   async syncExams(): Promise<void> {
     try {
       console.log('[Sync] Syncing exams...');
-      
-      // Get local exams
       const localExams = getExamHistory();
-      
-      // Get server exams
       const serverResponse = await api.exams.getAll(100, 0);
       const serverExams = serverResponse.data.exams;
 
-      // Upload local exams not on server
-      const toUpload = localExams.filter(
-        local => !serverExams.some((server: any) => server.id === local.id)
-      );
-
+      const toUpload = localExams.filter(local => !serverExams.some(server => server.id === local.id));
       for (const exam of toUpload) {
         try {
           await api.exams.create(exam);
@@ -86,11 +76,7 @@ class SyncManager {
         }
       }
 
-      // Download server exams not in local
-      const toDownload = serverExams.filter(
-        (server: any) => !localExams.some(local => local.id === server.id)
-      );
-
+      const toDownload = serverExams.filter(server => !localExams.some(local => local.id === server.id));
       for (const exam of toDownload) {
         try {
           saveExamToHistory(exam);
@@ -100,10 +86,7 @@ class SyncManager {
         }
       }
 
-      console.log('[Sync] Exams synced:', {
-        uploaded: toUpload.length,
-        downloaded: toDownload.length,
-      });
+      console.log('[Sync] Exams synced:', { uploaded: toUpload.length, downloaded: toDownload.length });
     } catch (error) {
       console.error('[Sync] Exam sync failed:', error);
       throw error;
@@ -111,41 +94,28 @@ class SyncManager {
   }
 
   // ============= SYNC FLASHCARDS =============
-
   async syncFlashcards(): Promise<void> {
     try {
       console.log('[Sync] Syncing flashcards...');
-      
       const localDecks = getAllDecks();
       const serverResponse = await api.flashcards.decks.getAll();
       const serverDecks = serverResponse.data.decks;
 
-      // Upload local decks not on server
-      const toUpload = localDecks.filter(
-        local => !serverDecks.some((server: any) => server.id === local.id)
-      );
-
+      const toUpload = localDecks.filter(local => !serverDecks.some(server => server.id === local.id));
       for (const deck of toUpload) {
         try {
           await api.flashcards.decks.create(deck);
-          
-          // Upload cards in this deck
           const cards = deck.cards || [];
           for (const card of cards) {
             await api.flashcards.decks.addCard(deck.id, card);
           }
-          
           console.log('[Sync] Uploaded deck:', deck.id);
         } catch (error) {
           console.error('[Sync] Failed to upload deck:', deck.id, error);
         }
       }
 
-      // Download server decks not in local
-      const toDownload = serverDecks.filter(
-        (server: any) => !localDecks.some(local => local.id === server.id)
-      );
-
+      const toDownload = serverDecks.filter(server => !localDecks.some(local => local.id === server.id));
       for (const deck of toDownload) {
         try {
           const fullDeck = await api.flashcards.decks.getById(deck.id);
@@ -156,10 +126,7 @@ class SyncManager {
         }
       }
 
-      console.log('[Sync] Flashcards synced:', {
-        uploaded: toUpload.length,
-        downloaded: toDownload.length,
-      });
+      console.log('[Sync] Flashcards synced:', { uploaded: toUpload.length, downloaded: toDownload.length });
     } catch (error) {
       console.error('[Sync] Flashcard sync failed:', error);
       throw error;
@@ -167,20 +134,18 @@ class SyncManager {
   }
 
   // ============= SYNC CHAT =============
-
   async syncChat(): Promise<void> {
     try {
       console.log('[Sync] Syncing chat...');
-      
-      const localChats = getChatHistory();
+      const localChatsRaw = await getChatHistory();
+      const localChats = Array.isArray(localChatsRaw) ? localChatsRaw : [];
+      if (!Array.isArray(localChats)) {
+        console.warn('[Sync] localChats is not an array, resetting to empty array');
+      }
       const serverResponse = await api.chat.getAll();
       const serverChats = serverResponse.data.sessions;
 
-      // Upload local chats not on server
-      const toUpload = localChats.filter(
-        local => !serverChats.some((server: any) => server.id === local.id)
-      );
-
+      const toUpload = localChats.filter(local => !serverChats.some(server => server.id === local.id));
       for (const chat of toUpload) {
         try {
           await api.chat.create(chat);
@@ -190,11 +155,7 @@ class SyncManager {
         }
       }
 
-      // Download server chats not in local
-      const toDownload = serverChats.filter(
-        (server: any) => !localChats.some(local => local.id === server.id)
-      );
-
+      const toDownload = serverChats.filter(server => !localChats.some(local => local.id === server.id));
       for (const chat of toDownload) {
         try {
           saveChatSession(chat);
@@ -204,10 +165,7 @@ class SyncManager {
         }
       }
 
-      console.log('[Sync] Chat synced:', {
-        uploaded: toUpload.length,
-        downloaded: toDownload.length,
-      });
+      console.log('[Sync] Chat synced:', { uploaded: toUpload.length, downloaded: toDownload.length });
     } catch (error) {
       console.error('[Sync] Chat sync failed:', error);
       throw error;
@@ -215,62 +173,46 @@ class SyncManager {
   }
 
   // ============= SYNC ALL =============
-
   async syncAll(): Promise<void> {
     if (this.syncInProgress || !this.config.enabled || !navigator.onLine) {
-      console.log('[Sync] Skipped:', {
-        inProgress: this.syncInProgress,
-        enabled: this.config.enabled,
-        online: navigator.onLine,
-      });
+      console.log('[Sync] Skipped:', { inProgress: this.syncInProgress, enabled: this.config.enabled, online: navigator.onLine });
       return;
     }
-
     this.syncInProgress = true;
-    const startTime = Date.now();
-
     try {
+      const startTime = Date.now();
       console.log('[Sync] Starting full sync...');
-      
-      await Promise.allSettled([
-        this.syncExams(),
-        this.syncFlashcards(),
-        this.syncChat(),
-      ]);
-
+      await Promise.allSettled([this.syncExams(), this.syncFlashcards(), this.syncChat()]);
       this.lastSyncTime = Date.now();
       localStorage.setItem('last_sync_time', String(this.lastSyncTime));
-
       const duration = Date.now() - startTime;
       console.log(`[Sync] Completed in ${duration}ms`);
-
-      // Dispatch event
-      window.dispatchEvent(new CustomEvent('sync-completed', {
-        detail: { lastSyncTime: this.lastSyncTime },
-      }));
+      window.dispatchEvent(new CustomEvent('sync-completed', { detail: { lastSyncTime: this.lastSyncTime } }));
     } catch (error) {
       console.error('[Sync] Failed:', error);
-      window.dispatchEvent(new CustomEvent('sync-error', {
-        detail: { error },
-      }));
+      if ((error as any).status === 401) {
+        console.warn('[Sync] 401 detected, pausing auto-sync');
+        this.pauseSync();
+      }
+      window.dispatchEvent(new CustomEvent('sync-error', { detail: { error } }));
     } finally {
       this.syncInProgress = false;
     }
   }
 
   // ============= AUTO SYNC =============
-
   startAutoSync(): void {
+    if (this.isSyncPaused) {
+      console.warn('[Sync] Auto-sync not started because sync is paused');
+      return;
+    }
     this.stopAutoSync();
-    
     if (!this.config.enabled) return;
-
     this.syncTimer = window.setInterval(() => {
-      if (navigator.onLine && this.config.enabled) {
+      if (navigator.onLine && this.config.enabled && !this.isSyncPaused) {
         this.syncAll();
       }
     }, this.config.syncInterval);
-
     console.log('[Sync] Auto-sync started:', this.config.syncInterval / 1000, 'seconds');
   }
 
@@ -282,8 +224,13 @@ class SyncManager {
     }
   }
 
-  // ============= STATUS =============
+  pauseSync(): void {
+    this.isSyncPaused = true;
+    this.stopAutoSync();
+    console.warn('[Sync] Sync paused due to 401 Unauthorized');
+  }
 
+  // ============= STATUS =============
   getLastSyncTime(): number {
     const stored = localStorage.getItem('last_sync_time');
     return stored ? parseInt(stored) : 0;
@@ -300,5 +247,8 @@ class SyncManager {
 
 // Export singleton
 export const syncManager = new SyncManager();
+
+// Public method to pause sync externally
+export const pauseSync = () => syncManager.pauseSync();
 
 export default syncManager;
