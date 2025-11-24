@@ -91,7 +91,7 @@ const Product6: React.FC = () => {
 
   if (!stats) {
     return <div className="flex items-center justify-center h-96">
-      <div className="animate-spin text-blue-600 text-4xl">
+      <div className="animate-spin text-primary text-4xl">
         ⏳
       </div>
     </div>;
@@ -100,7 +100,7 @@ const Product6: React.FC = () => {
   return (
     <div className="space-y-8 animate-fade-in">
       {/* Header */}
-      <div className="bg-white  p-6 rounded-xl shadow-sm border border-blue-100 ">
+      <div className="bg-white  p-6 rounded-xl shadow-sm border border-primary ">
         <h2 className="text-3xl font-bold text-center mb-2 text-gray-800  flex items-center justify-center gap-3">
           📊 Dashboard - Theo Dõi Tiến Độ Học Tập
         </h2>
@@ -138,7 +138,7 @@ const Product6: React.FC = () => {
           <div className="text-sm opacity-90 font-medium">Điểm trung bình</div>
         </div>
 
-        <div className="bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl p-6 text-white shadow-lg transform hover:scale-105 transition-all">
+        <div className="bg-gradient-to-br from-primary to-primary-hover rounded-2xl p-6 text-white shadow-lg transform hover:scale-105 transition-all">
           <div className="flex items-center justify-between mb-4">
             <span className="text-3xl opacity-75">🔥</span>
             <span className="text-xs bg-white/20 px-3 py-1 rounded-full font-medium">Streak</span>
@@ -150,7 +150,7 @@ const Product6: React.FC = () => {
 
       {/* More Stats */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
-        <div className="bg-white  rounded-2xl p-6 shadow-sm border border-gray-200  hover:border-blue-300 :border-blue-700 transition-all">
+        <div className="bg-white  rounded-2xl p-6 shadow-sm border border-gray-200  hover:border-primary :border-primary transition-all">
           <div className="text-center">
             <div className="text-4xl mb-3">📂</div>
             <div className="text-3xl font-bold text-gray-900 ">{stats.flashcardsLearned}</div>
@@ -158,7 +158,7 @@ const Product6: React.FC = () => {
           </div>
         </div>
 
-        <div className="bg-white  rounded-2xl p-6 shadow-sm border border-gray-200  hover:border-blue-300 :border-blue-700 transition-all">
+        <div className="bg-white  rounded-2xl p-6 shadow-sm border border-gray-200  hover:border-primary :border-primary transition-all">
           <div className="text-center">
             <div className="text-4xl mb-3">💬</div>
             <div className="text-3xl font-bold text-gray-900 ">{stats.chatSessions}</div>
@@ -166,7 +166,7 @@ const Product6: React.FC = () => {
           </div>
         </div>
 
-        <div className="bg-white  rounded-2xl p-6 shadow-sm border border-gray-200  hover:border-blue-300 :border-blue-700 transition-all">
+        <div className="bg-white  rounded-2xl p-6 shadow-sm border border-gray-200  hover:border-primary :border-primary transition-all">
           <div className="text-center">
             <div className="text-4xl mb-3">📅</div>
             <div className="text-3xl font-bold text-gray-900 ">{stats.weeklyActiveDays}/7</div>
@@ -174,7 +174,7 @@ const Product6: React.FC = () => {
           </div>
         </div>
 
-        <div className="bg-white  rounded-2xl p-6 shadow-sm border border-gray-200  hover:border-blue-300 :border-blue-700 transition-all">
+        <div className="bg-white  rounded-2xl p-6 shadow-sm border border-gray-200  hover:border-primary :border-primary transition-all">
           <div className="text-center">
             <div className="text-4xl mb-3">🏆</div>
             <div className="text-3xl font-bold text-gray-900 ">{stats.longestStreak}</div>
@@ -189,7 +189,7 @@ const Product6: React.FC = () => {
         <div className="bg-white  rounded-2xl shadow-sm p-8 border border-gray-200 ">
           <div className="flex items-center justify-between mb-6">
             <h3 className="text-xl font-bold text-gray-900  flex items-center gap-2">
-              <span className="text-blue-600">📊</span>
+              <span className="text-primary">📊</span>
               Hoạt động học tập
             </h3>
             <div className="flex gap-2 bg-gray-100  p-1 rounded-lg">
@@ -198,7 +198,7 @@ const Product6: React.FC = () => {
                   key={days}
                   onClick={() => setSelectedPeriod(days as any)}
                   className={`px-3 py-1 rounded-md text-sm font-bold transition-all ${selectedPeriod === days
-                    ? 'bg-white  text-blue-600  shadow-sm'
+                    ? 'bg-white  text-primary  shadow-sm'
                     : 'text-gray-500  hover:text-gray-700 :text-gray-200'
                     }`}
                 >
@@ -267,7 +267,7 @@ const Product6: React.FC = () => {
           </h3>
           <button
             onClick={() => setShowCreateGoal(true)}
-            className="px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-all font-bold shadow-md flex items-center gap-2"
+            className="px-6 py-3 bg-primary text-white rounded-xl hover:bg-primary-hover transition-all font-bold shadow-md flex items-center gap-2"
           >
             <span className="text-white">➕</span>
             Tạo mục tiêu mới
@@ -293,7 +293,7 @@ const Product6: React.FC = () => {
                     ? 'bg-green-50  border-green-200 '
                     : isOverdue
                       ? 'bg-red-50  border-red-200 '
-                      : 'bg-white  border-gray-200  hover:border-blue-300 :border-blue-700 hover:shadow-md'
+                      : 'bg-white  border-gray-200  hover:border-primary :border-primary hover:shadow-md'
                     }`}
                 >
                   <div className="flex items-start justify-between mb-4">
@@ -303,7 +303,7 @@ const Product6: React.FC = () => {
                           onClick={() => handleToggleGoal(goal)}
                           className={`w-8 h-8 rounded-full border-2 flex items-center justify-center transition-all ${goal.completed
                             ? 'bg-green-500 border-green-500'
-                            : 'border-gray-300 hover:border-blue-500 text-transparent hover:text-blue-500'
+                            : 'border-gray-300 hover:border-primary text-transparent hover:text-primary'
                             }`}
                         >
                           {goal.completed && <span className="text-white text-sm">✓</span>}
@@ -334,7 +334,7 @@ const Product6: React.FC = () => {
                         className={`h-full rounded-full transition-all duration-1000 ${goal.completed
                           ? 'bg-green-500'
                           : progress >= 80
-                            ? 'bg-blue-500'
+                            ? 'bg-primary'
                             : progress >= 50
                               ? 'bg-yellow-500'
                               : 'bg-red-500'
@@ -365,7 +365,7 @@ const Product6: React.FC = () => {
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="bg-white  rounded-2xl shadow-2xl max-w-2xl w-full p-8 animate-scale-in max-h-[90vh] overflow-y-auto">
             <h3 className="text-2xl font-bold mb-6 text-gray-900  flex items-center gap-2">
-              <span className="text-blue-600">🎯</span>
+              <span className="text-primary">🎯</span>
               Tạo mục tiêu mới
             </h3>
 
@@ -379,7 +379,7 @@ const Product6: React.FC = () => {
                   value={goalForm.title}
                   onChange={(e) => setGoalForm({ ...goalForm, title: e.target.value })}
                   placeholder="VD: Đạt điểm trung bình 80%"
-                  className="w-full px-4 py-3 border border-gray-300  rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50  "
+                  className="w-full px-4 py-3 border border-gray-300  rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent bg-gray-50  "
                 />
               </div>
 
@@ -392,7 +392,7 @@ const Product6: React.FC = () => {
                   onChange={(e) => setGoalForm({ ...goalForm, description: e.target.value })}
                   placeholder="Mô tả chi tiết về mục tiêu"
                   rows={3}
-                  className="w-full px-4 py-3 border border-gray-300  rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50   resize-none"
+                  className="w-full px-4 py-3 border border-gray-300  rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent bg-gray-50   resize-none"
                 />
               </div>
 
@@ -404,7 +404,7 @@ const Product6: React.FC = () => {
                   <select
                     value={goalForm.type}
                     onChange={(e) => setGoalForm({ ...goalForm, type: e.target.value as any })}
-                    className="w-full px-4 py-3 border border-gray-300  rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50  "
+                    className="w-full px-4 py-3 border border-gray-300  rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent bg-gray-50  "
                   >
                     <option value="exam-score">Điểm thi</option>
                     <option value="study-time">Thời gian học</option>
@@ -422,7 +422,7 @@ const Product6: React.FC = () => {
                     value={goalForm.deadline}
                     onChange={(e) => setGoalForm({ ...goalForm, deadline: e.target.value })}
                     min={new Date().toISOString().split('T')[0]}
-                    className="w-full px-4 py-3 border border-gray-300  rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50  "
+                    className="w-full px-4 py-3 border border-gray-300  rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent bg-gray-50  "
                   />
                 </div>
               </div>
@@ -436,7 +436,7 @@ const Product6: React.FC = () => {
                     type="number"
                     value={goalForm.target}
                     onChange={(e) => setGoalForm({ ...goalForm, target: Number(e.target.value) })}
-                    className="w-full px-4 py-3 border border-gray-300  rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50  "
+                    className="w-full px-4 py-3 border border-gray-300  rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent bg-gray-50  "
                   />
                 </div>
 
@@ -449,7 +449,7 @@ const Product6: React.FC = () => {
                     value={goalForm.unit}
                     onChange={(e) => setGoalForm({ ...goalForm, unit: e.target.value })}
                     placeholder="%, phút, thẻ..."
-                    className="w-full px-4 py-3 border border-gray-300  rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50  "
+                    className="w-full px-4 py-3 border border-gray-300  rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent bg-gray-50  "
                   />
                 </div>
               </div>
@@ -464,7 +464,7 @@ const Product6: React.FC = () => {
               </button>
               <button
                 onClick={handleCreateGoal}
-                className="flex-1 px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-all font-bold shadow-md flex items-center justify-center gap-2"
+                className="flex-1 px-6 py-3 bg-primary text-white rounded-xl hover:bg-primary-hover transition-all font-bold shadow-md flex items-center justify-center gap-2"
               >
                 ✅ Tạo mục tiêu
               </button>

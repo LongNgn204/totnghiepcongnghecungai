@@ -7,8 +7,8 @@ export interface GeminiResponse {
 
 export const AVAILABLE_MODELS = [
   { id: 'gemini-2.5-pro', name: 'Gemini 2.5 Pro', description: 'Mô hình mạnh mẽ nhất (Next Gen)' },
+  { id: 'gemini-2.5-flash', name: 'Gemini 2.5 Flash', description: 'Mô hình tốc độ cao' },
   { id: 'gemini-2.5-flash-native-audio-dialog', name: 'Gemini 2.5 Flash Audio', description: 'Hỗ trợ hội thoại âm thanh tự nhiên' },
-  { id: 'gemini-2.0-flash-exp', name: 'Gemini 2.0 Flash (Exp)', description: 'Mô hình thử nghiệm' },
 ];
 
 const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
@@ -39,9 +39,9 @@ export async function generateContent(prompt: string, modelId: string = 'gemini-
           }]
         }],
         generationConfig: {
-          temperature: 0.7,
-          topK: 40,
-          topP: 0.95,
+          temperature: 0.3,
+          topK: 30,
+          topP: 0.90,
           maxOutputTokens: 8192,
         },
       }),
@@ -164,9 +164,9 @@ export async function sendChatMessage(
       body: JSON.stringify({
         contents: contents,
         generationConfig: {
-          temperature: 0.7,
-          topK: 40,
-          topP: 0.95,
+          temperature: 0.3,
+          topK: 30,
+          topP: 0.90,
           maxOutputTokens: 8192,
         },
         safetySettings: [

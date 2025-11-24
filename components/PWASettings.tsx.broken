@@ -87,16 +87,16 @@ const PWASettings: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-orange-100 to-slate-100 py-8 px-4">
+    <div className="min-h-screen bg-gradient-to-br from-cyan-50 via-teal-50 to-slate-50 py-8 px-4">
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="bg-white rounded-2xl shadow-xl p-6 mb-6">
           <div className="flex items-center gap-4">
-            <div className="w-16 h-16 bg-gradient-to-br from-primary to-primary-hover rounded-2xl flex items-center justify-center">
+            <div className="w-16 h-16 bg-gradient-to-br from-primary to-accent rounded-2xl flex items-center justify-center">
               <span className="text-3xl text-white">📱</span>
             </div>
             <div>
-              <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-primary-hover bg-clip-text text-transparent">
+              <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
                 Cài đặt PWA
               </h1>
               <p className="text-gray-600 mt-1">Progressive Web App & Offline Mode</p>
@@ -163,7 +163,7 @@ const PWASettings: React.FC = () => {
               {canInstall && !pwaStatus.isInstalled && (
                 <button
                   onClick={handleInstall}
-                  className="w-full mt-4 bg-gradient-to-r from-primary to-primary-hover text-white py-3 rounded-xl font-semibold hover:shadow-lg transition-all duration-300 transform hover:scale-105 flex items-center justify-center"
+                  className="w-full mt-4 bg-gradient-to-r from-primary to-accent text-white py-3 rounded-xl font-semibold hover:shadow-lg transition-all duration-300 transform hover:scale-105 flex items-center justify-center"
                 >
                   <span className="mr-2">📥</span>
                   Cài đặt ứng dụng
@@ -204,8 +204,8 @@ const PWASettings: React.FC = () => {
               Xóa tất cả dữ liệu đã lưu
             </button>
 
-            <div className="p-4 bg-orange-50 border border-primary rounded-xl">
-              <p className="text-sm text-primary flex items-center">
+            <div className="p-4 bg-cyan-50 border border-cyan-200 rounded-xl">
+              <p className="text-sm text-cyan-800 flex items-center">
                 <span className="mr-2">ℹ️</span>
                 Dữ liệu offline giúp bạn sử dụng ứng dụng khi không có Internet.
                 Bao gồm: Bài thi, Flashcards, Lịch sử chat.
@@ -217,7 +217,7 @@ const PWASettings: React.FC = () => {
         {/* Notifications */}
         <div className="bg-white rounded-2xl shadow-xl p-6 mb-6">
           <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
-            <span className="mr-2 text-primary">🔔</span>
+            <span className="mr-2 text-accent">🔔</span>
             Thông báo
           </h2>
           <div className="space-y-4">
@@ -246,7 +246,7 @@ const PWASettings: React.FC = () => {
               <button
                 onClick={handleRequestNotification}
                 disabled={notificationPermission === 'denied'}
-                className="w-full bg-gradient-to-r from-primary to-primary-hover text-white py-3 rounded-xl font-semibold hover:shadow-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+                className="w-full bg-gradient-to-r from-primary to-accent text-white py-3 rounded-xl font-semibold hover:shadow-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
               >
                 <span className="mr-2">🔔</span>
                 {notificationPermission === 'denied' ? 'Đã bị chặn' : 'Bật thông báo'}
@@ -287,13 +287,13 @@ const PWASettings: React.FC = () => {
                   }}
                   className="sr-only peer"
                 />
-                <div className="w-14 h-7 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-primary"></div>
+                <div className="w-14 h-7 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-cyan-300 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-primary"></div>
               </label>
             </div>
 
             {/* Sync Interval */}
             {syncManager.isEnabled() && (
-              <div className="p-4 bg-orange-50 border border-primary rounded-xl">
+              <div className="p-4 bg-cyan-50 border border-cyan-200 rounded-xl">
                 <label className="block text-sm font-bold text-gray-700 mb-2">
                   Tần suất đồng bộ tự động
                 </label>
@@ -357,8 +357,8 @@ const PWASettings: React.FC = () => {
             </div>
 
             {/* Info */}
-            <div className="p-4 bg-orange-50 border border-primary rounded-xl">
-              <p className="text-sm text-primary flex items-start gap-2">
+            <div className="p-4 bg-cyan-50 border border-cyan-200 rounded-xl">
+              <p className="text-sm text-cyan-800 flex items-start gap-2">
                 <Cloud className="w-4 h-4 mt-0.5" />
                 <span>
                   Đồng bộ cloud lưu trữ an toàn dữ liệu của bạn (Bài thi, Flashcards, Chat) lên server.
@@ -398,7 +398,7 @@ const PWASettings: React.FC = () => {
 
             <div className="p-4 border-2 border-gray-200 rounded-xl">
               <div className="flex items-center gap-3 mb-2">
-                <span className="text-2xl text-primary">📱</span>
+                <span className="text-2xl text-accent">📱</span>
                 <h3 className="font-bold text-gray-900">Giống App</h3>
               </div>
               <p className="text-sm text-gray-600">
@@ -420,8 +420,7 @@ const PWASettings: React.FC = () => {
           </div>
         </div>
       </div>
-    </div>
-  );
+      );
 };
 
       export default PWASettings;

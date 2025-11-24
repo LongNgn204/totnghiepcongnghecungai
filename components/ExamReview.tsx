@@ -26,7 +26,7 @@ const ExamReview: React.FC = () => {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
-          <i className="fas fa-spinner fa-spin text-4xl text-blue-600 mb-4"></i>
+          <i className="fas fa-spinner fa-spin text-4xl text-primary mb-4"></i>
           <p className="text-gray-600 ">Đang tải...</p>
         </div>
       </div>
@@ -45,7 +45,7 @@ const ExamReview: React.FC = () => {
         </p>
         <Link
           to="/lich-su"
-          className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all inline-block"
+          className="px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary-hover transition-all inline-block"
         >
           <i className="fas fa-arrow-left mr-2"></i>Quay lại lịch sử
         </Link>
@@ -96,8 +96,8 @@ const ExamReview: React.FC = () => {
             <i className="fas fa-chart-bar mr-2"></i>Kết quả
           </h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="text-center p-4 bg-blue-50  rounded-lg">
-              <div className="text-3xl font-bold text-blue-600 ">
+            <div className="text-center p-4 bg-orange-50  rounded-lg">
+              <div className="text-3xl font-bold text-primary ">
                 {exam.score}/{exam.totalQuestions}
               </div>
               <div className="text-sm text-gray-600 ">Số câu đúng</div>
@@ -108,8 +108,8 @@ const ExamReview: React.FC = () => {
               </div>
               <div className="text-sm text-gray-600 ">Điểm (thang 10)</div>
             </div>
-            <div className="text-center p-4 bg-purple-50  rounded-lg">
-              <div className="text-3xl font-bold text-purple-600 ">
+            <div className="text-center p-4 bg-orange-50  rounded-lg">
+              <div className="text-3xl font-bold text-primary ">
                 {exam.percentage.toFixed(1)}%
               </div>
               <div className="text-sm text-gray-600 ">Tỷ lệ đúng</div>
@@ -139,12 +139,12 @@ const ExamReview: React.FC = () => {
 
         {/* Phần I: Multiple Choice */}
         <div className="mb-8">
-          <h4 className="text-xl font-bold mb-4 text-blue-600 ">
+          <h4 className="text-xl font-bold mb-4 text-primary ">
             PHẦN I: Trắc nghiệm 4 lựa chọn (Câu 1-24)
           </h4>
           <div className="space-y-6">
             {mcQuestions.map((q) => (
-              <div key={q.id} className="border-l-4 border-blue-500 pl-4">
+              <div key={q.id} className="border-l-4 border-primary pl-4">
                 <QuestionCard
                   question={q}
                   type="mc"
@@ -181,7 +181,7 @@ const ExamReview: React.FC = () => {
         <div className="mt-8 pt-6 border-t border-gray-200  flex flex-wrap justify-center gap-4">
           <button
             onClick={() => window.print()}
-            className="px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-all"
+            className="px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary-hover transition-all"
           >
             <i className="fas fa-print mr-2"></i>In đề thi
           </button>

@@ -12,7 +12,7 @@ export default function AuthPage() {
       <div className="bg-white rounded-3xl shadow-2xl p-8 w-full max-w-md">
         {/* Logo */}
         <div className="text-center mb-8">
-          <div className="bg-gradient-to-r from-blue-500 to-purple-500 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4">
+          <div className="bg-gradient-to-r from-primary to-primary-hover w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4">
             <i className="fas fa-graduation-cap text-4xl text-white"></i>
           </div>
           <h1 className="text-3xl font-bold text-gray-800">Ôn Thi THPT</h1>
@@ -25,7 +25,7 @@ export default function AuthPage() {
             onClick={() => setIsLogin(true)}
             className={`flex-1 py-3 rounded-lg font-semibold transition-all ${
               isLogin
-                ? 'bg-white text-blue-600 shadow-md'
+                ? 'bg-white text-primary shadow-md'
                 : 'text-gray-600 hover:text-gray-800'
             }`}
           >
@@ -36,7 +36,7 @@ export default function AuthPage() {
             onClick={() => setIsLogin(false)}
             className={`flex-1 py-3 rounded-lg font-semibold transition-all ${
               !isLogin
-                ? 'bg-white text-blue-600 shadow-md'
+                ? 'bg-white text-primary shadow-md'
                 : 'text-gray-600 hover:text-gray-800'
             }`}
           >
@@ -79,14 +79,14 @@ function LoginForm() {
     <form onSubmit={handleSubmit} className="space-y-5">
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">
-          <i className="fas fa-user mr-2 text-blue-500"></i>
+          <i className="fas fa-user mr-2 text-primary"></i>
           Username hoặc Email
         </label>
         <input
           type="text"
           value={formData.username}
           onChange={e => setFormData({ ...formData, username: e.target.value })}
-          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition"
           placeholder="Nhập username hoặc email"
           required
           disabled={loading}
@@ -95,14 +95,14 @@ function LoginForm() {
 
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">
-          <i className="fas fa-lock mr-2 text-blue-500"></i>
+          <i className="fas fa-lock mr-2 text-primary"></i>
           Mật khẩu
         </label>
         <input
           type="password"
           value={formData.password}
           onChange={e => setFormData({ ...formData, password: e.target.value })}
-          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition"
           placeholder="Nhập mật khẩu"
           required
           disabled={loading}
@@ -111,7 +111,7 @@ function LoginForm() {
 
       <div className="flex items-center justify-between">
         <div className="text-sm">
-          <Link to="/forgot-password" className="text-blue-600 hover:text-blue-800 font-medium">
+          <Link to="/forgot-password" className="text-primary hover:text-primary font-medium">
             <i className="fas fa-question-circle mr-1"></i>
             Quên mật khẩu?
           </Link>
@@ -121,7 +121,7 @@ function LoginForm() {
       <button
         type="submit"
         disabled={loading}
-        className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 rounded-lg font-semibold hover:from-blue-700 hover:to-purple-700 transition-all shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+        className="w-full bg-gradient-to-r from-primary to-primary-hover text-white py-3 rounded-lg font-semibold hover:from-blue-700 hover:to-purple-700 transition-all shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
       >
         {loading ? (
           <>
@@ -213,14 +213,14 @@ function RegisterForm({ setIsLogin }: { setIsLogin: (val: boolean) => void }) {
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">
-          <i className="fas fa-user mr-2 text-blue-500"></i>
+          <i className="fas fa-user mr-2 text-primary"></i>
           Username
         </label>
         <input
           type="text"
           value={formData.username}
           onChange={e => setFormData({ ...formData, username: e.target.value })}
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition"
           placeholder="Ít nhất 3 ký tự"
           required
           disabled={loading}
@@ -229,14 +229,14 @@ function RegisterForm({ setIsLogin }: { setIsLogin: (val: boolean) => void }) {
 
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">
-          <i className="fas fa-envelope mr-2 text-blue-500"></i>
+          <i className="fas fa-envelope mr-2 text-primary"></i>
           Email
         </label>
         <input
           type="email"
           value={formData.email}
           onChange={e => setFormData({ ...formData, email: e.target.value })}
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition"
           placeholder="email@example.com"
           required
           disabled={loading}
@@ -245,14 +245,14 @@ function RegisterForm({ setIsLogin }: { setIsLogin: (val: boolean) => void }) {
 
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">
-          <i className="fas fa-id-card mr-2 text-blue-500"></i>
+          <i className="fas fa-id-card mr-2 text-primary"></i>
           Tên hiển thị
         </label>
         <input
           type="text"
           value={formData.displayName}
           onChange={e => setFormData({ ...formData, displayName: e.target.value })}
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition"
           placeholder="Nguyễn Văn A"
           required
           disabled={loading}
@@ -261,14 +261,14 @@ function RegisterForm({ setIsLogin }: { setIsLogin: (val: boolean) => void }) {
 
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">
-          <i className="fas fa-lock mr-2 text-blue-500"></i>
+          <i className="fas fa-lock mr-2 text-primary"></i>
           Mật khẩu
         </label>
         <input
           type="password"
           value={formData.password}
           onChange={e => setFormData({ ...formData, password: e.target.value })}
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition"
           placeholder="Ít nhất 6 ký tự"
           required
           disabled={loading}
@@ -277,14 +277,14 @@ function RegisterForm({ setIsLogin }: { setIsLogin: (val: boolean) => void }) {
 
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">
-          <i className="fas fa-check-circle mr-2 text-blue-500"></i>
+          <i className="fas fa-check-circle mr-2 text-primary"></i>
           Xác nhận mật khẩu
         </label>
         <input
           type="password"
           value={formData.confirmPassword}
           onChange={e => setFormData({ ...formData, confirmPassword: e.target.value })}
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition"
           placeholder="Nhập lại mật khẩu"
           required
           disabled={loading}
@@ -314,7 +314,7 @@ function RegisterForm({ setIsLogin }: { setIsLogin: (val: boolean) => void }) {
         <button
           type="button"
           onClick={() => setIsLogin(true)}
-          className="text-blue-600 hover:text-blue-700 font-semibold"
+          className="text-primary hover:text-primary font-semibold"
         >
           Đăng nhập ngay
         </button>

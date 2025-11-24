@@ -168,7 +168,7 @@ const Product5: React.FC = () => {
   return (
     <div className="space-y-8 animate-fade-in">
       {/* Header */}
-      <div className="bg-white  p-6 rounded-xl shadow-sm border border-blue-100 ">
+      <div className="bg-white  p-6 rounded-xl shadow-sm border border-primary ">
         <h2 className="text-3xl font-bold text-center mb-2 text-gray-800  flex items-center justify-center gap-3">
           🧠 Sản Phẩm 5: Flashcards - Học Thông Minh
         </h2>
@@ -182,7 +182,7 @@ const Product5: React.FC = () => {
         <button
           onClick={() => setActiveTab('decks')}
           className={`flex-1 px-6 py-3 rounded-lg font-semibold transition-all whitespace-nowrap flex items-center justify-center gap-2 ${activeTab === 'decks'
-            ? 'bg-blue-600 text-white shadow-md'
+            ? 'bg-primary text-white shadow-md'
             : 'text-gray-600 hover:bg-gray-50'
             }`}
         >
@@ -191,7 +191,7 @@ const Product5: React.FC = () => {
         <button
           onClick={() => setActiveTab('ai')}
           className={`flex-1 px-6 py-3 rounded-lg font-semibold transition-all whitespace-nowrap flex items-center justify-center gap-2 ${activeTab === 'ai'
-            ? 'bg-blue-600 text-white shadow-md'
+            ? 'bg-primary text-white shadow-md'
             : 'text-gray-600 hover:bg-gray-50'
             }`}
         >
@@ -201,7 +201,7 @@ const Product5: React.FC = () => {
           onClick={() => setActiveTab('study')}
           disabled={!selectedDeck}
           className={`flex-1 px-6 py-3 rounded-lg font-semibold transition-all whitespace-nowrap flex items-center justify-center gap-2 ${activeTab === 'study' && selectedDeck
-            ? 'bg-blue-600 text-white shadow-md'
+            ? 'bg-primary text-white shadow-md'
             : 'text-gray-600 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed'
             }`}
         >
@@ -213,7 +213,7 @@ const Product5: React.FC = () => {
             setActiveTab('create');
           }}
           className={`flex-1 px-6 py-3 rounded-lg font-semibold transition-all whitespace-nowrap flex items-center justify-center gap-2 ${activeTab === 'create'
-            ? 'bg-blue-600 text-white shadow-md'
+            ? 'bg-primary text-white shadow-md'
             : 'text-gray-600  hover:bg-gray-50 :bg-slate-800'
             }`}
         >
@@ -247,14 +247,14 @@ const Product5: React.FC = () => {
               {/* Preview cards */}
               <div className="space-y-3 mb-6 max-h-96 overflow-y-auto pr-2 custom-scrollbar">
                 {generatedCards.map((card, index) => (
-                  <div key={index} className="border border-gray-200  rounded-xl p-4 hover:border-blue-400 transition-all bg-gray-50 ">
+                  <div key={index} className="border border-gray-200  rounded-xl p-4 hover:border-primary transition-all bg-gray-50 ">
                     <div className="flex items-start gap-3">
-                      <div className="bg-blue-100  rounded-full w-8 h-8 flex items-center justify-center flex-shrink-0 text-blue-600  font-bold text-sm">
+                      <div className="bg-orange-100  rounded-full w-8 h-8 flex items-center justify-center flex-shrink-0 text-primary  font-bold text-sm">
                         {index + 1}
                       </div>
                       <div className="flex-1">
                         <p className="font-semibold text-gray-800  mb-2 flex items-start gap-2">
-                          <span className="text-blue-500 mt-1 shrink-0">❓</span>
+                          <span className="text-primary mt-1 shrink-0">❓</span>
                           {card.front}
                         </p>
                         <p className="text-gray-600  text-sm mb-2 flex items-start gap-2">
@@ -280,7 +280,7 @@ const Product5: React.FC = () => {
                 </p>
                 <div className="flex gap-3">
                   <select
-                    className="flex-1 px-4 py-3 border border-gray-300  rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white  "
+                    className="flex-1 px-4 py-3 border border-gray-300  rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent bg-white  "
                     id="saveDeckSelect"
                   >
                     <option value="">-- Tạo bộ thẻ mới --</option>
@@ -335,7 +335,7 @@ const Product5: React.FC = () => {
                       loadDecks();
                       setActiveTab('decks');
                     }}
-                    className="px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-all font-bold shadow-md flex items-center gap-2"
+                    className="px-6 py-3 bg-primary text-white rounded-xl hover:bg-primary-hover transition-all font-bold shadow-md flex items-center gap-2"
                   >
                     💾 Lưu
                   </button>
@@ -361,7 +361,7 @@ const Product5: React.FC = () => {
                   setShowCreateDeck(true);
                   setActiveTab('create');
                 }}
-                className="px-8 py-4 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-all flex items-center mx-auto gap-2 font-bold shadow-lg"
+                className="px-8 py-4 bg-primary text-white rounded-xl hover:bg-primary-hover transition-all flex items-center mx-auto gap-2 font-bold shadow-lg"
               >
                 ➕ Tạo bộ thẻ mới
               </button>
@@ -372,13 +372,13 @@ const Product5: React.FC = () => {
               return (
                 <div
                   key={deck.id}
-                  className="bg-white  rounded-2xl shadow-sm p-6 hover:shadow-md transition-all border border-gray-200  hover:border-blue-300 :border-blue-700 group"
+                  className="bg-white  rounded-2xl shadow-sm p-6 hover:shadow-md transition-all border border-gray-200  hover:border-primary :border-primary group"
                 >
                   <div className="flex justify-between items-start mb-6">
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-3">
-                        <h3 className="text-2xl font-bold text-gray-900  group-hover:text-blue-600 :text-blue-400 transition-colors">{deck.title}</h3>
-                        <span className="px-3 py-1 bg-blue-100  text-blue-800  rounded-full text-xs font-bold">
+                        <h3 className="text-2xl font-bold text-gray-900  group-hover:text-primary :text-primary transition-colors">{deck.title}</h3>
+                        <span className="px-3 py-1 bg-orange-100  text-primary  rounded-full text-xs font-bold">
                           {deck.category}
                         </span>
                         <span className="px-3 py-1 bg-gray-100  text-gray-800  rounded-full text-xs font-bold">
@@ -390,7 +390,7 @@ const Product5: React.FC = () => {
                       {stats && (
                         <div className="grid grid-cols-5 gap-4 bg-gray-50  p-4 rounded-xl border border-gray-100 ">
                           <div className="text-center">
-                            <div className="text-2xl font-bold text-blue-600">{stats.totalCards}</div>
+                            <div className="text-2xl font-bold text-primary">{stats.totalCards}</div>
                             <div className="text-xs text-gray-500 font-medium mt-1">Tổng thẻ</div>
                           </div>
                           <div className="text-center">
@@ -418,7 +418,7 @@ const Product5: React.FC = () => {
                     <button
                       onClick={() => startStudySession(deck)}
                       disabled={stats?.dueCards === 0}
-                      className="flex-1 bg-blue-600 text-white px-4 py-3 rounded-xl hover:bg-blue-700 transition-all font-bold shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                      className="flex-1 bg-primary text-white px-4 py-3 rounded-xl hover:bg-primary-hover transition-all font-bold shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                     >
                       🧠 Ôn tập ngay ({stats?.dueCards || 0})
                     </button>
@@ -427,7 +427,7 @@ const Product5: React.FC = () => {
                         setSelectedDeck(deck);
                         setShowCreateCard(true);
                       }}
-                      className="px-6 py-3 bg-white  text-blue-600  border border-blue-200  rounded-xl hover:bg-blue-50 :bg-blue-900/20 transition-all font-bold flex items-center justify-center"
+                      className="px-6 py-3 bg-white  text-primary  border border-primary  rounded-xl hover:bg-orange-50 :bg-blue-900/20 transition-all font-bold flex items-center justify-center"
                       title="Thêm thẻ"
                     >
                       ➕
@@ -454,7 +454,7 @@ const Product5: React.FC = () => {
           <div className="bg-white  rounded-2xl shadow-sm border border-gray-200  p-6">
             <div className="flex justify-between items-center mb-3">
               <span className="text-sm font-bold text-gray-700  flex items-center gap-2">
-                <span className="text-blue-600">📂</span>
+                <span className="text-primary">📂</span>
                 Thẻ {currentCardIndex + 1} / {studyCards.length}
               </span>
               <span className="text-sm font-medium text-gray-500 ">
@@ -463,7 +463,7 @@ const Product5: React.FC = () => {
             </div>
             <div className="w-full bg-gray-100  rounded-full h-3 overflow-hidden">
               <div
-                className="bg-blue-600 h-3 rounded-full transition-all duration-500"
+                className="bg-primary h-3 rounded-full transition-all duration-500"
                 style={{ width: `${((currentCardIndex + 1) / studyCards.length) * 100}%` }}
               ></div>
             </div>
@@ -483,7 +483,7 @@ const Product5: React.FC = () => {
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="bg-white  rounded-2xl shadow-2xl max-w-2xl w-full p-8 animate-scale-in">
             <h3 className="text-2xl font-bold mb-6 text-gray-900  flex items-center gap-2">
-              <span className="text-blue-600">➕</span>
+              <span className="text-primary">➕</span>
               Tạo bộ thẻ mới
             </h3>
 
@@ -497,7 +497,7 @@ const Product5: React.FC = () => {
                   value={deckForm.title}
                   onChange={(e) => setDeckForm({ ...deckForm, title: e.target.value })}
                   placeholder="VD: Mạch điện ba pha"
-                  className="w-full px-4 py-3 border border-gray-300  rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50  "
+                  className="w-full px-4 py-3 border border-gray-300  rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent bg-gray-50  "
                 />
               </div>
 
@@ -510,7 +510,7 @@ const Product5: React.FC = () => {
                   onChange={(e) => setDeckForm({ ...deckForm, description: e.target.value })}
                   placeholder="Mô tả ngắn gọn về nội dung bộ thẻ"
                   rows={3}
-                  className="w-full px-4 py-3 border border-gray-300  rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50   resize-none"
+                  className="w-full px-4 py-3 border border-gray-300  rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent bg-gray-50   resize-none"
                 />
               </div>
 
@@ -522,7 +522,7 @@ const Product5: React.FC = () => {
                   <select
                     value={deckForm.category}
                     onChange={(e) => setDeckForm({ ...deckForm, category: e.target.value })}
-                    className="w-full px-4 py-3 border border-gray-300  rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50  "
+                    className="w-full px-4 py-3 border border-gray-300  rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent bg-gray-50  "
                   >
                     <option value="Công nghiệp">Công nghiệp</option>
                     <option value="Nông nghiệp">Nông nghiệp</option>
@@ -536,7 +536,7 @@ const Product5: React.FC = () => {
                   <select
                     value={deckForm.grade}
                     onChange={(e) => setDeckForm({ ...deckForm, grade: e.target.value })}
-                    className="w-full px-4 py-3 border border-gray-300  rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50  "
+                    className="w-full px-4 py-3 border border-gray-300  rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent bg-gray-50  "
                   >
                     {['6', '7', '8', '9', '10', '11', '12'].map(g => (
                       <option key={g} value={g}>Lớp {g}</option>
@@ -558,7 +558,7 @@ const Product5: React.FC = () => {
               </button>
               <button
                 onClick={handleCreateDeck}
-                className="flex-1 px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-all font-bold shadow-md flex items-center justify-center gap-2"
+                className="flex-1 px-6 py-3 bg-primary text-white rounded-xl hover:bg-primary-hover transition-all font-bold shadow-md flex items-center justify-center gap-2"
               >
                 ✅ Tạo bộ thẻ
               </button>
@@ -572,8 +572,8 @@ const Product5: React.FC = () => {
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="bg-white  rounded-2xl shadow-2xl max-w-2xl w-full p-8 animate-scale-in max-h-[90vh] overflow-y-auto">
             <h3 className="text-2xl font-bold mb-6 text-gray-900  flex items-center gap-2">
-              <span className="text-blue-600">➕</span>
-              Thêm thẻ vào: <span className="text-blue-600">{selectedDeck.title}</span>
+              <span className="text-primary">➕</span>
+              Thêm thẻ vào: <span className="text-primary">{selectedDeck.title}</span>
             </h3>
 
             <div className="space-y-5">
@@ -586,7 +586,7 @@ const Product5: React.FC = () => {
                   onChange={(e) => setCardForm({ ...cardForm, question: e.target.value })}
                   placeholder="VD: Công thức tính công suất trong mạch điện ba pha là gì?"
                   rows={3}
-                  className="w-full px-4 py-3 border border-gray-300  rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50   resize-none"
+                  className="w-full px-4 py-3 border border-gray-300  rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent bg-gray-50   resize-none"
                 />
               </div>
 
@@ -599,7 +599,7 @@ const Product5: React.FC = () => {
                   onChange={(e) => setCardForm({ ...cardForm, answer: e.target.value })}
                   placeholder="VD: P = √3 × U × I × cosφ"
                   rows={3}
-                  className="w-full px-4 py-3 border border-gray-300  rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50   resize-none"
+                  className="w-full px-4 py-3 border border-gray-300  rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent bg-gray-50   resize-none"
                 />
               </div>
 
@@ -636,11 +636,11 @@ const Product5: React.FC = () => {
                     onChange={(e) => setCardForm({ ...cardForm, tagInput: e.target.value })}
                     onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), handleAddTag())}
                     placeholder="Thêm tag và nhấn Enter"
-                    className="flex-1 px-4 py-3 border border-gray-300  rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50  "
+                    className="flex-1 px-4 py-3 border border-gray-300  rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent bg-gray-50  "
                   />
                   <button
                     onClick={handleAddTag}
-                    className="px-4 py-3 bg-blue-100  text-blue-600  rounded-xl hover:bg-blue-200 :bg-blue-900/50 transition-all font-bold"
+                    className="px-4 py-3 bg-orange-100  text-primary  rounded-xl hover:bg-blue-200 :bg-blue-900/50 transition-all font-bold"
                   >
                     ➕
                   </button>
@@ -650,13 +650,13 @@ const Product5: React.FC = () => {
                     {cardForm.tags.map(tag => (
                       <span
                         key={tag}
-                        className="px-3 py-1 bg-blue-50  text-blue-700  rounded-lg text-sm font-medium flex items-center gap-2 border border-blue-100 "
+                        className="px-3 py-1 bg-orange-50  text-primary  rounded-lg text-sm font-medium flex items-center gap-2 border border-primary "
                       >
                         <span className="text-xs">🏷️</span>
                         {tag}
                         <button
                           onClick={() => handleRemoveTag(tag)}
-                          className="text-blue-400 hover:text-blue-600"
+                          className="text-primary hover:text-primary"
                         >
                           ❌
                         </button>
@@ -676,7 +676,7 @@ const Product5: React.FC = () => {
               </button>
               <button
                 onClick={handleCreateCard}
-                className="flex-1 px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-all font-bold shadow-md flex items-center justify-center gap-2"
+                className="flex-1 px-6 py-3 bg-primary text-white rounded-xl hover:bg-primary-hover transition-all font-bold shadow-md flex items-center justify-center gap-2"
               >
                 ✅ Thêm thẻ
               </button>

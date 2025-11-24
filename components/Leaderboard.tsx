@@ -73,7 +73,7 @@ const Leaderboard: React.FC = () => {
               <Trophy className="w-10 h-10 text-white" />
             </div>
             <h1 className="text-4xl font-bold mb-2">Bảng Xếp Hạng</h1>
-            <p className="text-blue-100 text-lg">Cùng nhau thi đua học tập!</p>
+            <p className="text-primary text-lg">Cùng nhau thi đua học tập!</p>
           </div>
 
           {/* Filters */}
@@ -81,7 +81,7 @@ const Leaderboard: React.FC = () => {
             <button
               onClick={() => setFilter('all')}
               className={`px-6 py-2 rounded-lg font-bold transition-all duration-300 flex items-center gap-2 ${filter === 'all'
-                ? 'bg-white text-blue-600 shadow-md'
+                ? 'bg-white text-primary shadow-md'
                 : 'text-white hover:bg-white/20'
                 }`}
             >
@@ -91,7 +91,7 @@ const Leaderboard: React.FC = () => {
             <button
               onClick={() => setFilter('week')}
               className={`px-6 py-2 rounded-lg font-bold transition-all duration-300 flex items-center gap-2 ${filter === 'week'
-                ? 'bg-white text-blue-600 shadow-md'
+                ? 'bg-white text-primary shadow-md'
                 : 'text-white hover:bg-white/20'
                 }`}
             >
@@ -101,7 +101,7 @@ const Leaderboard: React.FC = () => {
             <button
               onClick={() => setFilter('month')}
               className={`px-6 py-2 rounded-lg font-bold transition-all duration-300 flex items-center gap-2 ${filter === 'month'
-                ? 'bg-white text-blue-600 shadow-md'
+                ? 'bg-white text-primary shadow-md'
                 : 'text-white hover:bg-white/20'
                 }`}
             >
@@ -154,7 +154,7 @@ const Leaderboard: React.FC = () => {
             <div className="bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl shadow-lg p-6 transform scale-105 hover:scale-110 transition-all">
               <div className="text-center">
                 <div className="relative inline-block mb-4">
-                  <div className="w-32 h-32 bg-white rounded-full flex items-center justify-center text-4xl font-bold text-blue-600 shadow-xl">
+                  <div className="w-32 h-32 bg-white rounded-full flex items-center justify-center text-4xl font-bold text-primary shadow-xl">
                     {leaderboard[0].userName.charAt(0)}
                   </div>
                   <div className="absolute -top-2 -right-2 bg-gradient-to-br from-yellow-300 to-yellow-500 rounded-full w-16 h-16 flex items-center justify-center shadow-xl animate-pulse">
@@ -163,19 +163,19 @@ const Leaderboard: React.FC = () => {
                 </div>
                 <h3 className="text-2xl font-bold text-white">{leaderboard[0].userName}</h3>
                 <p className="text-4xl font-bold text-white mt-2">{leaderboard[0].points}</p>
-                <p className="text-sm text-blue-100 font-medium">điểm</p>
+                <p className="text-sm text-primary font-medium">điểm</p>
 
                 <div className="mt-4 pt-4 border-t border-white/30 grid grid-cols-3 gap-2 text-sm text-white">
                   <div>
-                    <p className="text-blue-100 text-xs font-medium">Bài thi</p>
+                    <p className="text-primary text-xs font-medium">Bài thi</p>
                     <p className="font-bold text-lg">{leaderboard[0].examsCompleted}</p>
                   </div>
                   <div>
-                    <p className="text-blue-100 text-xs font-medium">Flashcards</p>
+                    <p className="text-primary text-xs font-medium">Flashcards</p>
                     <p className="font-bold text-lg">{leaderboard[0].flashcardsLearned}</p>
                   </div>
                   <div>
-                    <p className="text-blue-100 text-xs font-medium">Thời gian</p>
+                    <p className="text-primary text-xs font-medium">Thời gian</p>
                     <p className="font-bold text-lg">{formatTime(leaderboard[0].studyTime)}</p>
                   </div>
                 </div>
@@ -256,7 +256,7 @@ const Leaderboard: React.FC = () => {
                 leaderboard.map((entry, index) => (
                   <tr
                     key={entry.userId}
-                    className={`hover:bg-blue-50 transition-colors ${index < 3 ? 'bg-blue-50/30' : ''
+                    className={`hover:bg-orange-50 transition-colors ${index < 3 ? 'bg-orange-50/30' : ''
                       }`}
                   >
                     <td className="px-6 py-4">
@@ -293,7 +293,7 @@ const Leaderboard: React.FC = () => {
                       </div>
                     </td>
                     <td className="px-6 py-4 text-center">
-                      <span className="text-lg font-bold text-blue-600">{entry.points}</span>
+                      <span className="text-lg font-bold text-primary">{entry.points}</span>
                     </td>
                     <td className="px-6 py-4 text-center text-gray-700 font-medium">{entry.examsCompleted}</td>
                     <td className="px-6 py-4 text-center text-gray-700 font-medium">{entry.flashcardsLearned}</td>
@@ -316,7 +316,7 @@ const Leaderboard: React.FC = () => {
       {/* Badges Info */}
       <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
         <h2 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-          <Award className="w-6 h-6 text-blue-600" />
+          <Award className="w-6 h-6 text-primary" />
           Hệ thống huy hiệu
         </h2>
         <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
@@ -341,16 +341,16 @@ const Leaderboard: React.FC = () => {
             <p className="font-bold text-gray-900">Hạng Ba</p>
             <p className="text-sm text-gray-600 mt-1">Top 3</p>
           </div>
-          <div className="text-center p-6 bg-purple-50 rounded-2xl border border-purple-100 hover:shadow-md transition-all">
-            <div className="bg-purple-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-3">
-              <Star className="w-8 h-8 text-purple-600" />
+          <div className="text-center p-6 bg-orange-50 rounded-2xl border border-orange-200 hover:shadow-md transition-all">
+            <div className="bg-orange-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-3">
+              <Star className="w-8 h-8 text-primary" />
             </div>
             <p className="font-bold text-gray-900">Siêu sao</p>
             <p className="text-sm text-gray-600 mt-1">≥ 1000 điểm</p>
           </div>
-          <div className="text-center p-6 bg-blue-50 rounded-2xl border border-blue-100 hover:shadow-md transition-all">
-            <div className="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-3">
-              <TrendingUp className="w-8 h-8 text-blue-600" />
+          <div className="text-center p-6 bg-orange-50 rounded-2xl border border-primary hover:shadow-md transition-all">
+            <div className="bg-orange-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-3">
+              <TrendingUp className="w-8 h-8 text-primary" />
             </div>
             <p className="font-bold text-gray-900">Ngôi sao</p>
             <p className="text-sm text-gray-600 mt-1">≥ 500 điểm</p>

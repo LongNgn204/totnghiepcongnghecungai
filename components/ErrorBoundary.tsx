@@ -54,14 +54,17 @@ class ErrorBoundary extends Component<Props, State> {
                         {/* Header */}
                         <div className="flex items-center gap-3 text-red-600 mb-6">
                             <AlertTriangle className="w-8 h-8" />
-                            <h1 className="text-2xl font-bold">Component Error</h1>
+                            <h1 className="text-2xl font-bold">Đã xảy ra lỗi</h1>
                         </div>
 
                         {/* Error Message */}
                         <div className="bg-red-50 border border-red-200 rounded-xl p-4 mb-4">
-                            <h2 className="font-bold text-red-800 mb-2">Error in: {this.props.componentName}</h2>
-                            <p className="text-red-700 font-mono text-sm">
-                                {this.state.error?.message || 'Unknown error'}
+                            <h2 className="font-bold text-red-800 mb-2">Lỗi tại: {this.props.componentName || 'Hệ thống'}</h2>
+                            <p className="text-red-700 text-sm">
+                                Xin lỗi vì sự bất tiện này. Vui lòng tải lại trang hoặc thử lại sau.
+                            </p>
+                            <p className="text-red-700/60 font-mono text-xs mt-2 pt-2 border-t border-red-200/50">
+                                {this.state.error?.message || 'Lỗi không xác định'}
                             </p>
                         </div>
 
@@ -93,15 +96,15 @@ class ErrorBoundary extends Component<Props, State> {
                         <div className="flex gap-3">
                             <button
                                 onClick={() => window.location.reload()}
-                                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium"
+                                className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-hover font-medium shadow-lg shadow-blue-500/20 transition-transform active:scale-95"
                             >
-                                Reload Page
+                                Tải lại trang
                             </button>
                             <button
                                 onClick={() => window.history.back()}
-                                className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 font-medium"
+                                className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 font-medium transition-colors"
                             >
-                                Go Back
+                                Quay lại
                             </button>
                         </div>
 

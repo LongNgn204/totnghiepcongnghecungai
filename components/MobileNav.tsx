@@ -24,7 +24,7 @@ const MobileNav: React.FC = () => {
             key={item.path}
             to={item.path}
             className={`flex flex-col items-center gap-1 transition-colors ${
-              active ? 'text-blue-600' : 'text-gray-400 hover:text-gray-600'
+              active ? 'text-primary' : 'text-gray-400 hover:text-gray-600'
             }`}
           >
             <Icon size={24} strokeWidth={active ? 2.5 : 2} />

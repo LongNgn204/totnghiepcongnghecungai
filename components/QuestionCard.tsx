@@ -1,5 +1,48 @@
 import React from 'react';
 import { QuestionMC, QuestionTF, QuestionLevel, Question } from '../types';
+import katex from 'katex';
+import 'katex/dist/katex.min.css';
+
+// Helper to render text with LaTeX formulas
+const renderTextWithLatex = (text: string): JSX.Element => {
+  const parts: JSX.Element[] = [];
+  let lastIndex = 0;
+
+  // Match \( ... \) for inline math and \[ ... \] for display math
+  const regex = /\\\((.+?)\\\)|\\\[(.+?)\\\]/g;
+  let match;
+  let idx = 0;
+
+  while ((match = regex.exec(text)) !== null) {
+    // Add text before formula
+    if (match.index > lastIndex) {
+      parts.push(<span key={`text-${idx}`}>{text.substring(lastIndex, match.index)}</span>);
+    }
+
+    // Add formula
+    const latex = match[1] || match[2];
+    const displayMode = Boolean(match[2]);
+    try {
+      const html = katex.renderToString(latex, {
+        throwOnError: false,
+        displayMode
+      });
+      parts.push(<span key={`latex-${idx}`} dangerouslySetInnerHTML={{ __html: html }} />);
+    } catch (e) {
+      parts.push(<span key={`latex-${idx}`} className="text-red-400 bg-red-900/20 px-1 rounded">{latex}</span>);
+    }
+
+    lastIndex = match.index + match[0].length;
+    idx++;
+  }
+
+  // Add remaining text
+  if (lastIndex < text.length) {
+    parts.push(<span key="text-end">{text.substring(lastIndex)}</span>);
+  }
+
+  return parts.length > 0 ? <>{parts}</> : <>{text}</>;
+};
 
 interface QuestionCardProps {
   question: QuestionMC | QuestionTF | Question;
@@ -22,16 +65,16 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
     switch (level) {
       case QuestionLevel.KNOW:
       case 'Nhận biết':
-        return <span className="bg-gray-100  text-gray-800  text-xs px-2 py-1 rounded">NB</span>;
+        return <span className="bg-slate-700 text-slate-300 text-xs px-2 py-1 rounded border border-slate-600">NB</span>;
       case QuestionLevel.UNDERSTAND:
       case 'Thông hiểu':
-        return <span className="bg-blue-100  text-blue-800  text-xs px-2 py-1 rounded">TH</span>;
+        return <span className="bg-blue-900/30 text-primary text-xs px-2 py-1 rounded border border-primary/50">TH</span>;
       case QuestionLevel.APPLY:
       case 'Vận dụng':
-        return <span className="bg-yellow-100  text-yellow-800  text-xs px-2 py-1 rounded">VD</span>;
+        return <span className="bg-yellow-900/30 text-yellow-400 text-xs px-2 py-1 rounded border border-yellow-800/50">VD</span>;
       case QuestionLevel.ANALYZE:
       case 'Vận dụng cao':
-        return <span className="bg-red-100  text-red-800  text-xs px-2 py-1 rounded">VDC</span>;
+        return <span className="bg-red-900/30 text-red-400 text-xs px-2 py-1 rounded border border-red-800/50">VDC</span>;
       default:
         return null;
     }
@@ -49,17 +92,17 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
 
           if (isSubmitted) {
             if (isCorrect) {
-              className += "bg-green-50  border-green-200  text-green-800 ";
+              className += "bg-emerald-900/20 border-emerald-500/50 text-emerald-400";
             } else if (isSelected) {
-              className += "bg-red-50  border-red-200  text-red-800 ";
+              className += "bg-red-900/20 border-red-500/50 text-red-400";
             } else {
-              className += "bg-white  border-gray-200  text-gray-500  opacity-60";
+              className += "bg-stem-bg border-slate-700 text-slate-500 opacity-60";
             }
           } else {
             if (isSelected) {
-              className += "bg-blue-50  border-blue-200  text-blue-800  shadow-sm";
+              className += "bg-stem-primary/10 border-stem-primary text-white shadow-[0_0_10px_rgba(59,130,246,0.2)]";
             } else {
-              className += "bg-white  border-gray-200  text-gray-700  hover:bg-gray-50 :bg-slate-800 hover:border-gray-300 :border-slate-700";
+              className += "bg-stem-bg border-slate-700 text-slate-300 hover:bg-slate-800 hover:border-slate-600";
             }
           }
 
@@ -70,15 +113,13 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
               disabled={isSubmitted}
               className={className}
             >
-              <div className={`w-6 h-6 rounded-full border flex items-center justify-center flex-shrink-0 mt-0.5 ${isSelected || (isSubmitted && isCorrect)
-                  ? 'border-current'
-                  : 'border-gray-300 '
+              <div className={`w-6 h-6 rounded-full border flex items-center justify-center flex-shrink-0 mt-0.5 text-sm font-bold ${isSelected || (isSubmitted && isCorrect) ? 'border-current' : 'border-slate-500'
                 }`}>
                 {String.fromCharCode(65 + index)}
               </div>
-              <span>{option}</span>
-              {isSubmitted && isCorrect && <span className="ml-auto text-green-600 ">✓</span>}
-              {isSubmitted && isSelected && !isCorrect && <span className="ml-auto text-red-600 ">✗</span>}
+              <span>{renderTextWithLatex(option)}</span>
+              {isSubmitted && isCorrect && <span className="ml-auto text-emerald-400">✓</span>}
+              {isSubmitted && isSelected && !isCorrect && <span className="ml-auto text-red-400">✗</span>}
             </button>
           );
         })}
@@ -94,7 +135,7 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
 
     return (
       <div className="space-y-4">
-        <div className="grid grid-cols-12 gap-4 mb-2 px-4 text-sm font-bold text-gray-500 ">
+        <div className="grid grid-cols-12 gap-4 mb-2 px-4 text-sm font-bold text-slate-500">
           <div className="col-span-8">Phát biểu</div>
           <div className="col-span-2 text-center">Đúng</div>
           <div className="col-span-2 text-center">Sai</div>
@@ -104,20 +145,20 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
           const correctAns = answers[key as keyof typeof answers];
 
           return (
-            <div key={key} className="bg-white  rounded-xl border border-gray-200  overflow-hidden">
+            <div key={key} className="bg-stem-bg rounded-xl border border-slate-700 overflow-hidden">
               <div className="grid grid-cols-12 gap-4 p-4 items-center">
-                <div className="col-span-8 text-gray-800 ">
-                  <span className="font-bold mr-2">{key})</span>
-                  {statement}
+                <div className="col-span-8 text-slate-200">
+                  <span className="font-bold mr-2 text-stem-primary">{key})</span>
+                  {renderTextWithLatex(statement)}
                 </div>
                 <div className="col-span-2 flex justify-center">
                   <button
                     onClick={() => !isSubmitted && onAnswerChange(q.id, { ...userAnswer, [key]: true })}
                     disabled={isSubmitted}
-                    className={`w-8 h-8 rounded-full border-2 flex items-center justify-center transition-all ${userAns === true
-                        ? 'bg-blue-600 border-blue-600 text-white'
-                        : 'border-gray-300  hover:border-blue-400'
-                      } ${isSubmitted && correctAns === true ? 'ring-2 ring-green-500 ring-offset-2 ' : ''}`}
+                    className={`w-8 h-8 rounded-full border-2 flex items-center justify-center transition-all text-sm font-bold ${userAns === true
+                        ? 'bg-stem-primary border-stem-primary text-white'
+                        : 'border-slate-600 hover:border-stem-primary text-slate-400'
+                      } ${isSubmitted && correctAns === true ? 'ring-2 ring-emerald-500 ring-offset-2 ring-offset-slate-900' : ''}`}
                   >
                     Đ
                   </button>
@@ -126,10 +167,10 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
                   <button
                     onClick={() => !isSubmitted && onAnswerChange(q.id, { ...userAnswer, [key]: false })}
                     disabled={isSubmitted}
-                    className={`w-8 h-8 rounded-full border-2 flex items-center justify-center transition-all ${userAns === false
-                        ? 'bg-blue-600 border-blue-600 text-white'
-                        : 'border-gray-300  hover:border-blue-400'
-                      } ${isSubmitted && correctAns === false ? 'ring-2 ring-green-500 ring-offset-2 ' : ''}`}
+                    className={`w-8 h-8 rounded-full border-2 flex items-center justify-center transition-all text-sm font-bold ${userAns === false
+                        ? 'bg-stem-primary border-stem-primary text-white'
+                        : 'border-slate-600 hover:border-stem-primary text-slate-400'
+                      } ${isSubmitted && correctAns === false ? 'ring-2 ring-emerald-500 ring-offset-2 ring-offset-slate-900' : ''}`}
                   >
                     S
                   </button>
@@ -138,14 +179,14 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
 
               {isSubmitted && (
                 <div className={`px-4 py-3 text-sm border-t ${userAns === correctAns
-                    ? 'bg-green-50  border-green-100  text-green-800 '
-                    : 'bg-red-50  border-red-100  text-red-800 '
+                    ? 'bg-emerald-900/20 border-emerald-900/50 text-emerald-400'
+                    : 'bg-red-900/20 border-red-900/50 text-red-400'
                   }`}>
                   <div className="font-bold mb-1">
                     {userAns === correctAns ? '✓ Chính xác' : '✗ Chưa chính xác'} - Đáp án: {correctAns ? 'Đúng' : 'Sai'}
                   </div>
                   {explanations[key as keyof typeof explanations] && (
-                    <div>{explanations[key as keyof typeof explanations]}</div>
+                    <div className="text-slate-300">{renderTextWithLatex(explanations[key as keyof typeof explanations])}</div>
                   )}
                 </div>
               )}
@@ -157,18 +198,18 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
   };
 
   return (
-    <div className="bg-white  p-6 rounded-2xl shadow-sm border border-gray-200  h-full flex flex-col">
+    <div className="bg-stem-sidebar p-6 rounded-2xl shadow-lg border border-slate-700 h-full flex flex-col">
       <div className="flex justify-between items-start mb-4">
         <div className="flex items-center gap-2">
-          <span className="bg-blue-100  text-blue-800  font-bold px-3 py-1 rounded-lg text-sm">
+          <span className="bg-stem-primary/20 text-stem-primary font-bold px-3 py-1 rounded-lg text-sm border border-stem-primary/30">
             Câu {question.id}
           </span>
           {getLevelBadge(question.level)}
         </div>
       </div>
 
-      <div className="mb-6 text-lg font-medium text-gray-900  leading-relaxed">
-        {question.question}
+      <div className="mb-6 text-lg font-medium text-white leading-relaxed">
+        {renderTextWithLatex(question.question)}
       </div>
 
       <div className="flex-grow">
@@ -176,16 +217,16 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
       </div>
 
       {isSubmitted && !((question as QuestionTF).statements) && (question as any).explanation && (
-        <div className="mt-6 p-4 bg-blue-50  rounded-xl border border-blue-100  animate-fade-in">
-          <p className="text-blue-800 ">
-            <strong>💡 Giải thích:</strong> {(question as any).explanation}
+        <div className="mt-6 p-4 bg-blue-900/20 rounded-xl border border-primary/50 animate-fade-in">
+          <p className="text-primary">
+            <strong>💡 Giải thích:</strong> {renderTextWithLatex((question as any).explanation)}
           </p>
         </div>
       )}
 
       {question.requirement && (
-        <div className="mt-6 pt-4 border-t border-gray-100 ">
-          <p className="text-xs text-gray-500  italic">
+        <div className="mt-6 pt-4 border-t border-slate-700">
+          <p className="text-xs text-slate-500 italic">
             YCCĐ: {question.requirement}
           </p>
         </div>

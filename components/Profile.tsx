@@ -1,8 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import { User, Mail, Calendar, Edit2, Save, X, Trophy, Clock, BookOpen } from 'lucide-react';
+import {
+  User,
+  Mail,
+  Phone,
+  MapPin,
+  Calendar,
+  Edit2,
+  Camera,
+  Cpu,
+  Code2,
+  Trophy,
+  Zap,
+  BookOpen,
+  Save,
+  X,
+  Shield
+} from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { api } from '../utils/apiClient';
 import { toast } from 'react-hot-toast';
+import TechBadge from './TechBadge';
 
 const Profile: React.FC = () => {
   const { user, updateProfile } = useAuth();
@@ -17,7 +34,11 @@ const Profile: React.FC = () => {
   const [formData, setFormData] = useState({
     name: user?.displayName || '',
     email: user?.email || '',
-    bio: user?.bio || 'Đang học tập chăm chỉ để đạt kết quả tốt!'
+    bio: user?.bio || 'Đang học tập chăm chỉ để đạt kết quả tốt!',
+    phone: '0987 654 321',
+    address: 'Hà Nội, Việt Nam',
+    school: 'THPT Chuyên KHTN',
+    dob: '01/01/2008'
   });
 
   useEffect(() => {
@@ -44,11 +65,11 @@ const Profile: React.FC = () => {
       await updateProfile({
         displayName: formData.name,
         bio: formData.bio
-        // Email update might not be supported or requires specific API
       });
       setIsEditing(false);
+      toast.success('Cập nhật hồ sơ thành công!');
     } catch (error) {
-      // Error handling is done in AuthContext with toast
+      toast.error('Có lỗi xảy ra khi cập nhật.');
     }
   };
 
@@ -58,213 +79,199 @@ const Profile: React.FC = () => {
   };
 
   return (
-    <div className="space-y-8 animate-fade-in">
-      {/* Header */}
-      <div className="bg-gradient-to-r from-blue-600 to-indigo-700 p-8 rounded-2xl shadow-lg text-white relative overflow-hidden">
-        <div className="absolute top-0 right-0 opacity-10 transform translate-x-1/4 -translate-y-1/4">
-          <User size={200} />
-        </div>
-        <div className="relative z-10">
-          <h2 className="text-3xl font-bold text-center mb-2">Hồ Sơ Cá Nhân</h2>
-          <p className="text-center text-blue-100 text-lg">Quản lý thông tin và theo dõi tiến độ của bạn</p>
-        </div>
-      </div>
-
-      {/* Profile Card */}
-      <div className="bg-white  rounded-2xl shadow-sm border border-gray-200 ">
+    <div className="p-6 md:p-8 max-w-5xl mx-auto animate-fade-in space-y-8">
+      {/* Header Section */}
+      <div className="relative">
         {/* Cover Image */}
-        <div className="h-32 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-t-2xl"></div>
+        <div className="h-48 w-full rounded-2xl bg-gradient-to-r from-primary to-primary-hover relative overflow-hidden">
+          <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&q=80')] bg-cover bg-center opacity-30 mix-blend-overlay" />
+          <div className="absolute inset-0 bg-gradient-to-t from-stem-bg to-transparent" />
+        </div>
 
-        <div className="px-8 pb-8">
-          {/* Avatar */}
-          <div className="relative -mt-16 mb-6">
-            <div className="w-32 h-32 rounded-full border-4 border-white  shadow-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white text-4xl font-bold">
-              {formData.name.charAt(0).toUpperCase()}
+        {/* Profile Info */}
+        <div className="px-6 relative -mt-16 flex flex-col md:flex-row items-end md:items-center gap-6">
+          <div className="relative group">
+            <div className="w-32 h-32 rounded-2xl bg-surface border-4 border-stem-bg shadow-xl overflow-hidden relative">
+              {user?.photoURL ? (
+                <img src={user.photoURL} alt="Profile" className="w-full h-full object-cover" />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center bg-surface text-slate-500">
+                  <User size={48} />
+                </div>
+              )}
+              <button className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
+                <Camera className="text-white" size={24} />
+              </button>
+            </div>
+            <div className="absolute -bottom-2 -right-2 bg-primary text-white p-1.5 rounded-lg border-4 border-stem-bg shadow-lg">
+              <Zap size={16} fill="currentColor" />
             </div>
           </div>
 
-          {!isEditing ? (
-            <div>
-              {/* Display Mode */}
-              <div className="flex justify-between items-start mb-6">
-                <div>
-                  <h1 className="text-3xl font-bold text-gray-900  mb-2">{formData.name}</h1>
-                  <p className="text-gray-600  flex items-center gap-2 mb-2">
-                    <Mail className="w-4 h-4 text-blue-600 " />
-                    {formData.email}
-                  </p>
-                  <p className="text-gray-500  text-sm flex items-center gap-2">
-                    <Calendar className="w-4 h-4 text-indigo-600 " />
-                    Tham gia: {user?.createdAt ? new Date(user.createdAt).toLocaleDateString('vi-VN') : 'N/A'}
-                  </p>
-                </div>
-                <button
-                  onClick={() => setIsEditing(true)}
-                  className="px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-all font-bold flex items-center gap-2 shadow-md"
-                >
-                  <Edit2 className="w-4 h-4" />
-                  Chỉnh sửa
-                </button>
-              </div>
+          <div className="flex-1 mb-2">
+            <h1 className="text-3xl font-bold text-white flex items-center gap-2">
+              {formData.name}
+              <span className="px-2 py-0.5 bg-yellow-500/20 text-yellow-400 text-xs rounded border border-yellow-500/30 font-mono">LV.5</span>
+            </h1>
+            <p className="text-slate-400 flex items-center gap-2 mt-1">
+              <Code2 size={16} className="text-primary" />
+              Nhà Phát Triển Tương Lai
+            </p>
+          </div>
 
-              {formData.bio && (
-                <div className="mb-6 p-4 bg-gray-50  rounded-xl border border-gray-100 ">
-                  <h3 className="text-sm font-bold text-gray-700  mb-2 flex items-center gap-2">
-                    <User className="w-4 h-4 text-blue-600 " />
-                    Giới thiệu
-                  </h3>
-                  <p className="text-gray-600 ">{formData.bio}</p>
-                </div>
-              )}
-
-              {/* Stats */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                <div className="bg-gradient-to-br from-blue-50 to-blue-100   p-6 rounded-2xl border border-blue-200 ">
-                  <div className="flex items-center gap-3">
-                    <div className="bg-blue-500 w-12 h-12 rounded-full flex items-center justify-center">
-                      <BookOpen className="w-6 h-6 text-white" />
-                    </div>
-                    <div>
-                      <p className="text-sm text-blue-700  font-medium">Bài thi</p>
-                      <p className="text-2xl font-bold text-blue-900 ">{stats.examsCompleted}</p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="bg-gradient-to-br from-green-50 to-green-100   p-6 rounded-2xl border border-green-200 ">
-                  <div className="flex items-center gap-3">
-                    <div className="bg-green-500 w-12 h-12 rounded-full flex items-center justify-center">
-                      <Clock className="w-6 h-6 text-white" />
-                    </div>
-                    <div>
-                      <p className="text-sm text-green-700  font-medium">Thời gian</p>
-                      <p className="text-2xl font-bold text-green-900 ">{formatTime(stats.studyTime)}</p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="bg-gradient-to-br from-purple-50 to-purple-100   p-6 rounded-2xl border border-purple-200 ">
-                  <div className="flex items-center gap-3">
-                    <div className="bg-purple-500 w-12 h-12 rounded-full flex items-center justify-center">
-                      <Trophy className="w-6 h-6 text-white" />
-                    </div>
-                    <div>
-                      <p className="text-sm text-purple-700  font-medium">Flashcards</p>
-                      <p className="text-2xl font-bold text-purple-900 ">{stats.flashcardsLearned}</p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="bg-gradient-to-br from-orange-50 to-orange-100   p-6 rounded-2xl border border-orange-200 ">
-                  <div className="flex items-center gap-3">
-                    <div className="bg-orange-500 w-12 h-12 rounded-full flex items-center justify-center">
-                      <span className="text-2xl">🔥</span>
-                    </div>
-                    <div>
-                      <p className="text-sm text-orange-700  font-medium">Streak</p>
-                      <p className="text-2xl font-bold text-orange-900 ">{stats.currentStreak}</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          ) : (
-            <div>
-              {/* Edit Mode */}
-              <h2 className="text-2xl font-bold text-gray-900  mb-6">Chỉnh sửa hồ sơ</h2>
-
-              <div className="space-y-5">
-                <div>
-                  <label className="block text-sm font-bold text-gray-700  mb-2">
-                    Tên hiển thị
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    className="w-full px-4 py-3 border border-gray-300  rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50  "
-                    placeholder="Nhập tên của bạn"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-bold text-gray-700  mb-2">
-                    Email
-                  </label>
-                  <input
-                    type="email"
-                    value={formData.email}
-                    disabled
-                    className="w-full px-4 py-3 border border-gray-300  rounded-xl bg-gray-100  text-gray-500  cursor-not-allowed"
-                    placeholder="email@example.com"
-                  />
-                  <p className="text-xs text-gray-500  mt-1">Không thể thay đổi email</p>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-bold text-gray-700  mb-2">
-                    Giới thiệu
-                  </label>
-                  <textarea
-                    value={formData.bio}
-                    onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
-                    className="w-full px-4 py-3 border border-gray-300  rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none bg-gray-50  "
-                    rows={4}
-                    placeholder="Viết vài dòng về bản thân..."
-                  />
-                </div>
-
-                <div className="flex gap-3 pt-4 border-t border-gray-100 ">
-                  <button
-                    onClick={handleSave}
-                    className="flex-1 px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-all font-bold shadow-md flex items-center justify-center gap-2"
-                  >
-                    <Save className="w-5 h-5" />
-                    Lưu thay đổi
-                  </button>
-                  <button
-                    onClick={() => {
-                      setIsEditing(false);
-                      setFormData({
-                        name: user?.displayName || '',
-                        email: user?.email || '',
-                        bio: user?.bio || ''
-                      });
-                    }}
-                    className="px-6 py-3 bg-white  text-gray-700  border border-gray-300  rounded-xl hover:bg-gray-50 :bg-slate-700 transition-all font-bold flex items-center justify-center gap-2"
-                  >
-                    <X className="w-5 h-5" />
-                    Hủy
-                  </button>
-                </div>
-              </div>
-            </div>
+          {!isEditing && (
+            <button onClick={() => setIsEditing(true)} className="btn-primary mb-4">
+              <Edit2 size={16} />
+              Chỉnh Sửa Hồ Sơ
+            </button>
           )}
         </div>
       </div>
 
-      {/* Activity Info */}
-      <div className="bg-white  rounded-2xl shadow-sm border border-gray-200  p-8">
-        <h2 className="text-xl font-bold text-gray-900  mb-4 flex items-center gap-2">
-          <Trophy className="w-6 h-6 text-blue-600 " />
-          Thành tích
-        </h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="text-center p-4 bg-blue-50  rounded-xl border border-blue-100 ">
-            <p className="text-3xl mb-2">🏆</p>
-            <p className="text-sm text-gray-600  font-medium">Học viên tích cực</p>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {/* Left Column: Stats & Badge */}
+        <div className="space-y-6">
+          {/* Tech Badge */}
+          <TechBadge />
+
+          {/* Stats Card */}
+          <div className="bg-surface border border-surface-highlight rounded-xl p-6">
+            <h3 className="font-bold text-white mb-4 flex items-center gap-2">
+              <Trophy className="text-yellow-400" size={20} />
+              Thành Tích
+            </h3>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="bg-background p-3 rounded-lg border border-surface-highlight text-center">
+                <div className="text-2xl font-bold text-white">{stats.examsCompleted}</div>
+                <div className="text-xs text-slate-500 uppercase font-bold">Dự Án</div>
+              </div>
+              <div className="bg-background p-3 rounded-lg border border-surface-highlight text-center">
+                <div className="text-2xl font-bold text-primary">1.2k</div>
+                <div className="text-xs text-slate-500 uppercase font-bold">Điểm XP</div>
+              </div>
+              <div className="bg-background p-3 rounded-lg border border-surface-highlight text-center">
+                <div className="text-2xl font-bold text-emerald-400">{stats.flashcardsLearned}</div>
+                <div className="text-xs text-slate-500 uppercase font-bold">Chứng Chỉ</div>
+              </div>
+              <div className="bg-background p-3 rounded-lg border border-surface-highlight text-center">
+                <div className="text-2xl font-bold text-primary">{formatTime(stats.studyTime)}</div>
+                <div className="text-xs text-slate-500 uppercase font-bold">Giờ Học</div>
+              </div>
+            </div>
           </div>
-          <div className="text-center p-4 bg-green-50  rounded-xl border border-green-100 ">
-            <p className="text-3xl mb-2">⭐</p>
-            <p className="text-sm text-gray-600  font-medium">Người mới</p>
+        </div>
+
+        {/* Right Column: Personal Info */}
+        <div className="md:col-span-2 space-y-6">
+          <div className="bg-surface border border-surface-highlight rounded-xl p-6">
+            <h3 className="font-bold text-white mb-6 flex items-center gap-2">
+              <User className="text-primary" size={20} />
+              Thông Tin Cá Nhân
+            </h3>
+
+            {isEditing ? (
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-bold text-slate-400 mb-1">Họ và Tên</label>
+                  <input
+                    type="text"
+                    value={formData.name}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    className="input-stem"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-bold text-slate-400 mb-1">Giới thiệu</label>
+                  <textarea
+                    value={formData.bio}
+                    onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
+                    className="input-stem min-h-[100px]"
+                  />
+                </div>
+                <div className="flex gap-3 pt-4 border-t border-surface-highlight">
+                  <button onClick={handleSave} className="btn-primary flex-1 justify-center">
+                    <Save size={18} /> Lưu Thay Đổi
+                  </button>
+                  <button onClick={() => setIsEditing(false)} className="btn-secondary flex-1 justify-center">
+                    <X size={18} /> Hủy Bỏ
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <label className="text-xs font-bold text-slate-500 uppercase">Họ và Tên</label>
+                  <div className="input-stem flex items-center gap-3">
+                    <User size={18} className="text-slate-500" />
+                    <span>{formData.name}</span>
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-xs font-bold text-slate-500 uppercase">Email</label>
+                  <div className="input-stem flex items-center gap-3">
+                    <Mail size={18} className="text-slate-500" />
+                    <span>{formData.email}</span>
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-xs font-bold text-slate-500 uppercase">Số Điện Thoại</label>
+                  <div className="input-stem flex items-center gap-3">
+                    <Phone size={18} className="text-slate-500" />
+                    <span>{formData.phone}</span>
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-xs font-bold text-slate-500 uppercase">Địa Chỉ</label>
+                  <div className="input-stem flex items-center gap-3">
+                    <MapPin size={18} className="text-slate-500" />
+                    <span>{formData.address}</span>
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-xs font-bold text-slate-500 uppercase">Ngày Sinh</label>
+                  <div className="input-stem flex items-center gap-3">
+                    <Calendar size={18} className="text-slate-500" />
+                    <span>{formData.dob}</span>
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-xs font-bold text-slate-500 uppercase">Trường Học</label>
+                  <div className="input-stem flex items-center gap-3">
+                    <Shield size={18} className="text-slate-500" />
+                    <span>{formData.school}</span>
+                  </div>
+                </div>
+
+                <div className="col-span-full space-y-2">
+                  <label className="text-xs font-bold text-slate-500 uppercase">Giới thiệu</label>
+                  <div className="p-4 bg-background rounded-lg border border-surface-highlight text-slate-300 italic">
+                    "{formData.bio}"
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
-          <div className="text-center p-4 bg-purple-50  rounded-xl border border-purple-100 ">
-            <p className="text-3xl mb-2">📚</p>
-            <p className="text-sm text-gray-600  font-medium">Học giỏi</p>
-          </div>
-          <div className="text-center p-4 bg-orange-50  rounded-xl border border-orange-100 ">
-            <p className="text-3xl mb-2">🔥</p>
-            <p className="text-sm text-gray-600  font-medium">Kiên trì</p>
+
+          <div className="bg-surface border border-surface-highlight rounded-xl p-6">
+            <h3 className="font-bold text-white mb-4 flex items-center gap-2">
+              <Cpu className="text-primary" size={20} />
+              Sở Thích Công Nghệ
+            </h3>
+            <div className="flex flex-wrap gap-2">
+              {['Lập trình Web', 'Trí tuệ nhân tạo', 'Robotics', 'IoT', 'Thiết kế 3D'].map((tag) => (
+                <span key={tag} className="px-3 py-1 bg-background border border-surface-highlight rounded-full text-sm text-slate-300 hover:border-primary hover:text-primary transition-colors cursor-default">
+                  {tag}
+                </span>
+              ))}
+              <button className="px-3 py-1 border border-dashed border-slate-600 rounded-full text-sm text-slate-500 hover:text-white hover:border-white transition-colors">
+                + Thêm sở thích
+              </button>
+            </div>
           </div>
         </div>
       </div>

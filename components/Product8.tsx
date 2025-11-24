@@ -69,7 +69,7 @@ const booksData: Book[] = [
         id: '11-2',
         title: "Công nghệ 11 - Công nghệ cơ khí",
         shortTitle: "CK",
-        color: "bg-blue-600",
+        color: "bg-primary",
         link: "https://www.hoc10.vn/doc-sach/cong-nghe-11-cong-nghe-co-khi/1/384/0/",
         grade: 11,
         publisher: "Cánh Diều"
@@ -218,36 +218,36 @@ const Product8: React.FC = () => {
     return (
         <div className="space-y-8 animate-fade-in">
             {/* Header with Stats */}
-            <div className="bg-gradient-to-r from-amber-600 to-orange-700 p-8 rounded-2xl shadow-lg text-white relative overflow-hidden">
-                <div className="absolute top-0 right-0 opacity-10 transform translate-x-1/4 -translate-y-1/4">
-                    <BookOpen className="w-64 h-64" />
+            <div className="bg-white p-8 rounded-2xl shadow-lg border border-gray-200 relative overflow-hidden">
+                <div className="absolute top-0 right-0 opacity-5 transform translate-x-1/4 -translate-y-1/4">
+                    <span className="text-9xl">📚</span>
                 </div>
                 <div className="relative z-10">
-                    <h2 className="text-3xl font-bold text-center mb-3 flex items-center justify-center gap-3">
-                        <BookOpen className="w-8 h-8" />
+                    <h2 className="text-3xl font-bold text-center mb-3 flex items-center justify-center gap-3 text-gray-900">
+                        <span>📚</span>
                         Tủ sách học liệu số
                     </h2>
-                    <p className="text-center text-amber-100 max-w-2xl mx-auto text-lg mb-6">
+                    <p className="text-center text-gray-600 max-w-2xl mx-auto text-lg mb-6">
                         Kho sách giáo khoa điện tử chính thống từ bộ sách Cánh Diều
                     </p>
 
                     {/* Reading Stats */}
                     <div className="flex justify-center gap-4 mt-6">
-                        <div className="bg-white/20 backdrop-blur-md rounded-2xl p-4 border border-white/30 min-w-[180px] hover:bg-white/30 transition-all">
-                            <div className="flex items-center gap-2 text-amber-100 text-sm font-medium mb-1">
+                        <div className="bg-orange-50 rounded-2xl p-4 border border-primary min-w-[180px] hover:bg-orange-100 transition-all">
+                            <div className="flex items-center gap-2 text-primary text-sm font-medium mb-1">
                                 <Clock className="w-4 h-4" />
                                 <span>Tổng thời gian đọc</span>
                             </div>
-                            <div className="text-3xl font-bold">{formatTime(totalReadingTime)}</div>
+                            <div className="text-3xl font-bold text-primary">{formatTime(totalReadingTime)}</div>
                         </div>
 
                         {sessionTime > 0 && (
-                            <div className="bg-green-500/30 backdrop-blur-md rounded-2xl p-4 border border-green-300/50 min-w-[180px] animate-pulse-slow">
-                                <div className="flex items-center gap-2 text-green-100 text-sm font-medium mb-1">
+                            <div className="bg-green-50 rounded-2xl p-4 border border-green-200 min-w-[180px] animate-pulse-slow">
+                                <div className="flex items-center gap-2 text-green-700 text-sm font-medium mb-1">
                                     <TrendingUp className="w-4 h-4" />
                                     <span>Phiên hiện tại</span>
                                 </div>
-                                <div className="text-3xl font-bold">{formatTime(sessionTime)}</div>
+                                <div className="text-3xl font-bold text-green-900">{formatTime(sessionTime)}</div>
                             </div>
                         )}
                     </div>
@@ -266,8 +266,8 @@ const Product8: React.FC = () => {
                         key={filter.id}
                         onClick={() => setSelectedGrade(filter.id as number | 'all')}
                         className={`px-6 py-3 rounded-xl font-bold transition-all hover-lift ${selectedGrade === filter.id
-                            ? 'bg-amber-600 text-white shadow-lg transform scale-105'
-                            : 'bg-white  text-gray-600  hover:bg-amber-50 :bg-slate-700 border border-gray-200 '
+                                ? 'bg-amber-600 text-white shadow-lg transform scale-105'
+                                : 'bg-white text-gray-600 hover:bg-amber-50 border border-gray-200'
                             }`}
                     >
                         <span className="mr-2">{filter.icon}</span>
@@ -281,7 +281,7 @@ const Product8: React.FC = () => {
                 {filteredBooks.map((book, index) => (
                     <div
                         key={book.id}
-                        className="group bg-white  rounded-xl shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100  p-4 flex items-center gap-4 hover-lift animate-slide-up"
+                        className="group bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100 p-4 flex items-center gap-4 hover-lift animate-slide-up"
                         style={{ animationDelay: `${index * 50}ms` }}
                     >
                         {/* Icon/Short Title */}
@@ -293,14 +293,14 @@ const Product8: React.FC = () => {
 
                         {/* Content */}
                         <div className="flex-grow min-w-0">
-                            <h3 className="font-bold text-gray-800  text-lg mb-1 truncate" title={book.title}>
+                            <h3 className="font-bold text-gray-800 text-lg mb-1 truncate" title={book.title}>
                                 {book.title}
                             </h3>
                             <div className="flex items-center gap-2 text-sm">
-                                <span className="font-semibold bg-amber-100  text-amber-800  px-2 py-0.5 rounded-full text-xs">
+                                <span className="font-semibold bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full text-xs">
                                     {book.publisher}
                                 </span>
-                                <span className="text-gray-500  font-medium flex items-center gap-1 text-xs">
+                                <span className="text-gray-500 font-medium flex items-center gap-1 text-xs">
                                     🎓 Lớp {book.grade}
                                 </span>
                             </div>
@@ -323,14 +323,14 @@ const Product8: React.FC = () => {
             {/* Preview Modal with Reading Timer */}
             {previewBook && (
                 <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex flex-col animate-scale-in">
-                    <div className="bg-white  p-4 flex justify-between items-center shadow-md">
+                    <div className="bg-white p-4 flex justify-between items-center shadow-md">
                         <div className="flex items-center gap-4">
-                            <h3 className="font-bold text-lg text-gray-800  flex items-center gap-2">
+                            <h3 className="font-bold text-lg text-gray-800 flex items-center gap-2">
                                 <BookOpen className="w-5 h-5 text-amber-600" />
                                 {previewBook.title}
                             </h3>
                             {/* Live Reading Timer */}
-                            <div className="flex items-center gap-2 bg-green-50  text-green-700  px-3 py-1 rounded-full text-sm font-medium">
+                            <div className="flex items-center gap-2 bg-green-50 text-green-700 px-3 py-1 rounded-full text-sm font-medium">
                                 <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
                                 Đang đọc: {formatTime(sessionTime)}
                             </div>
@@ -340,19 +340,19 @@ const Product8: React.FC = () => {
                                 href={previewBook.link}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center gap-2 text-sm hover-lift"
+                                className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-hover transition-colors font-medium flex items-center gap-2 text-sm hover-lift"
                             >
                                 🔗 Mở tab mới
                             </a>
                             <button
                                 onClick={() => setPreviewBook(null)}
-                                className="p-2 hover:bg-gray-100 :bg-slate-800 rounded-full transition-colors"
+                                className="p-2 hover:bg-gray-100 rounded-full transition-colors"
                             >
                                 ❌
                             </button>
                         </div>
                     </div>
-                    <div className="flex-1 bg-gray-100  relative">
+                    <div className="flex-1 bg-gray-100 relative">
                         <iframe
                             src={previewBook.link}
                             className="w-full h-full border-0"
@@ -364,8 +364,8 @@ const Product8: React.FC = () => {
                         <div className="absolute inset-0 -z-10 flex items-center justify-center">
                             <div className="text-center p-8 max-w-md">
                                 <div className="text-6xl mb-4">🔒</div>
-                                <h4 className="text-xl font-bold text-gray-800  mb-2">Không thể tải bản xem trước</h4>
-                                <p className="text-gray-600  mb-6">
+                                <h4 className="text-xl font-bold text-gray-800 mb-2">Không thể tải bản xem trước</h4>
+                                <p className="text-gray-600 mb-6">
                                     Trang web này có thể chặn hiển thị trong ứng dụng. Vui lòng mở trong tab mới để đọc sách.
                                 </p>
                                 <a

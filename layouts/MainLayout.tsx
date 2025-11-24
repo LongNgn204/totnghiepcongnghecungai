@@ -1,21 +1,18 @@
 import React from 'react';
 import NavigationSidebar from '../components/NavigationSidebar';
-import MobileNav from '../components/MobileNav';
 
 const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     return (
-        <div className="flex h-screen overflow-hidden bg-gray-50 dark:bg-slate-950 transition-colors duration-300">
-            {/* Desktop Sidebar */}
+        <div className="flex h-screen overflow-hidden bg-background text-text-main font-sans">
+            {/* Sidebar (Navigation) */}
             <NavigationSidebar />
 
-            <div className="flex-1 flex flex-col min-w-0 overflow-hidden relative">
-                <main className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-200 dark:scrollbar-thumb-slate-800 relative pb-20 lg:pb-0">
+            {/* Main Content Area - Light Theme */}
+            <main className="flex-1 overflow-y-auto relative bg-background">
+                <div className="min-h-full p-0 relative">
                     {children}
-                </main>
-            </div>
-
-            {/* Mobile Navigation */}
-            <MobileNav />
+                </div>
+            </main>
         </div>
     );
 };

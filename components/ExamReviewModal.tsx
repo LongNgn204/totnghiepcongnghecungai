@@ -41,14 +41,14 @@ const ExamReviewModal: React.FC<ExamReviewModalProps> = ({ exam, onClose }) => {
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 overflow-y-auto">
       <div className="bg-white  rounded-2xl shadow-2xl max-w-5xl w-full my-8 max-h-[90vh] overflow-y-auto">
         {/* Header */}
-        <div className="sticky top-0 bg-gradient-to-r from-blue-600 to-purple-600 text-white p-6 rounded-t-2xl z-10">
+        <div className="sticky top-0 bg-gradient-to-r from-primary to-primary-hover text-white p-6 rounded-t-2xl z-10">
           <div className="flex items-center justify-between">
             <div className="flex-1">
               <h2 className="text-2xl font-bold mb-2 flex items-center gap-2">
                 <i className="fas fa-file-alt"></i>
                 Xem lại đề thi
               </h2>
-              <p className="text-blue-100 text-sm">{exam.examTitle}</p>
+              <p className="text-primary text-sm">{exam.examTitle}</p>
               <div className="mt-3 flex items-center gap-4 text-sm">
                 <span className="bg-white/20 px-3 py-1 rounded-full">
                   <i className="fas fa-calendar mr-1"></i>
@@ -88,8 +88,8 @@ const ExamReviewModal: React.FC<ExamReviewModalProps> = ({ exam, onClose }) => {
         <div className="p-6 space-y-8">
           {/* Stats Summary */}
           <div className="grid grid-cols-4 gap-4">
-            <div className="bg-blue-50  p-4 rounded-xl text-center border border-blue-200  transform transition-all hover:scale-105 hover:shadow-lg">
-              <div className="text-3xl font-bold text-blue-600  animate-fade-in">{exam.totalQuestions}</div>
+            <div className="bg-orange-50  p-4 rounded-xl text-center border border-primary  transform transition-all hover:scale-105 hover:shadow-lg">
+              <div className="text-3xl font-bold text-primary  animate-fade-in">{exam.totalQuestions}</div>
               <div className="text-sm text-gray-600  mt-1">Tổng câu</div>
             </div>
             <div className="bg-green-50  p-4 rounded-xl text-center border border-green-200  transform transition-all hover:scale-105 hover:shadow-lg">
@@ -100,8 +100,8 @@ const ExamReviewModal: React.FC<ExamReviewModalProps> = ({ exam, onClose }) => {
               <div className="text-3xl font-bold text-red-600  animate-fade-in">{exam.totalQuestions - exam.score}</div>
               <div className="text-sm text-gray-600  mt-1">Trả lời sai</div>
             </div>
-            <div className="bg-purple-50  p-4 rounded-xl text-center border border-purple-200  transform transition-all hover:scale-105 hover:shadow-lg">
-              <div className="text-3xl font-bold text-purple-600  animate-fade-in">{exam.percentage.toFixed(1)}%</div>
+            <div className="bg-orange-50  p-4 rounded-xl text-center border border-orange-200  transform transition-all hover:scale-105 hover:shadow-lg">
+              <div className="text-3xl font-bold text-primary  animate-fade-in">{exam.percentage.toFixed(1)}%</div>
               <div className="text-sm text-gray-600  mt-1">Điểm số</div>
             </div>
           </div>
@@ -111,7 +111,7 @@ const ExamReviewModal: React.FC<ExamReviewModalProps> = ({ exam, onClose }) => {
             {/* Pie Chart - Correct vs Wrong */}
             <div className="bg-white  p-6 rounded-xl shadow-lg border border-gray-200 ">
               <h3 className="text-lg font-bold text-gray-800  mb-4 flex items-center">
-                <i className="fas fa-chart-pie text-blue-600  mr-2"></i>
+                <i className="fas fa-chart-pie text-primary  mr-2"></i>
                 Phân bố đúng/sai
               </h3>
               <ResponsiveContainer width="100%" height={250}>
@@ -141,7 +141,7 @@ const ExamReviewModal: React.FC<ExamReviewModalProps> = ({ exam, onClose }) => {
             {/* Bar Chart - Level Breakdown */}
             <div className="bg-white  p-6 rounded-xl shadow-lg border border-gray-200 ">
               <h3 className="text-lg font-bold text-gray-800  mb-4 flex items-center">
-                <i className="fas fa-chart-bar text-purple-600  mr-2"></i>
+                <i className="fas fa-chart-bar text-primary  mr-2"></i>
                 Phân tích theo mức độ
               </h3>
               <ResponsiveContainer width="100%" height={250}>
@@ -197,7 +197,7 @@ const ExamReviewModal: React.FC<ExamReviewModalProps> = ({ exam, onClose }) => {
                 </div>
               ) : exam.percentage >= 50 ? (
                 <div className="flex items-start gap-3">
-                  <i className="fas fa-thumbs-up text-blue-500 text-2xl"></i>
+                  <i className="fas fa-thumbs-up text-primary text-2xl"></i>
                   <div>
                     <p className="font-semibold text-yellow-700">Khá tốt! 👍</p>
                     <p className="text-gray-600">Bạn đã hiểu cơ bản. Hãy ôn lại các câu sai và luyện tập thêm để đạt điểm cao hơn.</p>
@@ -242,7 +242,7 @@ const ExamReviewModal: React.FC<ExamReviewModalProps> = ({ exam, onClose }) => {
 
           {/* PHẦN I: Trắc nghiệm 4 lựa chọn */}
           <div>
-            <h3 className="text-xl font-bold text-blue-600  mb-4 flex items-center gap-2">
+            <h3 className="text-xl font-bold text-primary  mb-4 flex items-center gap-2">
               <i className="fas fa-list-ol"></i>
               PHẦN I: Trắc nghiệm 4 lựa chọn (Câu 1-24)
             </h3>
@@ -361,8 +361,8 @@ const ExamReviewModal: React.FC<ExamReviewModalProps> = ({ exam, onClose }) => {
 
                       {/* Hiển thị 4 phát biểu nếu có */}
                       {q.statements && (
-                        <div className="bg-blue-50  p-4 rounded-lg border-l-4 border-blue-500 mb-4">
-                          <p className="text-sm font-semibold text-blue-800  mb-3">
+                        <div className="bg-orange-50  p-4 rounded-lg border-l-4 border-primary mb-4">
+                          <p className="text-sm font-semibold text-primary  mb-3">
                             <i className="fas fa-list-check mr-2"></i>
                             Các phát biểu:
                           </p>
@@ -374,7 +374,7 @@ const ExamReviewModal: React.FC<ExamReviewModalProps> = ({ exam, onClose }) => {
                               return (
                                 <div key={key} className="bg-white  p-3 rounded-md border-2 border-gray-200 ">
                                   <div className="flex items-start gap-2">
-                                    <span className="font-bold text-blue-600  mt-0.5">{key})</span>
+                                    <span className="font-bold text-primary  mt-0.5">{key})</span>
                                     <div className="flex-1">
                                       <p className="text-sm text-gray-800 ">{statement}</p>
                                       {explanation && (
@@ -442,7 +442,7 @@ const ExamReviewModal: React.FC<ExamReviewModalProps> = ({ exam, onClose }) => {
             </div>
             <button
               onClick={onClose}
-              className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-3 rounded-xl hover:shadow-lg hover:scale-105 transition-all font-bold"
+              className="bg-gradient-to-r from-primary to-primary-hover text-white px-8 py-3 rounded-xl hover:shadow-lg hover:scale-105 transition-all font-bold"
             >
               <i className="fas fa-check mr-2"></i>
               Đóng

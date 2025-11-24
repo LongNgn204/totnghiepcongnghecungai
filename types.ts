@@ -2,6 +2,7 @@ export enum QuestionLevel {
   KNOW = 'Nhận biết',
   UNDERSTAND = 'Thông hiểu',
   APPLY = 'Vận dụng',
+  ANALYZE = 'Vận dụng cao',
 }
 
 export interface QuestionMC {
@@ -64,7 +65,7 @@ export interface QuestionTF {
 }
 
 export interface MemberAssignment {
-    memberName: string;
-    mcQuestions: number[];
-    tfQuestions: number[];
+  memberName: string;
+  mcQuestions: number[];
+  tfQuestions: number[];
 }

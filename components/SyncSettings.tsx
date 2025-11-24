@@ -48,8 +48,8 @@ const SyncSettings: React.FC = () => {
       {/* Header */}
       <div>
         <h2 className="text-2xl font-bold text-gray-900 mb-2 flex items-center gap-3">
-          <div className="p-2 bg-blue-100 rounded-lg">
-            <RefreshCw className="w-6 h-6 text-blue-600" />
+          <div className="p-2 bg-orange-100 rounded-lg">
+            <RefreshCw className="w-6 h-6 text-primary" />
           </div>
           Cài đặt đồng bộ
         </h2>
@@ -59,14 +59,14 @@ const SyncSettings: React.FC = () => {
       </div>
 
       {/* Status */}
-      <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-8 border border-blue-100 shadow-sm">
+      <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-8 border border-primary shadow-sm">
         <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
           <div className="flex items-center gap-4">
             <div className="bg-white p-4 rounded-full shadow-sm">
-              <Cloud className="w-8 h-8 text-blue-500" />
+              <Cloud className="w-8 h-8 text-primary" />
             </div>
             <div>
-              <p className="text-sm text-blue-600 font-medium mb-1 uppercase tracking-wide">Lần đồng bộ cuối</p>
+              <p className="text-sm text-primary font-medium mb-1 uppercase tracking-wide">Lần đồng bộ cuối</p>
               <p className="text-2xl font-bold text-gray-900">
                 {lastSyncDate ? lastSyncDate.toLocaleString('vi-VN') : 'Chưa đồng bộ'}
               </p>
@@ -75,7 +75,7 @@ const SyncSettings: React.FC = () => {
           <button
             onClick={handleSyncNow}
             disabled={saving || !config.enabled}
-            className="bg-blue-600 text-white px-8 py-4 rounded-xl font-bold hover:bg-blue-700 transition-all shadow-lg shadow-blue-500/30 disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none flex items-center gap-3"
+            className="bg-primary text-white px-8 py-4 rounded-xl font-bold hover:bg-primary-hover transition-all shadow-lg shadow-blue-500/30 disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none flex items-center gap-3"
           >
             {saving ? (
               <>
@@ -107,7 +107,7 @@ const SyncSettings: React.FC = () => {
           <button
             onClick={handleToggleEnabled}
             className={`relative inline-flex h-8 w-14 items-center rounded-full transition-colors ${
-              config.enabled ? 'bg-blue-600' : 'bg-gray-300'
+              config.enabled ? 'bg-primary' : 'bg-gray-300'
             }`}
           >
             <span
@@ -164,7 +164,7 @@ const SyncSettings: React.FC = () => {
                       onClick={() => handleIntervalChange(minutes)}
                       className={`py-3 px-4 rounded-xl font-semibold transition-all ${
                         config.syncInterval === minutes * 60 * 1000
-                          ? 'bg-blue-600 text-white shadow-lg'
+                          ? 'bg-primary text-white shadow-lg'
                           : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                       }`}
                     >
@@ -181,7 +181,7 @@ const SyncSettings: React.FC = () => {
       {/* Info */}
       <div className="bg-gray-50 rounded-2xl p-6 border border-gray-200">
         <h3 className="font-bold text-gray-900 mb-4 flex items-center gap-2">
-          <Info className="w-5 h-5 text-blue-600" />
+          <Info className="w-5 h-5 text-primary" />
           Thông tin bảo mật
         </h3>
         <ul className="space-y-3 text-sm text-gray-600">

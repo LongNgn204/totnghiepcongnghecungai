@@ -35,7 +35,7 @@ const SuggestedQuestions: React.FC<SuggestedQuestionsProps> = ({
       {topics.length > 0 && (
         <div className="space-y-2">
           <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider flex items-center gap-2">
-            <i className="fas fa-tags text-blue-500"></i>
+            <i className="fas fa-tags text-primary"></i>
             Chủ đề gợi ý
           </h4>
           <div className="flex flex-wrap gap-2">
@@ -43,7 +43,7 @@ const SuggestedQuestions: React.FC<SuggestedQuestionsProps> = ({
               <button
                 key={index}
                 onClick={() => onSelectQuestion(`Giải thích về chủ đề: ${topic}`)}
-                className="px-3 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-full text-xs font-medium transition-colors border border-blue-200 hover:border-blue-300 flex items-center gap-1"
+                className="px-3 py-1.5 bg-orange-50 hover:bg-orange-100 text-primary rounded-full text-xs font-medium transition-colors border border-primary hover:border-primary flex items-center gap-1"
               >
                 <span>#</span>
                 {topic}
@@ -70,24 +70,23 @@ const SuggestedQuestions: React.FC<SuggestedQuestionsProps> = ({
                 <button
                   key={index}
                   onClick={() => onSelectQuestion(content)}
-                  className="flex-shrink-0 w-64 p-3 bg-white hover:bg-gray-50 border border-gray-200 hover:border-blue-400 rounded-xl text-left transition-all hover:shadow-md group relative overflow-hidden flex flex-col gap-2"
+                  className="flex-shrink-0 w-64 p-3 bg-white hover:bg-gray-50 border border-gray-200 hover:border-primary rounded-xl text-left transition-all hover:shadow-md group relative overflow-hidden flex flex-col gap-2"
                 >
                   <div className="flex items-start gap-3">
-                    <div className="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center flex-shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                    <div className="w-8 h-8 rounded-full bg-orange-100 text-primary flex items-center justify-center flex-shrink-0 group-hover:bg-primary group-hover:text-white transition-colors">
                       <i className="fas fa-question text-xs"></i>
                     </div>
                     <span className="text-sm text-gray-700 font-medium line-clamp-2 group-hover:text-gray-900">
                       {content}
                     </span>
                   </div>
-                  
+
                   {type && (
                     <div className="ml-11">
-                      <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wide ${
-                        type === 'TRUE_FALSE' 
-                          ? 'bg-purple-100 text-purple-700 border border-purple-200' 
+                      <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wide ${type === 'TRUE_FALSE'
+                          ? 'bg-orange-100 text-primary border border-orange-200'
                           : 'bg-green-100 text-green-700 border border-green-200'
-                      }`}>
+                        }`}>
                         {type === 'TRUE_FALSE' ? 'Đúng/Sai' : 'Trắc nghiệm'}
                       </span>
                     </div>

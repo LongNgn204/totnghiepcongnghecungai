@@ -87,21 +87,21 @@ const ChatInput: React.FC<ChatInputProps> = ({
             <div className="space-y-1">
               <button
                 onClick={() => { onInputChange('Hãy tạo hình ảnh: '); setShowMenu(false); }}
-                className="w-full flex items-center gap-3 px-4 py-3 hover:bg-blue-50 :bg-blue-900/30 rounded-xl transition-colors text-left group"
+                className="w-full flex items-center gap-3 px-4 py-3 hover:bg-orange-50 :bg-blue-900/30 rounded-xl transition-colors text-left group"
               >
                 <span className="text-xl group-hover:scale-110 transition-transform">🍌</span>
                 <span className="font-medium text-gray-700 ">Tạo hình ảnh</span>
               </button>
               <button
                 onClick={() => { onInputChange('Mở chế độ Canvas: '); setShowMenu(false); }}
-                className="w-full flex items-center gap-3 px-4 py-3 hover:bg-blue-50 :bg-blue-900/30 rounded-xl transition-colors text-left group"
+                className="w-full flex items-center gap-3 px-4 py-3 hover:bg-orange-50 :bg-blue-900/30 rounded-xl transition-colors text-left group"
               >
                 <span className="text-xl group-hover:scale-110 transition-transform">📝</span>
                 <span className="font-medium text-gray-700 ">Canvas</span>
               </button>
               <button
                 onClick={() => { onInputChange('Hãy hướng dẫn tôi học về chủ đề: '); setShowMenu(false); }}
-                className="w-full flex items-center gap-3 px-4 py-3 hover:bg-blue-50 :bg-blue-900/30 rounded-xl transition-colors text-left group"
+                className="w-full flex items-center gap-3 px-4 py-3 hover:bg-orange-50 :bg-blue-900/30 rounded-xl transition-colors text-left group"
               >
                 <span className="text-xl group-hover:scale-110 transition-transform">📖</span>
                 <span className="font-medium text-gray-700 ">Học có hướng dẫn</span>
@@ -116,7 +116,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
             {attachedFiles.map((file, idx) => (
               <div key={idx} className="relative group flex-shrink-0 bg-white/90  backdrop-blur border border-white/50  p-2 rounded-xl shadow-lg animate-fade-in-up">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-blue-50  rounded-lg flex items-center justify-center text-blue-500 ">
+                  <div className="w-10 h-10 bg-orange-50  rounded-lg flex items-center justify-center text-primary ">
                     {file.type.startsWith('image/') ? <ImageIcon size={20} /> : <Paperclip size={20} />}
                   </div>
                   <div className="max-w-[120px]">
@@ -167,7 +167,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
           <div className="flex items-center gap-1 pr-1 pb-1">
             <button
               onClick={() => fileInputRef.current?.click()}
-              className="p-2 text-gray-400  hover:text-blue-600 :text-blue-400 hover:bg-blue-50 :bg-blue-900/30 rounded-full transition-all"
+              className="p-2 text-gray-400  hover:text-primary :text-primary hover:bg-orange-50 :bg-blue-900/30 rounded-full transition-all"
               title="Đính kèm"
             >
               <Paperclip size={20} />
@@ -175,7 +175,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
 
             <button
               onClick={toggleListening}
-              className={`p-2 rounded-full transition-all ${isListening ? 'bg-red-50  text-red-500  animate-pulse' : 'text-gray-400  hover:text-blue-600 :text-blue-400 hover:bg-blue-50 :bg-blue-900/30'
+              className={`p-2 rounded-full transition-all ${isListening ? 'bg-red-50  text-red-500  animate-pulse' : 'text-gray-400  hover:text-primary :text-primary hover:bg-orange-50 :bg-blue-900/30'
                 }`}
               title="Giọng nói"
             >

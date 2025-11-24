@@ -858,7 +858,7 @@ router.get('/api/leaderboard', async (request, env: Env) => {
 
 // ============= SYNC API =============
 
-// Sync data from client to server
+// Sync data from client to server (BATCH OPTIMIZED)
 router.post('/api/sync', async (request, env: Env) => {
   try {
     const userId = await requireAuth(request, env.DB);
@@ -871,12 +871,20 @@ router.post('/api/sync', async (request, env: Env) => {
     const chats = Array.isArray(body.chats) ? body.chats : [];
     const sessions = Array.isArray(body.sessions) ? body.sessions : [];
 
-    // Upsert exams
+    // Collect all statements for a single batch execution
+    const statements: D1PreparedStatement[] = [];
+
+    // 1. Prepare Exams
+    // Note: Assuming 'updated_at' column exists as per migration 001.
+    // Fallback: If migration hasn't run, this might fail or ignore updated_at.
+    // We use COALESCE(updated_at, 0) to handle existing rows with NULL updated_at.
     for (const e of exams) {
       const completed_at = e.completed_at || now;
-      await env.DB.prepare(
-        `INSERT INTO exams (id, user_id, title, category, grade, questions, answers, score, total_questions, duration, completed_at)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      const updated_at = e.updated_at || completed_at || now; // Use provided updated_at or fallback
+      
+      statements.push(env.DB.prepare(
+        `INSERT INTO exams (id, user_id, title, category, grade, questions, answers, score, total_questions, duration, completed_at, updated_at)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
          ON CONFLICT(id) DO UPDATE SET
            title = excluded.title,
            category = excluded.category,
@@ -886,28 +894,31 @@ router.post('/api/sync', async (request, env: Env) => {
            score = excluded.score,
            total_questions = excluded.total_questions,
            duration = excluded.duration,
-           completed_at = excluded.completed_at`)
-        .bind(
-          e.id,
-          userId,
-          e.title,
-          e.category,
-          e.grade,
-          JSON.stringify(e.questions || []),
-          e.answers ? JSON.stringify(e.answers) : null,
-          e.score ?? null,
-          e.total_questions ?? null,
-          e.duration ?? null,
-          completed_at
-        )
-        .run();
+           completed_at = excluded.completed_at,
+           updated_at = excluded.updated_at
+         WHERE excluded.updated_at > COALESCE(exams.updated_at, 0)`
+      ).bind(
+        e.id,
+        userId,
+        e.title,
+        e.category,
+        e.grade,
+        JSON.stringify(e.questions || []),
+        e.answers ? JSON.stringify(e.answers) : null,
+        e.score ?? null,
+        e.total_questions ?? null,
+        e.duration ?? null,
+        completed_at,
+        updated_at
+      ));
     }
 
-    // Upsert flashcard decks
+    // 2. Prepare Flashcard Decks
     for (const d of decks) {
       const created_at = d.created_at || now;
       const updated_at = d.updated_at || now;
-      await env.DB.prepare(
+      
+      statements.push(env.DB.prepare(
         `INSERT INTO flashcard_decks (id, user_id, title, description, category, grade, is_public, color, created_at, updated_at)
          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
          ON CONFLICT(id) DO UPDATE SET
@@ -917,28 +928,30 @@ router.post('/api/sync', async (request, env: Env) => {
            grade = excluded.grade,
            is_public = excluded.is_public,
            color = excluded.color,
-           updated_at = excluded.updated_at`)
-        .bind(
-          d.id,
-          userId,
-          d.title,
-          d.description ?? null,
-          d.category ?? null,
-          d.grade ?? null,
-          d.is_public ? 1 : 0,
-          d.color ?? null,
-          created_at,
-          updated_at
-        )
-        .run();
+           updated_at = excluded.updated_at
+         WHERE excluded.updated_at > COALESCE(flashcard_decks.updated_at, 0)`
+      ).bind(
+        d.id,
+        userId,
+        d.title,
+        d.description ?? null,
+        d.category ?? null,
+        d.grade ?? null,
+        d.is_public ? 1 : 0,
+        d.color ?? null,
+        created_at,
+        updated_at
+      ));
     }
 
-    // Upsert flashcards
+    // 3. Prepare Flashcards
     for (const c of cards) {
       const created_at = c.created_at || now;
-      await env.DB.prepare(
-        `INSERT INTO flashcards (id, deck_id, question, answer, difficulty, tags, ease_factor, interval, repetitions, mastery_level, review_count, correct_count, next_review, last_reviewed, created_at)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      const updated_at = c.updated_at || created_at || now; // Fallback for updated_at
+      
+      statements.push(env.DB.prepare(
+        `INSERT INTO flashcards (id, deck_id, question, answer, difficulty, tags, ease_factor, interval, repetitions, mastery_level, review_count, correct_count, next_review, last_reviewed, created_at, updated_at)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
          ON CONFLICT(id) DO UPDATE SET
            deck_id = excluded.deck_id,
            question = excluded.question,
@@ -952,32 +965,35 @@ router.post('/api/sync', async (request, env: Env) => {
            review_count = excluded.review_count,
            correct_count = excluded.correct_count,
            next_review = excluded.next_review,
-           last_reviewed = excluded.last_reviewed`)
-        .bind(
-          c.id,
-          c.deck_id,
-          c.question,
-          c.answer,
-          c.difficulty ?? 'medium',
-          c.tags ? JSON.stringify(c.tags) : null,
-          c.ease_factor ?? 2.5,
-          c.interval ?? 0,
-          c.repetitions ?? 0,
-          c.mastery_level ?? 0,
-          c.review_count ?? 0,
-          c.correct_count ?? 0,
-          c.next_review ?? null,
-          c.last_reviewed ?? null,
-          created_at
-        )
-        .run();
+           last_reviewed = excluded.last_reviewed,
+           updated_at = excluded.updated_at
+         WHERE excluded.updated_at > COALESCE(flashcards.updated_at, 0)`
+      ).bind(
+        c.id,
+        c.deck_id,
+        c.question,
+        c.answer,
+        c.difficulty ?? 'medium',
+        c.tags ? JSON.stringify(c.tags) : null,
+        c.ease_factor ?? 2.5,
+        c.interval ?? 0,
+        c.repetitions ?? 0,
+        c.mastery_level ?? 0,
+        c.review_count ?? 0,
+        c.correct_count ?? 0,
+        c.next_review ?? null,
+        c.last_reviewed ?? null,
+        created_at,
+        updated_at
+      ));
     }
 
-    // Upsert chat sessions
+    // 4. Prepare Chat Sessions
     for (const s of chats) {
       const created_at = s.created_at || now;
       const updated_at = s.updated_at || now;
-      await env.DB.prepare(
+      
+      statements.push(env.DB.prepare(
         `INSERT INTO chat_sessions (id, user_id, title, category, grade, messages, message_count, created_at, updated_at)
          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
          ON CONFLICT(id) DO UPDATE SET
@@ -986,27 +1002,29 @@ router.post('/api/sync', async (request, env: Env) => {
            grade = excluded.grade,
            messages = excluded.messages,
            message_count = excluded.message_count,
-           updated_at = excluded.updated_at`)
-        .bind(
-          s.id,
-          userId,
-          s.title,
-          s.category ?? null,
-          s.grade ?? null,
-          JSON.stringify(s.messages || []),
-          Array.isArray(s.messages) ? s.messages.length : (s.message_count ?? 0),
-          created_at,
-          updated_at
-        )
-        .run();
+           updated_at = excluded.updated_at
+         WHERE excluded.updated_at > COALESCE(chat_sessions.updated_at, 0)`
+      ).bind(
+        s.id,
+        userId,
+        s.title,
+        s.category ?? null,
+        s.grade ?? null,
+        JSON.stringify(s.messages || []),
+        Array.isArray(s.messages) ? s.messages.length : (s.message_count ?? 0),
+        created_at,
+        updated_at
+      ));
     }
 
-    // Upsert study sessions
+    // 5. Prepare Study Sessions
     for (const ss of sessions) {
       const session_date = ss.session_date ?? now;
-      await env.DB.prepare(
-        `INSERT INTO study_sessions (id, user_id, activity, duration, score, cards_studied, questions_asked, subject, grade, session_date)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      const updated_at = ss.updated_at || session_date || now; // Fallback
+      
+      statements.push(env.DB.prepare(
+        `INSERT INTO study_sessions (id, user_id, activity, duration, score, cards_studied, questions_asked, subject, grade, session_date, updated_at)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
          ON CONFLICT(id) DO UPDATE SET
            activity = excluded.activity,
            duration = excluded.duration,
@@ -1015,25 +1033,45 @@ router.post('/api/sync', async (request, env: Env) => {
            questions_asked = excluded.questions_asked,
            subject = excluded.subject,
            grade = excluded.grade,
-           session_date = excluded.session_date`)
-        .bind(
-          ss.id,
-          userId,
-          ss.activity,
-          ss.duration ?? 0,
-          ss.score ?? null,
-          ss.cards_studied ?? 0,
-          ss.questions_asked ?? 0,
-          ss.subject ?? null,
-          ss.grade ?? null,
-          session_date
-        )
-        .run();
+           session_date = excluded.session_date,
+           updated_at = excluded.updated_at
+         WHERE excluded.updated_at > COALESCE(study_sessions.updated_at, 0)`
+      ).bind(
+        ss.id,
+        userId,
+        ss.activity,
+        ss.duration ?? 0,
+        ss.score ?? null,
+        ss.cards_studied ?? 0,
+        ss.questions_asked ?? 0,
+        ss.subject ?? null,
+        ss.grade ?? null,
+        session_date,
+        updated_at
+      ));
     }
 
-    return successResponse({ synced: { exams: exams.length, decks: decks.length, cards: cards.length, chats: chats.length, sessions: sessions.length } }, 'Sync completed');
+    // 6. Execute Batch (Atomic Transaction)
+    // Only execute if there are statements to run
+    let successCount = 0;
+    if (statements.length > 0) {
+      const results = await env.DB.batch(statements);
+      successCount = results.length;
+    }
+
+    return successResponse({
+      synced: {
+        exams: exams.length,
+        decks: decks.length,
+        cards: cards.length,
+        chats: chats.length,
+        sessions: sessions.length,
+        total_operations: successCount
+      }
+    }, 'Sync completed via Batch');
   } catch (error: any) {
-    return errorResponse(error.message);
+    console.error('Sync Batch Error:', error);
+    return errorResponse(error.message, 500);
   }
 });
 

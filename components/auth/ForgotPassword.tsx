@@ -60,7 +60,7 @@ const ForgotPassword: React.FC = () => {
         <div className="bg-white rounded-2xl shadow-2xl p-8">
           {/* Header */}
           <div className="text-center mb-8">
-            <div className="inline-block bg-gradient-to-r from-purple-500 to-pink-500 rounded-full p-3 mb-4">
+            <div className="inline-block bg-gradient-to-r from-primary to-primary-hover rounded-full p-3 mb-4">
               <i className="fas fa-key text-3xl text-white"></i>
             </div>
             <h2 className="text-3xl font-bold text-gray-800 mb-2">Quên mật khẩu</h2>
@@ -87,7 +87,7 @@ const ForgotPassword: React.FC = () => {
           <form onSubmit={handleResetPassword} className="space-y-5">
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
-                <i className="fas fa-envelope text-purple-500"></i>
+                <i className="fas fa-envelope text-primary"></i>
                 Email
               </label>
               <input
@@ -158,7 +158,7 @@ const ForgotPassword: React.FC = () => {
             <button
               type="button"
               onClick={() => navigate('/login')}
-              className="text-purple-600 hover:text-purple-700 font-semibold text-sm flex items-center justify-center gap-1 mx-auto"
+              className="text-primary hover:text-primary font-semibold text-sm flex items-center justify-center gap-1 mx-auto"
             >
               <i className="fas fa-arrow-left"></i>
               Quay lại đăng nhập

@@ -95,12 +95,12 @@ const formatMarkdown = (text: string): string => {
   });
 
   // Headers
-  html = html.replace(/^### (.*$)/gim, '<h3 class="text-lg font-bold mt-6 mb-3 text-gray-800 flex items-center gap-2"><span class="w-1.5 h-6 bg-gradient-to-b from-blue-500 to-purple-500 rounded-full inline-block shadow-sm"></span>$1</h3>');
-  html = html.replace(/^## (.*$)/gim, '<h2 class="text-xl font-bold mt-8 mb-4 text-gray-900 border-b-2 border-blue-100 pb-2 flex items-center gap-2"><span class="text-blue-600">#</span> $1</h2>');
-  html = html.replace(/^# (.*$)/gim, '<h1 class="text-3xl font-extrabold mt-8 mb-6 text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600 drop-shadow-sm">$1</h1>');
+  html = html.replace(/^### (.*$)/gim, '<h3 class="text-lg font-bold mt-6 mb-3 text-gray-800 flex items-center gap-2"><span class="w-1.5 h-6 bg-gradient-to-b from-primary to-primary-hover rounded-full inline-block shadow-sm"></span>$1</h3>');
+  html = html.replace(/^## (.*$)/gim, '<h2 class="text-xl font-bold mt-8 mb-4 text-gray-900 border-b-2 border-primary pb-2 flex items-center gap-2"><span class="text-primary">#</span> $1</h2>');
+  html = html.replace(/^# (.*$)/gim, '<h1 class="text-3xl font-extrabold mt-8 mb-6 text-transparent bg-clip-text bg-gradient-to-r from-primary to-primary-hover drop-shadow-sm">$1</h1>');
 
   // Bold
-  html = html.replace(/\*\*(.*?)\*\*/g, '<strong class="font-bold text-gray-900 bg-blue-50/50 px-1 rounded">$1</strong>');
+  html = html.replace(/\*\*(.*?)\*\*/g, '<strong class="font-bold text-gray-900 bg-orange-50/50 px-1 rounded">$1</strong>');
 
   // Italic
   html = html.replace(/\*(.*?)\*/g, '<em class="italic text-gray-600 font-serif">$1</em>');
@@ -112,16 +112,16 @@ const formatMarkdown = (text: string): string => {
   html = html.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<div class="my-6 relative group flex justify-center"><div class="relative overflow-hidden rounded-2xl shadow-lg border border-gray-100 bg-gray-50"><img src="$2" alt="$1" class="max-w-full max-h-[500px] object-contain cursor-zoom-in transition-transform duration-500 hover:scale-[1.02]" onclick="window.open(\'$2\', \'_blank\')" /><div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div><div class="absolute bottom-3 right-3 bg-white/90 backdrop-blur-sm text-gray-700 text-xs font-medium px-3 py-1.5 rounded-full shadow-sm opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">Click to expand</div></div></div>');
 
   // Links
-  html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" class="text-blue-600 hover:text-blue-800 hover:underline font-medium inline-flex items-center gap-1 transition-colors" target="_blank" rel="noopener noreferrer">$1 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg></a>');
+  html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" class="text-primary hover:text-primary hover:underline font-medium inline-flex items-center gap-1 transition-colors" target="_blank" rel="noopener noreferrer">$1 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg></a>');
 
   // Lists - Unordered
-  html = html.replace(/^\s*[-•]\s+(.*)$/gim, '<li class="ml-4 my-2 flex items-start gap-3 text-gray-700 group/li"><span class="text-blue-400 mt-2 text-[0.5rem] group-hover/li:text-blue-600 transition-colors">●</span><span class="leading-relaxed">$1</span></li>');
+  html = html.replace(/^\s*[-•]\s+(.*)$/gim, '<li class="ml-4 my-2 flex items-start gap-3 text-gray-700 group/li"><span class="text-primary mt-2 text-[0.5rem] group-hover/li:text-primary transition-colors">●</span><span class="leading-relaxed">$1</span></li>');
 
   // Lists - Ordered
-  html = html.replace(/^\s*(\d+)\.\s+(.*)$/gim, '<li class="ml-4 my-2 flex items-start gap-3 text-gray-700 group/li"><span class="text-blue-600 font-bold min-w-[1.5rem] bg-blue-50 rounded px-1 text-center text-sm group-hover/li:bg-blue-100 transition-colors">$1.</span><span class="leading-relaxed">$2</span></li>');
+  html = html.replace(/^\s*(\d+)\.\s+(.*)$/gim, '<li class="ml-4 my-2 flex items-start gap-3 text-gray-700 group/li"><span class="text-primary font-bold min-w-[1.5rem] bg-orange-50 rounded px-1 text-center text-sm group-hover/li:bg-orange-100 transition-colors">$1.</span><span class="leading-relaxed">$2</span></li>');
 
   // Blockquotes
-  html = html.replace(/^>\s+(.*)$/gim, '<blockquote class="border-l-4 border-blue-500 pl-6 my-6 italic text-gray-700 bg-gradient-to-r from-blue-50 to-transparent py-4 rounded-r-xl shadow-sm relative"><span class="absolute top-2 left-2 text-blue-200 text-4xl font-serif leading-none select-none">"</span><div class="relative z-10">$1</div></blockquote>');
+  html = html.replace(/^>\s+(.*)$/gim, '<blockquote class="border-l-4 border-primary pl-6 my-6 italic text-gray-700 bg-gradient-to-r from-blue-50 to-transparent py-4 rounded-r-xl shadow-sm relative"><span class="absolute top-2 left-2 text-primary text-4xl font-serif leading-none select-none">"</span><div class="relative z-10">$1</div></blockquote>');
 
   // Horizontal rules
   html = html.replace(/^━+$/gm, '<hr class="my-6 border-t-2 border-gray-100"/>');

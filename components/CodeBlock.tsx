@@ -102,7 +102,7 @@ const CodeBlock: React.FC<CodeBlockProps> = ({ code, language = 'javascript' }) 
           </div>
           {/* Language Label */}
           <div className="flex items-center gap-2 text-xs font-semibold text-gray-400 ml-2 select-none">
-            <Terminal size={12} className="text-blue-400" />
+            <Terminal size={12} className="text-primary" />
             <span className="uppercase tracking-wider text-[10px]">{languageLabel}</span>
           </div>
         </div>

@@ -103,7 +103,7 @@ const APITester: React.FC = () => {
             <Terminal className="w-8 h-8" />
             API Tester
           </h1>
-          <p className="text-center text-blue-100 text-lg">
+          <p className="text-center text-primary text-lg">
             Test các API endpoints và xem request/response
           </p>
         </div>
@@ -113,7 +113,7 @@ const APITester: React.FC = () => {
         {/* Left Panel - Request */}
         <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
           <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-            <Send className="w-6 h-6 text-blue-600" />
+            <Send className="w-6 h-6 text-primary" />
             Request
           </h2>
 
@@ -129,7 +129,7 @@ const APITester: React.FC = () => {
                     setEndpoint(test.endpoint);
                     setRequestBody(test.body);
                   }}
-                  className="px-3 py-1 bg-blue-100 hover:bg-blue-200 text-blue-700 rounded-lg text-sm font-medium transition-colors"
+                  className="px-3 py-1 bg-orange-100 hover:bg-blue-200 text-primary rounded-lg text-sm font-medium transition-colors"
                 >
                   {test.name}
                 </button>
@@ -154,7 +154,7 @@ const APITester: React.FC = () => {
             <select
               value={method}
               onChange={(e) => setMethod(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent"
             >
               <option value="GET">GET</option>
               <option value="POST">POST</option>
@@ -171,7 +171,7 @@ const APITester: React.FC = () => {
               value={endpoint}
               onChange={(e) => setEndpoint(e.target.value)}
               placeholder="/api/health"
-              className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent font-mono text-sm"
+              className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent font-mono text-sm"
             />
           </div>
 
@@ -183,7 +183,7 @@ const APITester: React.FC = () => {
                 value={requestBody}
                 onChange={(e) => setRequestBody(e.target.value)}
                 rows={10}
-                className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent font-mono text-sm resize-none"
+                className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent font-mono text-sm resize-none"
                 placeholder='{"key": "value"}'
               />
             </div>
@@ -193,7 +193,7 @@ const APITester: React.FC = () => {
           <button
             onClick={testEndpoint}
             disabled={loading}
-            className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-md flex items-center justify-center gap-2"
+            className="w-full py-3 bg-primary hover:bg-primary-hover text-white font-bold rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-md flex items-center justify-center gap-2"
           >
             {loading ? (
               <>

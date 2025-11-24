@@ -261,14 +261,14 @@ ${difficulty === 'Rất khó' ? '- Tập trung vào vận dụng cao.\n- Các b�
   return (
     <div className="space-y-8 animate-fade-in">
       {/* Header */}
-      <div className="bg-white  p-6 rounded-xl shadow-sm border border-blue-100 ">
+      <div className="bg-white  p-6 rounded-xl shadow-sm border border-primary ">
         <h2 className="text-3xl font-bold text-center mb-2 text-gray-800  flex items-center justify-center gap-3">
           🌱 Sản Phẩm 4: Tạo Đề Thi THPT - Chuyên Đề Nông Nghiệp
         </h2>
         <p className="text-center text-gray-600 ">
           Đề thi chuẩn tốt nghiệp THPT Quốc Gia - 28 câu (24 TN + 4 Đ/S), 50 phút
         </p>
-        <p className="text-center text-blue-600  text-sm mt-2 flex items-center justify-center gap-2">
+        <p className="text-center text-primary  text-sm mt-2 flex items-center justify-center gap-2">
           ℹ️ Công cụ hỗ trợ học tập - Nội dung mang tính tham khảo
         </p>
       </div>
@@ -278,7 +278,7 @@ ${difficulty === 'Rất khó' ? '- Tập trung vào vận dụng cao.\n- Các b�
         <button
           onClick={() => setActiveTab('create')}
           className={`flex-1 px-6 py-3 rounded-lg font-semibold transition-all flex items-center justify-center gap-2 ${activeTab === 'create'
-            ? 'bg-blue-600 text-white shadow-md'
+            ? 'bg-primary text-white shadow-md'
             : 'text-gray-600  hover:bg-gray-50 :bg-slate-800'
             }`}
         >
@@ -287,7 +287,7 @@ ${difficulty === 'Rất khó' ? '- Tập trung vào vận dụng cao.\n- Các b�
         <button
           onClick={() => setActiveTab('history')}
           className={`flex-1 px-6 py-3 rounded-lg font-semibold transition-all flex items-center justify-center gap-2 ${activeTab === 'history'
-            ? 'bg-blue-600 text-white shadow-md'
+            ? 'bg-primary text-white shadow-md'
             : 'text-gray-600  hover:bg-gray-50 :bg-slate-800'
             }`}
         >
@@ -311,7 +311,7 @@ ${difficulty === 'Rất khó' ? '- Tập trung vào vận dụng cao.\n- Các b�
                       Chọn chuyên đề
                     </label>
                     <select
-                      className="w-full px-4 py-2 border border-gray-300  rounded-lg focus:ring-2 focus:ring-blue-500 bg-gray-50  "
+                      className="w-full px-4 py-2 border border-gray-300  rounded-lg focus:ring-2 focus:ring-primary bg-gray-50  "
                       disabled
                     >
                       <option>Nông nghiệp (Trồng trọt & Chăn nuôi)</option>
@@ -324,7 +324,7 @@ ${difficulty === 'Rất khó' ? '- Tập trung vào vận dụng cao.\n- Các b�
                     <select
                       value={difficulty}
                       onChange={(e) => setDifficulty(e.target.value)}
-                      className="w-full px-4 py-2 border border-gray-300  rounded-lg focus:ring-2 focus:ring-blue-500 bg-white  "
+                      className="w-full px-4 py-2 border border-gray-300  rounded-lg focus:ring-2 focus:ring-primary bg-white  "
                       disabled={loading}
                     >
                       <option value="Dễ">Dễ (Cơ bản)</option>
@@ -334,11 +334,11 @@ ${difficulty === 'Rất khó' ? '- Tập trung vào vận dụng cao.\n- Các b�
                   </div>
                 </div>
 
-                <div className="bg-blue-50  p-4 rounded-lg border border-blue-100 ">
-                  <h4 className="font-semibold mb-2 flex items-center gap-2 text-blue-800 ">
+                <div className="bg-orange-50  p-4 rounded-lg border border-primary ">
+                  <h4 className="font-semibold mb-2 flex items-center gap-2 text-primary ">
                     ℹ️ Cấu trúc đề thi chuẩn THPT:
                   </h4>
-                  <ul className="space-y-1 text-sm text-blue-700 ">
+                  <ul className="space-y-1 text-sm text-primary ">
                     <li className="flex items-center gap-2">✅ <strong>Phần I:</strong> 24 câu trắc nghiệm 4 lựa chọn</li>
                     <li className="ml-6">• Câu 1-8: Công nghệ 10-11 (Bản vẽ, Vật liệu, Máy NN)</li>
                     <li className="ml-6">• Câu 9-14: Trồng trọt lớp 12</li>
@@ -359,7 +359,7 @@ ${difficulty === 'Rất khó' ? '- Tập trung vào vận dụng cao.\n- Các b�
                 <button
                   onClick={generateExam}
                   disabled={loading}
-                  className="w-full bg-blue-600 text-white font-bold py-4 px-6 rounded-lg hover:bg-blue-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-md flex items-center justify-center gap-2"
+                  className="w-full bg-primary text-white font-bold py-4 px-6 rounded-lg hover:bg-primary-hover transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-md flex items-center justify-center gap-2"
                 >
                   {loading ? (
                     <>
@@ -439,12 +439,12 @@ ${difficulty === 'Rất khó' ? '- Tập trung vào vận dụng cao.\n- Các b�
 
                 {/* Part I: Multiple Choice */}
                 <div className="mb-8">
-                  <h4 className="text-xl font-bold mb-4 text-blue-600 ">
+                  <h4 className="text-xl font-bold mb-4 text-primary ">
                     PHẦN I: Trắc nghiệm 4 lựa chọn (Câu 1-24)
                   </h4>
                   <div className="space-y-6">
                     {questions.filter(q => q.type === 'mc').map(q => (
-                      <div key={q.id} className="border-l-4 border-blue-500 pl-4">
+                      <div key={q.id} className="border-l-4 border-primary pl-4">
                         <QuestionCard
                           question={q as any}
                           type="mc"
@@ -489,7 +489,7 @@ ${difficulty === 'Rất khó' ? '- Tập trung vào vận dụng cao.\n- Các b�
                       </button>
                       <button
                         onClick={handlePrint}
-                        className="bg-purple-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-purple-700 transition-all flex items-center gap-2"
+                        className="bg-primary text-white font-bold py-3 px-8 rounded-lg hover:bg-primary-hover transition-all flex items-center gap-2"
                       >
                         🖨️ In đề thi
                       </button>
@@ -498,8 +498,8 @@ ${difficulty === 'Rất khó' ? '- Tập trung vào vận dụng cao.\n- Các b�
                     <>
                       <div className="bg-white  p-6 rounded-xl shadow-lg border border-gray-200  mb-8">
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
-                          <div className="p-4 bg-blue-50  rounded-lg border border-blue-100 ">
-                            <div className="text-3xl font-bold text-blue-600 ">
+                          <div className="p-4 bg-orange-50  rounded-lg border border-primary ">
+                            <div className="text-3xl font-bold text-primary ">
                               {Object.keys(userAnswers).filter(key => {
                                 const q = questions.find(q => q.id === parseInt(key));
                                 if (!q) return false;
@@ -536,8 +536,8 @@ ${difficulty === 'Rất khó' ? '- Tập trung vào vận dụng cao.\n- Các b�
                             </div>
                             <div className="text-sm text-gray-600 ">Điểm (thang 10)</div>
                           </div>
-                          <div className="p-4 bg-blue-50  rounded-lg border border-blue-100 ">
-                            <div className="text-3xl font-bold text-blue-600 ">
+                          <div className="p-4 bg-orange-50  rounded-lg border border-primary ">
+                            <div className="text-3xl font-bold text-primary ">
                               {startTime ? Math.floor((Date.now() - startTime) / 60000) : 0} phút
                             </div>
                             <div className="text-sm text-gray-600 ">Thời gian làm bài</div>
@@ -552,7 +552,7 @@ ${difficulty === 'Rất khó' ? '- Tập trung vào vận dụng cao.\n- Các b�
                             setStartTime(Date.now());
                             window.scrollTo({ top: 0, behavior: 'smooth' });
                           }}
-                          className="bg-blue-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-blue-700 transition-all flex items-center gap-2"
+                          className="bg-primary text-white font-bold py-3 px-8 rounded-lg hover:bg-primary-hover transition-all flex items-center gap-2"
                         >
                           🔄 Làm lại
                         </button>
@@ -595,14 +595,14 @@ ${difficulty === 'Rất khó' ? '- Tập trung vào vận dụng cao.\n- Các b�
                       </div>
                     </div>
                     <div className="flex items-start space-x-3">
-                      <span className="text-blue-500 mt-1">⏱️</span>
+                      <span className="text-primary mt-1">⏱️</span>
                       <div>
                         <p className="font-semibold text-gray-800 ">Rèn kỹ năng quản lý thời gian</p>
                         <p className="text-sm text-gray-600 ">50 phút cho 24 câu, trung bình 2 phút/câu</p>
                       </div>
                     </div>
                     <div className="flex items-start space-x-3">
-                      <span className="text-purple-500 mt-1">📊</span>
+                      <span className="text-primary mt-1">📊</span>
                       <div>
                         <p className="font-semibold text-gray-800 ">Ôn tập kiến thức toàn diện</p>
                         <p className="text-sm text-gray-600 ">Bao gồm cả 3 lớp 10, 11, 12 theo SGK KNTT & Cánh Diều</p>
@@ -628,13 +628,13 @@ ${difficulty === 'Rất khó' ? '- Tập trung vào vận dụng cao.\n- Các b�
         <div className="space-y-6">
           {/* Overall Statistics */}
           {examHistory.length > 0 && (
-            <div className="bg-white  rounded-xl shadow-sm border border-blue-100  p-6">
+            <div className="bg-white  rounded-xl shadow-sm border border-primary  p-6">
               <h3 className="text-xl font-bold mb-4 flex items-center gap-2 text-gray-800 ">
                 📊 Thống kê tổng quan
               </h3>
               <div className="grid grid-cols-4 gap-4">
-                <div className="bg-blue-50  rounded-xl p-4 text-center border border-blue-100 ">
-                  <div className="text-3xl font-bold text-blue-600 ">{examHistory.length}</div>
+                <div className="bg-orange-50  rounded-xl p-4 text-center border border-primary ">
+                  <div className="text-3xl font-bold text-primary ">{examHistory.length}</div>
                   <div className="text-sm text-gray-600  mt-1">Đề đã làm</div>
                 </div>
                 <div className="bg-green-50  rounded-xl p-4 text-center border border-green-100 ">
@@ -643,8 +643,8 @@ ${difficulty === 'Rất khó' ? '- Tập trung vào vận dụng cao.\n- Các b�
                   </div>
                   <div className="text-sm text-gray-600  mt-1">Điểm TB</div>
                 </div>
-                <div className="bg-purple-50  rounded-xl p-4 text-center border border-purple-100 ">
-                  <div className="text-3xl font-bold text-purple-600 ">
+                <div className="bg-orange-50  rounded-xl p-4 text-center border border-orange-200 ">
+                  <div className="text-3xl font-bold text-primary ">
                     {Math.max(...examHistory.map(e => e.percentage)).toFixed(1)}%
                   </div>
                   <div className="text-sm text-gray-600  mt-1">Cao nhất</div>
@@ -673,7 +673,7 @@ ${difficulty === 'Rất khó' ? '- Tập trung vào vận dụng cao.\n- Các b�
                 <p className="text-gray-500 text-sm mt-2">Tạo và làm đề thi để xem lịch sử tại đây</p>
                 <button
                   onClick={() => setActiveTab('create')}
-                  className="mt-4 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-all flex items-center mx-auto gap-2"
+                  className="mt-4 bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary-hover transition-all flex items-center mx-auto gap-2"
                 >
                   ✨ Tạo đề thi ngay
                 </button>
@@ -683,7 +683,7 @@ ${difficulty === 'Rất khó' ? '- Tập trung vào vận dụng cao.\n- Các b�
                 {examHistory.map((exam, idx) => (
                   <div
                     key={exam.id}
-                    className="border border-gray-200  rounded-xl p-5 hover:shadow-md transition-all hover:border-blue-300 :border-blue-700 bg-white "
+                    className="border border-gray-200  rounded-xl p-5 hover:shadow-md transition-all hover:border-primary :border-primary bg-white "
                   >
                     <div className="flex items-start justify-between mb-4">
                       <div className="flex-1">
@@ -721,7 +721,7 @@ ${difficulty === 'Rất khó' ? '- Tập trung vào vận dụng cao.\n- Các b�
                       <div className="flex flex-col gap-2 ml-4">
                         <button
                           onClick={() => setSelectedExam(exam)}
-                          className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                          className="p-2 text-primary hover:bg-orange-50 rounded-lg transition-colors"
                           title="Xem chi tiết"
                         >
                           👁️

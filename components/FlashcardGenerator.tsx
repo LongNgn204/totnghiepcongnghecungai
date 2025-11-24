@@ -147,7 +147,7 @@ ${data.difficulty === 'Khó' ? '- Tập trung phân tích, so sánh, vận dụn
   return (
     <div className="bg-white rounded-xl shadow-lg p-6 mb-6">
       <div className="flex items-center gap-3 mb-6">
-        <div className="bg-gradient-to-r from-purple-500 to-pink-500 rounded-full p-3 shadow-md">
+        <div className="bg-gradient-to-r from-primary to-primary-hover rounded-full p-3 shadow-md">
           <span className="text-2xl">✨</span>
         </div>
         <div>
@@ -267,9 +267,9 @@ ${data.difficulty === 'Khó' ? '- Tập trung phân tích, so sánh, vận dụn
       </div>
 
       {/* Thông tin */}
-      <div className="bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200 rounded-lg p-4 mb-6">
+      <div className="bg-gradient-to-r from-blue-50 to-purple-50 border border-primary rounded-lg p-4 mb-6">
         <div className="flex items-start gap-3">
-          <span className="text-blue-500 mt-1">ℹ️</span>
+          <span className="text-primary mt-1">ℹ️</span>
           <div className="text-sm text-gray-700">
             <p className="font-semibold mb-1">Lưu ý:</p>
             <ul className="list-disc list-inside space-y-1 text-xs">
@@ -286,7 +286,7 @@ ${data.difficulty === 'Khó' ? '- Tập trung phân tích, so sánh, vận dụn
       <button
         onClick={handleGenerate}
         disabled={loading || !formData.topic}
-        className="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white py-3 rounded-lg font-semibold hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+        className="w-full bg-gradient-to-r from-primary to-primary-hover text-white py-3 rounded-lg font-semibold hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
       >
         {loading ? (
           <>

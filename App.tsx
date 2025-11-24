@@ -21,6 +21,7 @@ const Product6 = React.lazy(() => import('./components/Product6'));
 const Product7 = React.lazy(() => import('./components/Product7'));
 const Product8 = React.lazy(() => import('./components/Product8'));
 const Dashboard = React.lazy(() => import('./components/Dashboard'));
+const SmartIDE = React.lazy(() => import('./components/SmartIDE'));
 const Flashcards = React.lazy(() => import('./components/Flashcards'));
 const ExamHistory = React.lazy(() => import('./components/ExamHistory'));
 const Profile = React.lazy(() => import('./components/Profile'));
@@ -32,7 +33,7 @@ const NotFound = React.lazy(() => import('./components/NotFound'));
 const LoadingFallback = () => (
   <div className="min-h-screen flex items-center justify-center bg-gray-50">
     <div className="flex flex-col items-center gap-4 animate-fade-in">
-      <Loader2 className="w-12 h-12 text-blue-600 animate-spin" />
+      <Loader2 className="w-12 h-12 text-primary animate-spin" />
       <p className="text-gray-500 font-medium">Đang tải dữ liệu...</p>
     </div>
   </div>
@@ -83,6 +84,7 @@ const App: React.FC = () => {
                 <Route path="/product7" element={<ProtectedRoute><Product7 /></ProtectedRoute>} />
                 <Route path="/product8" element={<ProtectedRoute><Product8 /></ProtectedRoute>} />
                 <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+                <Route path="/smart-ide" element={<ProtectedRoute><SmartIDE /></ProtectedRoute>} />
                 <Route path="/flashcards" element={<ProtectedRoute><Flashcards /></ProtectedRoute>} />
                 <Route path="/history" element={<ProtectedRoute><ExamHistory /></ProtectedRoute>} />
                 <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />

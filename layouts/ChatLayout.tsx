@@ -15,7 +15,7 @@ const ChatLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const { sidebarOpen, setSidebarOpen } = useChat();
 
     return (
-        <div className="flex h-screen overflow-hidden bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-slate-900 dark:via-slate-950 dark:to-slate-900 animate-fade-in transition-colors duration-300">
+        <div className="flex h-screen overflow-hidden bg-gradient-to-br from-blue-50 via-white to-purple-50 animate-fade-in transition-colors duration-300">
             {/* Chat Sidebar */}
             <ChatSidebar />
 
@@ -26,7 +26,7 @@ const ChatLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                     <div className="md:hidden absolute top-4 left-4 z-30 animate-slide-right">
                         <button
                             onClick={() => setSidebarOpen(true)}
-                            className="p-3 bg-white/90 dark:bg-slate-800/90 backdrop-blur-xl rounded-2xl shadow-lg border border-white/50 dark:border-white/10 text-gray-600 dark:text-gray-300 hover:bg-white dark:hover:bg-slate-800 hover:shadow-xl transition-all hover-lift"
+                            className="p-3 bg-white/90 backdrop-blur-xl rounded-2xl shadow-lg border border-white/50 text-gray-600 hover:bg-white:bg-slate-800 hover:shadow-xl transition-all hover-lift"
                         >
                             <Menu size={20} />
                         </button>

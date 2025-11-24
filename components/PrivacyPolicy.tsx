@@ -5,14 +5,14 @@ const PrivacyPolicy: React.FC = () => {
     return (
         <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
             <div className="max-w-3xl mx-auto bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
-                <div className="bg-blue-600 px-8 py-10 text-white">
+                <div className="bg-primary px-8 py-10 text-white">
                     <div className="flex items-center gap-4 mb-4">
                         <div className="p-3 bg-white/10 rounded-2xl backdrop-blur-sm">
                             <Shield className="w-8 h-8" />
                         </div>
                         <h1 className="text-3xl font-bold">Chính Sách Bảo Mật</h1>
                     </div>
-                    <p className="text-blue-100 text-lg">
+                    <p className="text-primary text-lg">
                         Cam kết bảo vệ thông tin cá nhân và quyền riêng tư của bạn.
                     </p>
                 </div>
@@ -20,7 +20,7 @@ const PrivacyPolicy: React.FC = () => {
                 <div className="p-8 space-y-8">
                     <section>
                         <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-                            <Eye className="w-5 h-5 text-blue-600" />
+                            <Eye className="w-5 h-5 text-primary" />
                             1. Thu thập thông tin
                         </h2>
                         <p className="text-gray-600 leading-relaxed">
@@ -35,7 +35,7 @@ const PrivacyPolicy: React.FC = () => {
 
                     <section>
                         <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-                            <Lock className="w-5 h-5 text-blue-600" />
+                            <Lock className="w-5 h-5 text-primary" />
                             2. Sử dụng thông tin
                         </h2>
                         <p className="text-gray-600 leading-relaxed">

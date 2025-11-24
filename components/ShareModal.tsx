@@ -77,13 +77,13 @@ const ShareModal: React.FC<ShareModalProps> = ({
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full animate-fade-in">
         {/* Header */}
-        <div className="bg-gradient-to-r from-purple-500 to-pink-500 p-6 rounded-t-2xl">
+        <div className="bg-gradient-to-r from-primary to-primary-hover p-6 rounded-t-2xl">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <span className="text-4xl">{getResourceIcon()}</span>
               <div>
                 <h2 className="text-2xl font-bold text-white">Chia sẻ</h2>
-                <p className="text-purple-100 text-sm">{getResourceTypeText()}</p>
+                <p className="text-primary text-sm">{getResourceTypeText()}</p>
               </div>
             </div>
             <button
@@ -121,29 +121,29 @@ const ShareModal: React.FC<ShareModalProps> = ({
               <div className="space-y-3">
                 <p className="font-semibold text-gray-900">Quyền riêng tư</p>
                 <div className="space-y-2">
-                  <label className="flex items-center gap-3 p-3 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-purple-500 transition-colors">
+                  <label className="flex items-center gap-3 p-3 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-primary transition-colors">
                     <input
                       type="radio"
                       name="privacy"
                       checked={isPublic}
                       onChange={() => setIsPublic(true)}
-                      className="w-4 h-4 text-purple-500"
+                      className="w-4 h-4 text-primary"
                     />
                     <div className="flex-1">
                       <p className="font-medium text-gray-900">
-                        <i className="fas fa-globe mr-2 text-blue-500"></i>
+                        <i className="fas fa-globe mr-2 text-primary"></i>
                         Công khai
                       </p>
                       <p className="text-sm text-gray-600">Mọi người có thể xem và sử dụng</p>
                     </div>
                   </label>
-                  <label className="flex items-center gap-3 p-3 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-purple-500 transition-colors">
+                  <label className="flex items-center gap-3 p-3 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-primary transition-colors">
                     <input
                       type="radio"
                       name="privacy"
                       checked={!isPublic}
                       onChange={() => setIsPublic(false)}
-                      className="w-4 h-4 text-purple-500"
+                      className="w-4 h-4 text-primary"
                     />
                     <div className="flex-1">
                       <p className="font-medium text-gray-900">
@@ -159,7 +159,7 @@ const ShareModal: React.FC<ShareModalProps> = ({
               {/* Share Button */}
               <button
                 onClick={handleShare}
-                className="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white py-3 rounded-xl font-semibold hover:shadow-lg transition-all duration-300 transform hover:scale-105"
+                className="w-full bg-gradient-to-r from-primary to-primary-hover text-white py-3 rounded-xl font-semibold hover:shadow-lg transition-all duration-300 transform hover:scale-105"
               >
                 <i className="fas fa-share-alt mr-2"></i>
                 Tạo link chia sẻ
@@ -192,11 +192,10 @@ const ShareModal: React.FC<ShareModalProps> = ({
                   />
                   <button
                     onClick={handleCopy}
-                    className={`px-4 py-2 rounded-lg font-semibold transition-all duration-300 ${
-                      copied
+                    className={`px-4 py-2 rounded-lg font-semibold transition-all duration-300 ${copied
                         ? 'bg-green-500 text-white'
-                        : 'bg-purple-500 text-white hover:bg-purple-600'
-                    }`}
+                        : 'bg-primary text-white hover:bg-primary-hover'
+                      }`}
                   >
                     <i className={`fas ${copied ? 'fa-check' : 'fa-copy'} mr-1`}></i>
                     {copied ? 'Đã copy!' : 'Copy'}
@@ -206,16 +205,16 @@ const ShareModal: React.FC<ShareModalProps> = ({
 
               {/* Share Options */}
               <div className="grid grid-cols-3 gap-3">
-                <button className="flex flex-col items-center gap-2 p-3 bg-blue-50 hover:bg-blue-100 rounded-xl transition-colors">
-                  <i className="fab fa-facebook text-2xl text-blue-600"></i>
+                <button className="flex flex-col items-center gap-2 p-3 bg-orange-50 hover:bg-orange-100 rounded-xl transition-colors">
+                  <i className="fab fa-facebook text-2xl text-primary"></i>
                   <span className="text-xs font-medium text-gray-700">Facebook</span>
                 </button>
                 <button className="flex flex-col items-center gap-2 p-3 bg-green-50 hover:bg-green-100 rounded-xl transition-colors">
                   <i className="fab fa-whatsapp text-2xl text-green-600"></i>
                   <span className="text-xs font-medium text-gray-700">WhatsApp</span>
                 </button>
-                <button className="flex flex-col items-center gap-2 p-3 bg-purple-50 hover:bg-purple-100 rounded-xl transition-colors">
-                  <i className="fas fa-envelope text-2xl text-purple-600"></i>
+                <button className="flex flex-col items-center gap-2 p-3 bg-orange-50 hover:bg-orange-100 rounded-xl transition-colors">
+                  <i className="fas fa-envelope text-2xl text-primary"></i>
                   <span className="text-xs font-medium text-gray-700">Email</span>
                 </button>
               </div>

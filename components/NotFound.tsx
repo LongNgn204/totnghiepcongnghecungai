@@ -6,8 +6,8 @@ const NotFound: React.FC = () => {
     return (
         <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 px-4 text-center">
             <div className="bg-white p-8 rounded-3xl shadow-xl max-w-lg w-full border border-gray-100">
-                <div className="w-24 h-24 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <span className="text-4xl font-bold text-blue-600">404</span>
+                <div className="w-24 h-24 bg-orange-50 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <span className="text-4xl font-bold text-primary">404</span>
                 </div>
 
                 <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
@@ -29,7 +29,7 @@ const NotFound: React.FC = () => {
 
                     <Link
                         to="/"
-                        className="flex items-center justify-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-xl font-medium hover:bg-blue-700 transition-colors shadow-lg shadow-blue-600/20"
+                        className="flex items-center justify-center gap-2 px-6 py-3 bg-primary text-white rounded-xl font-medium hover:bg-primary-hover transition-colors shadow-lg shadow-blue-600/20"
                     >
                         <Home size={20} />
                         Trang chủ

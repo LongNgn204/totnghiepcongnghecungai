@@ -99,7 +99,7 @@ const Product7: React.FC = () => {
   return (
     <div className="space-y-8 animate-fade-in">
       {/* Header */}
-      <div className="bg-white  p-6 rounded-xl shadow-sm border border-blue-100 ">
+      <div className="bg-white  p-6 rounded-xl shadow-sm border border-primary ">
         <h1 className="text-3xl font-bold text-center mb-2 text-gray-800  flex items-center justify-center gap-3">
           👥 Nhóm Học Tập
         </h1>
@@ -109,7 +109,7 @@ const Product7: React.FC = () => {
         <div className="flex justify-center mt-4">
           <button
             onClick={() => setShowCreateModal(true)}
-            className="bg-blue-600 text-white px-6 py-3 rounded-xl font-bold hover:bg-blue-700 transition-all duration-300 transform hover:scale-105 flex items-center gap-2 shadow-md"
+            className="bg-primary text-white px-6 py-3 rounded-xl font-bold hover:bg-primary-hover transition-all duration-300 transform hover:scale-105 flex items-center gap-2 shadow-md"
           >
             ➕ Tạo nhóm mới
           </button>
@@ -121,7 +121,7 @@ const Product7: React.FC = () => {
         <div className="lg:col-span-1">
           <div className="bg-white  rounded-2xl shadow-sm border border-gray-200  p-6">
             <h2 className="text-xl font-bold text-gray-900  mb-6 flex items-center gap-2">
-              <span className="text-blue-600">👥</span>
+              <span className="text-primary">👥</span>
               Danh sách nhóm
             </h2>
 
@@ -141,8 +141,8 @@ const Product7: React.FC = () => {
                     <div
                       key={group.id}
                       className={`p-4 border-2 rounded-xl cursor-pointer transition-all duration-300 ${isSelected
-                        ? 'border-blue-500 bg-blue-50  shadow-md'
-                        : 'border-gray-200  hover:border-blue-300 :border-blue-700 hover:shadow-sm bg-white '
+                        ? 'border-primary bg-orange-50  shadow-md'
+                        : 'border-gray-200  hover:border-primary :border-primary hover:shadow-sm bg-white '
                         }`}
                       onClick={() => {
                         const g = getStudyGroup(group.id);
@@ -165,7 +165,7 @@ const Product7: React.FC = () => {
                             <span>👤</span>
                             {group.members.length}
                           </span>
-                          <span className="px-2 py-1 bg-blue-100  text-blue-700  rounded-lg text-xs font-bold">
+                          <span className="px-2 py-1 bg-orange-100  text-primary  rounded-lg text-xs font-bold">
                             {group.category}
                           </span>
                         </div>
@@ -176,7 +176,7 @@ const Product7: React.FC = () => {
                               e.stopPropagation();
                               handleJoinGroup(group.id);
                             }}
-                            className="px-3 py-1 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center gap-1"
+                            className="px-3 py-1 bg-primary text-white text-sm rounded-lg hover:bg-primary-hover transition-colors font-medium flex items-center gap-1"
                           >
                             <span>➕</span>
                             Tham gia
@@ -203,14 +203,14 @@ const Product7: React.FC = () => {
                     <p className="text-gray-600  mb-3">{selectedGroup.description}</p>
                     <div className="flex items-center gap-4 text-sm text-gray-600 ">
                       <span className="flex items-center gap-1">
-                        <span className="text-blue-600">👤</span>
+                        <span className="text-primary">👤</span>
                         <span className="font-medium">{selectedGroup.members.length} thành viên</span>
                       </span>
                       <span className="flex items-center gap-1">
                         <span className="text-indigo-600 ">📅</span>
                         <span className="font-medium">{formatDate(selectedGroup.createdAt)}</span>
                       </span>
-                      <span className="px-2 py-1 bg-blue-100  text-blue-700  rounded-lg text-xs font-bold">
+                      <span className="px-2 py-1 bg-orange-100  text-primary  rounded-lg text-xs font-bold">
                         {selectedGroup.category}
                       </span>
                     </div>
@@ -231,14 +231,14 @@ const Product7: React.FC = () => {
               {/* Members List */}
               <div className="p-6 border-b border-gray-200 ">
                 <h3 className="font-bold text-gray-900  mb-3 flex items-center gap-2">
-                  <span className="text-blue-600">👥</span>
+                  <span className="text-primary">👥</span>
                   Thành viên
                 </h3>
                 <div className="flex flex-wrap gap-3">
                   {selectedGroup.members.map(member => (
                     <div
                       key={member.id}
-                      className="flex items-center gap-2 px-3 py-2 bg-gray-50  rounded-xl border border-gray-200  hover:border-blue-200 :border-blue-700 transition-colors"
+                      className="flex items-center gap-2 px-3 py-2 bg-gray-50  rounded-xl border border-gray-200  hover:border-primary :border-primary transition-colors"
                     >
                       <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-full flex items-center justify-center text-white font-bold text-sm">
                         {member.name.charAt(0)}
@@ -246,7 +246,7 @@ const Product7: React.FC = () => {
                       <div>
                         <p className="text-sm font-bold text-gray-900 ">{member.name}</p>
                         {member.role === 'admin' && (
-                          <span className="text-xs text-blue-600 font-bold">Quản trị viên</span>
+                          <span className="text-xs text-primary font-bold">Quản trị viên</span>
                         )}
                       </div>
                       <span className="ml-2 text-xs text-gray-500  font-medium">
@@ -290,7 +290,7 @@ const Product7: React.FC = () => {
                           )}
                           <p className="text-sm">{msg.message}</p>
                           <p
-                            className={`text-xs mt-1 ${msg.userId === user.id ? 'text-blue-100' : 'text-gray-500 '
+                            className={`text-xs mt-1 ${msg.userId === user.id ? 'text-primary' : 'text-gray-500 '
                               }`}
                           >
                             {formatDate(msg.timestamp)}
@@ -311,12 +311,12 @@ const Product7: React.FC = () => {
                         onChange={(e) => setNewMessage(e.target.value)}
                         onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
                         placeholder="Nhập tin nhắn..."
-                        className="flex-1 px-4 py-3 border border-gray-300  rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50  "
+                        className="flex-1 px-4 py-3 border border-gray-300  rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent bg-gray-50  "
                       />
                       <button
                         onClick={handleSendMessage}
                         disabled={!newMessage.trim()}
-                        className="px-6 py-3 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center shadow-md hover:shadow-lg"
+                        className="px-6 py-3 bg-primary text-white rounded-xl font-bold hover:bg-primary-hover transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center shadow-md hover:shadow-lg"
                       >
                         🚀
                       </button>
@@ -359,7 +359,7 @@ const Product7: React.FC = () => {
                   value={groupName}
                   onChange={(e) => setGroupName(e.target.value)}
                   placeholder="VD: Học nhóm Công nghệ lớp 9"
-                  className="w-full px-4 py-3 border border-gray-300  rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50  "
+                  className="w-full px-4 py-3 border border-gray-300  rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent bg-gray-50  "
                 />
               </div>
 
@@ -372,7 +372,7 @@ const Product7: React.FC = () => {
                   onChange={(e) => setGroupDescription(e.target.value)}
                   placeholder="Mô tả về nhóm học tập..."
                   rows={3}
-                  className="w-full px-4 py-3 border border-gray-300  rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none bg-gray-50  "
+                  className="w-full px-4 py-3 border border-gray-300  rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent resize-none bg-gray-50  "
                 />
               </div>
 
@@ -383,7 +383,7 @@ const Product7: React.FC = () => {
                 <select
                   value={groupCategory}
                   onChange={(e) => setGroupCategory(e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300  rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50  "
+                  className="w-full px-4 py-3 border border-gray-300  rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent bg-gray-50  "
                 >
                   <option value="Công nghệ">Công nghệ</option>
                   <option value="Nông nghiệp">Nông nghiệp</option>
@@ -397,7 +397,7 @@ const Product7: React.FC = () => {
                     type="checkbox"
                     checked={isPublic}
                     onChange={(e) => setIsPublic(e.target.checked)}
-                    className="w-4 h-4 text-blue-600 rounded focus:ring-2 focus:ring-blue-500"
+                    className="w-4 h-4 text-primary rounded focus:ring-2 focus:ring-primary"
                   />
                   <span className="text-sm text-gray-700  font-medium">Công khai (Mọi người có thể tham gia)</span>
                 </label>
@@ -413,7 +413,7 @@ const Product7: React.FC = () => {
                 <button
                   onClick={handleCreateGroup}
                   disabled={!groupName.trim()}
-                  className="flex-1 px-4 py-3 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:shadow-lg"
+                  className="flex-1 px-4 py-3 bg-primary text-white rounded-xl font-bold hover:bg-primary-hover transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:shadow-lg"
                 >
                   Tạo nhóm
                 </button>

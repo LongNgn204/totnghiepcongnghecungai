@@ -16,6 +16,9 @@ interface MessageListProps {
   onSuggestionClick: (msg: string) => void;
   onFileInputClick: () => void;
   messagesEndRef: React.RefObject<HTMLDivElement>;
+  // New props for Scroll handling
+  chatContainerRef?: React.RefObject<HTMLDivElement>;
+  onScroll?: () => void;
 }
 
 const MessageList: React.FC<MessageListProps> = ({
@@ -28,35 +31,43 @@ const MessageList: React.FC<MessageListProps> = ({
   onDrop,
   onSuggestionClick,
   onFileInputClick,
-  messagesEndRef
+  messagesEndRef,
+  chatContainerRef,
+  onScroll
 }) => {
   return (
     <div
-      className="flex-1 overflow-y-auto p-4 md:p-8 space-y-8 bg-white "
+      ref={chatContainerRef}
+      onScroll={onScroll}
+      className="flex-1 overflow-y-auto p-4 md:p-8 space-y-8 bg-background custom-scrollbar scroll-smooth"
       onDragOver={onDragOver}
       onDragLeave={onDragLeave}
       onDrop={onDrop}
     >
       {isDragging && (
-        <div className="absolute inset-0 bg-blue-50/90  z-50 flex items-center justify-center border-4 border-dashed border-blue-400  rounded-lg transition-all">
+        <div className="absolute inset-0 bg-background/90 backdrop-blur-sm z-50 flex items-center justify-center border-4 border-dashed border-primary m-4 rounded-3xl transition-all animate-fade-in">
           <div className="text-center">
-            <p className="text-2xl font-medium text-blue-600 ">Thả file vào đây</p>
+            <div className="w-20 h-20 mx-auto bg-orange-100 rounded-full flex items-center justify-center mb-4">
+               <FileText className="w-10 h-10 text-primary animate-bounce" />
+            </div>
+            <p className="text-2xl font-bold text-text-heading">Thả file vào đây</p>
+            <p className="text-text-sub mt-2">Hỗ trợ ảnh và tài liệu</p>
           </div>
         </div>
       )}
 
       {messages.length === 0 ? (
-        <div className="flex flex-col items-center justify-center h-full text-gray-800  animate-fade-in">
-          <div className="w-20 h-20 bg-gradient-to-tr from-blue-100  to-purple-100  rounded-3xl flex items-center justify-center mb-8 shadow-lg shadow-blue-500/10">
-            <Sparkles className="w-10 h-10 text-blue-600 " />
+        <div className="flex flex-col items-center justify-center h-full text-text-main animate-fade-in py-10">
+          <div className="w-20 h-20 bg-orange-50 rounded-[2rem] flex items-center justify-center mb-8">
+            <Sparkles className="w-10 h-10 text-primary" />
           </div>
-          <h3 className="text-4xl font-bold mb-3 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent text-center">
-            Xin chào, tôi có thể giúp gì?
+          <h3 className="text-2xl md:text-3xl font-bold mb-3 text-slate-800 text-center tracking-tight">
+            Hôm nay bạn muốn học gì?
           </h3>
-          <p className="text-center max-w-lg text-gray-500  mb-12 text-lg font-medium">
-            Hỏi về Công nghệ, giải bài tập, hoặc tải lên hình ảnh để phân tích.
+          <p className="text-center max-w-lg text-slate-500 mb-10 text-base leading-relaxed">
+            Trợ lý AI sẵn sàng hỗ trợ giải bài tập, lập trình và tư vấn lộ trình học tập.
           </p>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-2xl px-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 w-full max-w-2xl px-4">
             <SuggestionCard onClick={() => onSuggestionClick('Giải thích định luật Ohm?')} text="Giải thích định luật Ohm" icon="⚡" />
             <SuggestionCard onClick={() => onSuggestionClick('Giải bài tập điện xoay chiều?')} text="Giải bài tập điện xoay chiều" icon="📝" />
             <SuggestionCard onClick={onFileInputClick} text="Phân tích hình ảnh sơ đồ" icon="🖼️" />
@@ -71,26 +82,27 @@ const MessageList: React.FC<MessageListProps> = ({
               className={`flex gap-4 ${message.role === 'user' ? 'flex-row-reverse' : 'flex-row'} animate-slide-up`}
             >
               {/* Avatar */}
-              <div className={`flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center shadow-md transition-transform hover:scale-105 ${message.role === 'user'
-                ? 'bg-gradient-to-br from-blue-600 to-indigo-600 text-white ring-2 ring-blue-100 '
-                : 'bg-white  border border-gray-100  text-blue-600  ring-2 ring-purple-50 '
+              <div className={`flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center ${message.role === 'user'
+                ? 'bg-primary text-white'
+                : 'bg-orange-50 text-primary'
                 }`}>
-                {message.role === 'user' ? <User size={20} /> : <Bot size={20} />}
+                {message.role === 'user' ? <User size={16} strokeWidth={2.5} /> : <Bot size={18} strokeWidth={2.5} />}
               </div>
 
               {/* Message Bubble */}
               <div className={`flex flex-col max-w-[85%] md:max-w-[75%] group ${message.role === 'user' ? 'items-end' : 'items-start'}`}>
-                <div className={`relative px-6 py-5 shadow-sm transition-all duration-200 ${message.role === 'user'
-                  ? 'bg-blue-600 text-white rounded-2xl rounded-tr-sm shadow-blue-500/20'
-                  : 'bg-white/80  backdrop-blur border border-gray-100  text-gray-800  rounded-2xl rounded-tl-sm shadow-sm hover:shadow-md'
+                <div className={`relative px-5 py-4 transition-all duration-200 ${message.role === 'user'
+                  ? 'bg-primary text-white rounded-2xl rounded-tr-sm shadow-sm'
+                  : 'bg-white border border-slate-200 text-slate-700 rounded-2xl rounded-tl-sm shadow-sm'
                   }`}>
+                  
                   {message.role === 'assistant' && (
-                    <div className="flex items-center gap-2 mb-3 pb-2 border-b border-gray-50 ">
-                      <span className="text-xs font-bold uppercase tracking-wider text-blue-600  bg-blue-50  px-2 py-0.5 rounded-full">Gemini AI</span>
+                    <div className="flex items-center gap-2 mb-3 pb-3 border-b border-slate-100/80">
+                      <span className="text-[10px] font-bold uppercase tracking-widest text-primary bg-orange-50 px-2 py-1 rounded-lg">Gemini 2.0 Flash</span>
                     </div>
                   )}
 
-                  <div className={`prose ${message.role === 'user' ? 'prose-invert' : 'prose-slate'} max-w-none`}>
+                  <div className={`prose ${message.role === 'user' ? 'prose-invert' : 'prose-slate'} max-w-none prose-p:leading-relaxed prose-headings:font-bold prose-a:text-blue-500`}>
                     <ReactMarkdown
                       remarkPlugins={[remarkGfm]}
                       components={{
@@ -106,13 +118,32 @@ const MessageList: React.FC<MessageListProps> = ({
                         },
                         img({ src, alt }) {
                           return (
-                            <div className="my-4 relative group/img">
+                            <div className="my-6 relative group/img">
                               <img
                                 src={src}
                                 alt={alt}
-                                className="rounded-xl shadow-lg max-w-full h-auto mx-auto border border-gray-200"
+                                loading="lazy"
+                                className="rounded-2xl shadow-xl max-w-full h-auto mx-auto border-2 border-gray-100 hover:border-primary transition-all duration-300 cursor-pointer hover:scale-[1.02]"
+                                onClick={() => window.open(src, '_blank')}
+                                onError={(e) => {
+                                  const target = e.target as HTMLImageElement;
+                                  target.style.display = 'none';
+                                  const errorDiv = document.createElement('div');
+                                  errorDiv.className = 'p-4 bg-red-50 border border-red-200 rounded-xl text-red-600 text-sm';
+                                  errorDiv.textContent = '⚠️ Không thể tải ảnh. Vui lòng thử lại.';
+                                  target.parentNode?.appendChild(errorDiv);
+                                }}
                               />
-                              <div className="absolute inset-0 rounded-xl ring-1 ring-black/5 pointer-events-none" />
+                              <div className="absolute inset-0 rounded-2xl ring-1 ring-black/5 pointer-events-none group-hover/img:ring-primary/20" />
+                              <div className="absolute top-2 right-2 opacity-0 group-hover/img:opacity-100 transition-opacity">
+                                <button
+                                  onClick={() => window.open(src, '_blank')}
+                                  className="px-3 py-1.5 bg-white/90 backdrop-blur rounded-lg text-xs font-medium text-gray-700 shadow-lg hover:bg-white transition-all"
+                                  title="Mở ảnh full size"
+                                >
+                                  🔍 Phóng to
+                                </button>
+                              </div>
                             </div>
                           );
                         },
@@ -123,7 +154,7 @@ const MessageList: React.FC<MessageListProps> = ({
                         h1: ({ children }) => <h1 className="text-2xl font-bold mb-4 mt-6 border-b pb-2">{children}</h1>,
                         h2: ({ children }) => <h2 className="text-xl font-bold mb-3 mt-5">{children}</h2>,
                         h3: ({ children }) => <h3 className="text-lg font-bold mb-2 mt-4">{children}</h3>,
-                        blockquote: ({ children }) => <blockquote className="border-l-4 border-blue-500  pl-4 italic my-4 bg-gray-50  py-2 pr-2 rounded-r">{children}</blockquote>,
+                        blockquote: ({ children }) => <blockquote className="border-l-4 border-primary  pl-4 italic my-4 bg-gray-50  py-2 pr-2 rounded-r">{children}</blockquote>,
                         table: ({ children }) => <div className="overflow-x-auto my-4 rounded-lg border border-gray-200 "><table className="min-w-full divide-y divide-gray-200 ">{children}</table></div>,
                         th: ({ children }) => <th className="px-4 py-2 bg-gray-50  text-left text-xs font-medium text-gray-500  uppercase tracking-wider">{children}</th>,
                         td: ({ children }) => <td className="px-4 py-2 whitespace-nowrap text-sm border-t border-gray-100 ">{children}</td>,
@@ -164,7 +195,7 @@ const MessageList: React.FC<MessageListProps> = ({
                   <div className="mt-2 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity px-2">
                     <button
                       onClick={() => navigator.clipboard.writeText(message.content)}
-                      className="p-1.5 text-gray-400  hover:text-blue-600 :text-blue-400 hover:bg-blue-50 :bg-blue-900/30 rounded-lg transition-all"
+                      className="p-1.5 text-gray-400  hover:text-primary :text-primary hover:bg-orange-50 :bg-blue-900/30 rounded-lg transition-all"
                       title="Sao chép"
                     >
                       <Copy size={14} />
@@ -179,23 +210,23 @@ const MessageList: React.FC<MessageListProps> = ({
           {loading && (
             <div className="flex gap-4 animate-slide-up">
               <div className="w-10 h-10 rounded-full bg-white  border border-gray-100  flex items-center justify-center shadow-sm">
-                <Bot size={20} className="text-blue-600  animate-pulse" />
+                <Bot size={20} className="text-primary  animate-pulse" />
               </div>
               <div className="flex flex-col gap-2 max-w-[75%]">
                 <div className="bg-white  px-6 py-4 rounded-2xl rounded-tl-none border border-gray-100  shadow-sm flex items-center gap-3">
                   {researchStatus ? (
-                    <div className="flex items-center gap-3 text-blue-600 ">
-                      <div className="w-4 h-4 border-2 border-blue-600  border-t-transparent rounded-full animate-spin" />
+                    <div className="flex items-center gap-3 text-primary ">
+                      <div className="w-4 h-4 border-2 border-primary  border-t-transparent rounded-full animate-spin" />
                       <span className="font-medium text-sm animate-pulse">{researchStatus}</span>
                     </div>
                   ) : (
                     <div className="flex items-center gap-3">
                       <div className="flex gap-1 h-4 items-center">
-                        <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-                        <div className="w-2 h-2 bg-purple-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-                        <div className="w-2 h-2 bg-pink-500 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                        <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                        <div className="w-2 h-2 bg-primary/70 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                        <div className="w-2 h-2 bg-primary/40 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
                       </div>
-                      <span className="text-sm font-medium text-gray-500  animate-pulse">Đang suy nghĩ...</span>
+                      <span className="text-sm font-medium text-slate-400 animate-pulse">Đang suy nghĩ...</span>
                     </div>
                   )}
                 </div>
@@ -212,10 +243,10 @@ const MessageList: React.FC<MessageListProps> = ({
 const SuggestionCard: React.FC<{ onClick: () => void; text: string; icon?: string }> = ({ onClick, text, icon }) => (
   <button
     onClick={onClick}
-    className="p-4 bg-white  hover:bg-blue-50 :bg-blue-900/30 rounded-xl text-left transition-all duration-200 text-gray-700  font-medium border border-gray-100  hover:border-blue-200 :border-blue-700 shadow-sm hover:shadow-md flex items-center gap-3 group"
+    className="p-4 bg-white rounded-xl text-left transition-all duration-200 text-slate-700 font-medium border border-slate-200 hover:border-primary/50 hover:bg-orange-50/30 flex items-center gap-3 group active:scale-[0.98]"
   >
-    <span className="text-xl group-hover:scale-110 transition-transform duration-200">{icon}</span>
-    <span>{text}</span>
+    <span className="w-8 h-8 rounded-lg bg-orange-100 flex items-center justify-center text-lg group-hover:scale-110 transition-transform duration-200">{icon}</span>
+    <span className="text-sm">{text}</span>
   </button>
 );
 

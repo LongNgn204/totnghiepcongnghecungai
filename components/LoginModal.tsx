@@ -103,7 +103,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
                         <h2 className="text-2xl font-bold mb-2">
                             {mode === 'login' ? 'Đăng Nhập' : 'Đăng Ký'}
                         </h2>
-                        <p className="text-blue-100 text-sm">Ôn Thi THPT QG môn Công Nghệ</p>
+                        <p className="text-primary text-sm">Ôn Thi THPT QG môn Công Nghệ</p>
                     </div>
                 </div>
 
@@ -114,7 +114,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
                         <button
                             onClick={() => mode !== 'login' && switchMode()}
                             className={`flex-1 py-2 rounded-lg font-bold text-sm transition-all ${mode === 'login'
-                                ? 'bg-white text-blue-600 shadow-sm'
+                                ? 'bg-white text-primary shadow-sm'
                                 : 'text-gray-600 hover:text-gray-900'
                                 }`}
                         >
@@ -123,7 +123,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
                         <button
                             onClick={() => mode !== 'register' && switchMode()}
                             className={`flex-1 py-2 rounded-lg font-bold text-sm transition-all ${mode === 'register'
-                                ? 'bg-white text-blue-600 shadow-sm'
+                                ? 'bg-white text-primary shadow-sm'
                                 : 'text-gray-600 hover:text-gray-900'
                                 }`}
                         >
@@ -160,7 +160,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
                                         type="text"
                                         value={formData.displayName}
                                         onChange={(e) => setFormData({ ...formData, displayName: e.target.value })}
-                                        className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50"
+                                        className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent bg-gray-50"
                                         placeholder="Nguyễn Văn A"
                                         required={mode === 'register'}
                                     />
@@ -179,7 +179,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
                                     type="email"
                                     value={formData.email}
                                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50"
+                                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent bg-gray-50"
                                     placeholder="student@example.com"
                                     required
                                 />
@@ -197,7 +197,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
                                     type="password"
                                     value={formData.password}
                                     onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50"
+                                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent bg-gray-50"
                                     placeholder="••••••••"
                                     required
                                     minLength={6}
@@ -220,7 +220,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
                                         type="password"
                                         value={formData.confirmPassword}
                                         onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
-                                        className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50"
+                                        className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent bg-gray-50"
                                         placeholder="••••••••"
                                         required={mode === 'register'}
                                     />
@@ -235,7 +235,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
                                     type="checkbox"
                                     id="rememberMe"
                                     defaultChecked={true}
-                                    className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
+                                    className="w-4 h-4 text-primary bg-gray-100 border-gray-300 rounded focus:ring-primary focus:ring-2"
                                 />
                                 <label htmlFor="rememberMe" className="text-sm text-gray-700 cursor-pointer select-none">
                                     Giữ đăng nhập (30 ngày)
@@ -269,7 +269,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
                             {mode === 'login' ? 'Chưa có tài khoản?' : 'Đã có tài khoản?'}{' '}
                             <button
                                 onClick={switchMode}
-                                className="text-blue-600 font-bold hover:text-blue-700 hover:underline"
+                                className="text-primary font-bold hover:text-primary hover:underline"
                             >
                                 {mode === 'login' ? 'Đăng ký ngay' : 'Đăng nhập'}
                             </button>

@@ -35,7 +35,7 @@ const ChatSidebar: React.FC = () => {
         className={`
           fixed md:static inset-y-0 left-0 z-50
           w-[280px] h-full
-          glass-panel  border-r border-white/50 
+          bg-white border-r border-slate-100
           flex flex-col
           transition-transform duration-300 ease-in-out
           ${sidebarOpen ? 'translate-x-0' : '-translate-x-full md:w-0 md:translate-x-0 md:overflow-hidden'}
@@ -45,14 +45,14 @@ const ChatSidebar: React.FC = () => {
         <div className="p-4 md:p-6 pb-2">
           <div className="flex items-center justify-between mb-6">
             <Link to="/dashboard" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
-              <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-bold shadow-lg shadow-blue-500/30">
+              <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-primary to-primary-hover flex items-center justify-center text-white font-bold shadow-md shadow-orange-200">
                 OT
               </div>
-              <span className="font-bold text-lg text-gradient">Ôn Thi THPT</span>
+              <span className="font-bold text-lg text-slate-800">Ôn Thi THPT</span>
             </Link>
             <button
               onClick={() => setSidebarOpen(false)}
-              className="md:hidden p-2 hover:bg-black/5 :bg-white/10 rounded-full text-gray-500 "
+              className="md:hidden p-2 hover:bg-slate-100 rounded-full text-slate-500"
             >
               <X size={20} />
             </button>
@@ -61,30 +61,29 @@ const ChatSidebar: React.FC = () => {
           {/* New Chat Button */}
           <button
             onClick={startNewChat}
-            className="w-full group relative overflow-hidden bg-white  hover:bg-blue-50 :bg-slate-700 text-blue-600  border border-blue-100  hover:border-blue-200 p-3.5 rounded-2xl transition-all duration-300 shadow-sm hover:shadow-md flex items-center justify-center gap-2 mb-6"
+            className="w-full group relative overflow-hidden bg-primary text-white p-3.5 rounded-xl transition-all duration-200 shadow-md shadow-orange-100 hover:shadow-lg hover:bg-primary-hover flex items-center justify-center gap-2 mb-6"
           >
-            <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity" />
             <Plus size={20} className="stroke-[2.5]" />
             <span className="font-semibold">Cuộc trò chuyện mới</span>
           </button>
 
           {/* Search */}
           <div className="relative group">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-blue-500 transition-colors" size={16} />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors" size={16} />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Tìm kiếm lịch sử..."
-              className="w-full bg-gray-50/50  hover:bg-white :bg-slate-800 focus:bg-white :bg-slate-800 border border-transparent focus:border-blue-200 :border-blue-800 rounded-xl py-2.5 pl-10 pr-4 text-sm outline-none transition-all placeholder:text-gray-400 "
+              className="w-full bg-slate-50 hover:bg-white focus:bg-white border border-transparent focus:border-primary rounded-xl py-2.5 pl-10 pr-4 text-sm outline-none transition-all placeholder:text-slate-400 text-slate-700"
             />
           </div>
         </div>
 
         {/* Chat List */}
-        <div className="flex-1 overflow-y-auto px-3 py-2 space-y-6 scrollbar-thin scrollbar-thumb-gray-200  hover:scrollbar-thumb-gray-300 :scrollbar-thumb-slate-700">
+        <div className="flex-1 overflow-y-auto px-3 py-2 space-y-6 scrollbar-thin scrollbar-thumb-slate-200 hover:scrollbar-thumb-slate-300">
           {chatHistory.length === 0 && !searchQuery && (
-            <div className="flex flex-col items-center justify-center h-40 text-gray-400 text-sm">
+            <div className="flex flex-col items-center justify-center h-40 text-slate-400 text-sm">
               <MessageSquare size={32} className="mb-2 opacity-20" />
               <p>Chưa có cuộc trò chuyện nào</p>
             </div>
@@ -92,7 +91,7 @@ const ChatSidebar: React.FC = () => {
 
           {Object.entries(groupedChats).map(([key, sessions]) => sessions.length > 0 && (
             <div key={key}>
-              <h3 className="text-[11px] font-bold text-gray-400 uppercase tracking-wider px-4 mb-2">
+              <h3 className="text-[11px] font-bold text-slate-400 uppercase tracking-wider px-4 mb-2">
                 {key === 'today' ? 'Hôm nay' : key === 'yesterday' ? 'Hôm qua' : '7 ngày qua'}
               </h3>
               <div className="space-y-1">
@@ -103,12 +102,12 @@ const ChatSidebar: React.FC = () => {
                     className={`
                       group relative flex items-center gap-3 px-3.5 py-3 rounded-xl cursor-pointer transition-all duration-200
                       ${currentSession?.id === session.id
-                        ? 'bg-blue-100/50  text-blue-700  font-medium shadow-sm'
-                        : 'text-gray-600  hover:bg-blue-50/50 :bg-slate-800/50 hover:text-gray-900 :text-gray-200'
+                        ? 'bg-orange-50 text-primary font-medium shadow-sm border border-orange-100'
+                        : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
                       }
                     `}
                   >
-                    <MessageSquare size={16} className={`flex-shrink-0 ${currentSession?.id === session.id ? 'text-blue-500' : 'text-gray-400 group-hover:text-blue-400'}`} />
+                    <MessageSquare size={16} className={`flex-shrink-0 ${currentSession?.id === session.id ? 'text-primary' : 'text-slate-400 group-hover:text-primary'}`} />
                     <span className="truncate text-sm flex-1">{session.title}</span>
 
                     {/* Delete Action */}
@@ -117,7 +116,7 @@ const ChatSidebar: React.FC = () => {
                         e.stopPropagation();
                         if (confirm('Xóa cuộc trò chuyện này?')) deleteChat(session.id);
                       }}
-                      className="opacity-0 group-hover:opacity-100 p-1.5 hover:bg-red-50 :bg-red-900/20 text-gray-400 hover:text-red-500 :text-red-400 rounded-lg transition-all"
+                      className="opacity-0 group-hover:opacity-100 p-1.5 hover:bg-red-50 text-slate-400 hover:text-red-500 rounded-lg transition-all"
                     >
                       <Trash2 size={14} />
                     </button>
@@ -129,9 +128,9 @@ const ChatSidebar: React.FC = () => {
         </div>
 
         {/* Footer: User Profile */}
-        <div className="p-4 border-t border-white/50  bg-white/30  backdrop-blur-sm">
-          <Link to="/profile" className="flex items-center gap-3 p-2 rounded-xl hover:bg-white/50 :bg-white/10 transition-colors cursor-pointer group">
-            <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-purple-500 to-pink-500 flex items-center justify-center text-white shadow-md">
+        <div className="p-4 border-t border-slate-100 bg-white">
+          <Link to="/profile" className="flex items-center gap-3 p-2 rounded-xl hover:bg-slate-50 transition-colors cursor-pointer group">
+            <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-primary to-primary-hover flex items-center justify-center text-white shadow-sm">
               {user?.avatar ? (
                 <img src={user.avatar} alt="Avatar" className="w-full h-full rounded-full object-cover" />
               ) : (
@@ -139,12 +138,12 @@ const ChatSidebar: React.FC = () => {
               )}
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-semibold text-gray-700  group-hover:text-gray-900 :text-white truncate">
+              <p className="text-sm font-semibold text-slate-700 group-hover:text-slate-900 truncate">
                 {user?.displayName || 'Học Sinh'}
               </p>
-              <p className="text-xs text-gray-500  truncate">{user?.email || 'Học viên THPT'}</p>
+              <p className="text-xs text-slate-500 truncate">{user?.email || 'Học viên THPT'}</p>
             </div>
-            <Settings size={18} className="text-gray-400 group-hover:text-gray-600 transition-colors" />
+            <Settings size={18} className="text-slate-400 group-hover:text-slate-600 transition-colors" />
           </Link>
         </div>
       </div>

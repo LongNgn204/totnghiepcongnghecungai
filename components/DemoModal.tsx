@@ -43,7 +43,7 @@ const DemoModal: React.FC<DemoModalProps> = ({ isOpen, onClose }) => {
                             Trải nghiệm Hệ thống Ôn thi Công nghệ 4.0
                         </h2>
 
-                        <p className="text-blue-100 text-lg">
+                        <p className="text-primary text-lg">
                             Đăng ký ngay để nhận bản Demo miễn phí và tư vấn triển khai cho nhà trường.
                         </p>
 
@@ -96,7 +96,7 @@ const DemoModal: React.FC<DemoModalProps> = ({ isOpen, onClose }) => {
                                     <input
                                         type="text"
                                         required
-                                        className="w-full px-4 py-3 rounded-xl border border-gray-200  focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all bg-gray-50  focus:bg-white :bg-slate-900 "
+                                        className="w-full px-4 py-3 rounded-xl border border-gray-200  focus:border-primary focus:ring-2 focus:ring-primary outline-none transition-all bg-gray-50  focus:bg-white :bg-slate-900 "
                                         placeholder="Nguyễn Văn A"
                                     />
                                 </div>
@@ -106,7 +106,7 @@ const DemoModal: React.FC<DemoModalProps> = ({ isOpen, onClose }) => {
                                     <input
                                         type="text"
                                         required
-                                        className="w-full px-4 py-3 rounded-xl border border-gray-200  focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all bg-gray-50  focus:bg-white :bg-slate-900 "
+                                        className="w-full px-4 py-3 rounded-xl border border-gray-200  focus:border-primary focus:ring-2 focus:ring-primary outline-none transition-all bg-gray-50  focus:bg-white :bg-slate-900 "
                                         placeholder="email@example.com hoặc 0912..."
                                     />
                                 </div>
@@ -115,14 +115,14 @@ const DemoModal: React.FC<DemoModalProps> = ({ isOpen, onClose }) => {
                                     <label className="text-sm font-medium text-gray-700 ">Đơn vị công tác (Trường/Tổ chức)</label>
                                     <input
                                         type="text"
-                                        className="w-full px-4 py-3 rounded-xl border border-gray-200  focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all bg-gray-50  focus:bg-white :bg-slate-900 "
+                                        className="w-full px-4 py-3 rounded-xl border border-gray-200  focus:border-primary focus:ring-2 focus:ring-primary outline-none transition-all bg-gray-50  focus:bg-white :bg-slate-900 "
                                         placeholder="THPT..."
                                     />
                                 </div>
 
                                 <button
                                     type="submit"
-                                    className="w-full py-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-lg shadow-blue-200 transition-all transform hover:-translate-y-0.5 flex items-center justify-center gap-2"
+                                    className="w-full py-4 bg-primary hover:bg-primary-hover text-white font-bold rounded-xl shadow-lg shadow-blue-200 transition-all transform hover:-translate-y-0.5 flex items-center justify-center gap-2"
                                 >
                                     <span>Gửi Đăng Ký Ngay</span>
                                     <Send size={18} />

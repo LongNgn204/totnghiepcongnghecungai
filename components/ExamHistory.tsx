@@ -127,7 +127,7 @@ const ExamHistory: React.FC = () => {
             <History className="w-8 h-8" />
             Lịch Sử Đề Thi
           </h2>
-          <p className="text-center text-blue-100 text-lg">
+          <p className="text-center text-primary text-lg">
             Xem lại các đề thi đã làm và theo dõi tiến độ học tập
           </p>
         </div>
@@ -137,7 +137,7 @@ const ExamHistory: React.FC = () => {
       {stats && stats.totalExams > 0 && (
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
           <div className="bg-white  p-6 rounded-2xl shadow-sm border border-gray-200  text-center hover:shadow-md transition-all">
-            <FileText className="w-8 h-8 text-blue-500 mx-auto mb-2" />
+            <FileText className="w-8 h-8 text-primary mx-auto mb-2" />
             <div className="text-2xl font-bold text-gray-900 ">{stats.totalExams}</div>
             <div className="text-sm text-gray-500  font-medium">Đề đã làm</div>
           </div>
@@ -152,7 +152,7 @@ const ExamHistory: React.FC = () => {
             <div className="text-sm text-gray-500  font-medium">Cao nhất</div>
           </div>
           <div className="bg-white  p-6 rounded-2xl shadow-sm border border-gray-200  text-center hover:shadow-md transition-all">
-            <Clock className="w-8 h-8 text-purple-500 mx-auto mb-2" />
+            <Clock className="w-8 h-8 text-primary mx-auto mb-2" />
             <div className="text-2xl font-bold text-gray-900 ">{stats.totalTimeSpent}</div>
             <div className="text-sm text-gray-500  font-medium">Phút học</div>
           </div>
@@ -176,7 +176,7 @@ const ExamHistory: React.FC = () => {
             <button
               onClick={() => setFilter('all')}
               className={`px-4 py-2 rounded-xl font-bold transition-all flex items-center gap-2 ${filter === 'all'
-                ? 'bg-blue-600 text-white shadow-md'
+                ? 'bg-primary text-white shadow-md'
                 : 'bg-gray-100  text-gray-600  hover:bg-gray-200 :bg-slate-700'
                 }`}
             >
@@ -209,7 +209,7 @@ const ExamHistory: React.FC = () => {
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as 'date' | 'score')}
-              className="px-4 py-2 border border-gray-300  rounded-xl bg-white  text-gray-700  font-medium focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="px-4 py-2 border border-gray-300  rounded-xl bg-white  text-gray-700  font-medium focus:ring-2 focus:ring-primary focus:border-transparent"
             >
               <option value="date">Sắp xếp: Mới nhất</option>
               <option value="score">Sắp xếp: Điểm cao nhất</option>
@@ -329,7 +329,7 @@ const ExamHistory: React.FC = () => {
                 <div className="flex gap-2">
                   <Link
                     to={`/xem-lai/${exam.id}`}
-                    className="px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-all flex items-center gap-2 font-bold shadow-md"
+                    className="px-4 py-2 bg-primary text-white rounded-xl hover:bg-primary-hover transition-all flex items-center gap-2 font-bold shadow-md"
                     title="Xem lại đề thi"
                   >
                     <Eye className="w-4 h-4" />

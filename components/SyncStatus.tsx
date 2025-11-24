@@ -84,7 +84,7 @@ const SyncStatus: React.FC = () => {
             <span className="text-xs font-medium text-gray-500">Đã tắt đồng bộ</span>
             <button
               onClick={handleToggle}
-              className="text-blue-600 hover:text-blue-700 text-xs font-bold hover:underline"
+              className="text-primary hover:text-primary text-xs font-bold hover:underline"
             >
               Bật lại
             </button>
@@ -97,14 +97,14 @@ const SyncStatus: React.FC = () => {
   return (
     <div className="fixed bottom-4 right-4 z-50 group">
       <div className={`bg-white/90 backdrop-blur-xl rounded-full shadow-xl border transition-all duration-300 p-1.5 flex items-center gap-3 ${
-        syncing ? 'border-blue-200 pr-4 shadow-blue-500/20' :
+        syncing ? 'border-primary pr-4 shadow-blue-500/20' :
         !online ? 'border-amber-200 pr-4 shadow-amber-500/20' :
         'border-gray-100 hover:pr-4 hover:shadow-lg'
       }`}>
         
         {/* Icon Indicator */}
         <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 ${
-          syncing ? 'bg-blue-50 text-blue-600 rotate-180' :
+          syncing ? 'bg-orange-50 text-primary rotate-180' :
           !online ? 'bg-amber-50 text-amber-500' :
           'bg-green-50 text-green-600'
         }`}>
@@ -123,7 +123,7 @@ const SyncStatus: React.FC = () => {
         }`}>
           <div className="flex flex-col whitespace-nowrap">
             <span className={`text-xs font-bold ${
-              syncing ? 'text-blue-600' :
+              syncing ? 'text-primary' :
               !online ? 'text-amber-600' :
               'text-gray-700'
             }`}>
@@ -144,7 +144,7 @@ const SyncStatus: React.FC = () => {
               className={`p-1.5 rounded-lg transition-all ${
                 syncing || !online
                   ? 'text-gray-300 cursor-not-allowed'
-                  : 'text-gray-400 hover:text-blue-600 hover:bg-blue-50'
+                  : 'text-gray-400 hover:text-primary hover:bg-orange-50'
               }`}
               title="Đồng bộ ngay"
             >
