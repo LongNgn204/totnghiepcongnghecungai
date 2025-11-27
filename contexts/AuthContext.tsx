@@ -52,7 +52,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       if (storedToken) {
         try {
-          const response = await fetch(`${API_URL}/api/auth/me`, {
+          const response = await fetch(`${API_URL}/api/users/me`, {
             headers: {
               Authorization: `Bearer ${storedToken}`,
               'Content-Type': 'application/json',
@@ -93,7 +93,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   const register = async (username: string, email: string, password: string, displayName: string) => {
-    const response = await fetch(`${API_URL}/api/auth/register`, {
+    const response = await fetch(`${API_URL}/api/users/register`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username, email, password, displayName }),
@@ -120,7 +120,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const login = async (identifier: string, password: string) => {
     const isEmail = identifier.includes('@');
     const payload = isEmail ? { email: identifier, password } : { username: identifier, password };
-    const response = await fetch(`${API_URL}/api/auth/login`, {
+    const response = await fetch(`${API_URL}/api/users/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
@@ -146,7 +146,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const logout = () => {
     if (token) {
-      fetch(`${API_URL}/api/auth/logout`, {
+      fetch(`${API_URL}/api/users/logout`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -166,7 +166,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const updateProfile = async (data: Partial<User>) => {
     if (!token) throw new Error('Not authenticated');
-    const response = await fetch(`${API_URL}/api/auth/profile`, {
+    const response = await fetch(`${API_URL}/api/users/profile`, {
       method: 'PUT',
       headers: {
         Authorization: `Bearer ${token}`,

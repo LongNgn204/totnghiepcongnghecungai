@@ -14,12 +14,15 @@ import {
   BookOpen,
   Save,
   X,
-  Shield
+  Shield,
+  Quote,
+  Clock,
+  Plus
 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { api } from '../utils/apiClient';
 import { toast } from 'react-hot-toast';
-import TechBadge from './TechBadge';
+
 
 const Profile: React.FC = () => {
   const { user, updateProfile } = useAuth();
@@ -40,6 +43,57 @@ const Profile: React.FC = () => {
     school: 'THPT Chuyên KHTN',
     dob: '01/01/2008'
   });
+
+  const formatTime = (seconds: number): string => {
+    const hours = Math.floor(seconds / 3600);
+    return hours > 0 ? `${hours}h` : `${Math.floor(seconds / 60)}m`;
+  };
+
+  const statCards = [
+    {
+      label: 'Dự án',
+      value: stats.examsCompleted,
+      icon: BookOpen,
+      chip: 'Hoàn thành',
+      bg: 'from-accent-blue-50 dark:from-accent-blue-900/50 to-surface',
+      iconColor: 'text-accent-blue-500'
+    },
+    {
+      label: 'XP',
+      value: '1.2k',
+      icon: Zap,
+      chip: 'Tăng 12%',
+      bg: 'from-accent-purple-50 dark:from-accent-purple-900/50 to-surface',
+      iconColor: 'text-accent-purple-500'
+    },
+    {
+      label: 'Chứng chỉ',
+      value: stats.flashcardsLearned,
+      icon: Shield,
+      chip: 'STEM',
+      bg: 'from-accent-green-50 dark:from-accent-green-900/50 to-surface',
+      iconColor: 'text-accent-green-500'
+    },
+    {
+      label: 'Giờ học',
+      value: formatTime(stats.studyTime),
+      icon: Clock,
+      chip: 'Tuần này',
+      bg: 'from-primary-50 dark:from-primary-900/50 to-surface',
+      iconColor: 'text-primary-500'
+    }
+  ];
+
+  const infoFields = [
+    { key: 'name', label: 'Họ và tên', icon: User, placeholder: 'Nhập họ và tên...' },
+    { key: 'email', label: 'Email', icon: Mail, placeholder: 'Nhập email...' },
+    { key: 'phone', label: 'Số điện thoại', icon: Phone, placeholder: 'Nhập số điện thoại...' },
+    { key: 'address', label: 'Địa chỉ', icon: MapPin, placeholder: 'Nhập địa chỉ...' },
+    { key: 'dob', label: 'Ngày sinh', icon: Calendar, placeholder: 'DD/MM/YYYY' },
+    { key: 'school', label: 'Trường học', icon: Shield, placeholder: 'Nhập tên trường...' }
+  ] as const;
+
+  const interestTags = ['Lập trình Web', 'Trí tuệ nhân tạo', 'Robotics', 'IoT', 'Thiết kế 3D', 'Blockchain', 'Game Dev'];
 
   useEffect(() => {
     const fetchStats = async () => {
@@ -73,204 +127,209 @@ const Profile: React.FC = () => {
     }
   };
 
-  const formatTime = (seconds: number): string => {
-    const hours = Math.floor(seconds / 3600);
-    return hours > 0 ? `${hours}h` : `${Math.floor(seconds / 60)}m`;
-  };
-
   return (
-    <div className="p-6 md:p-8 max-w-5xl mx-auto animate-fade-in space-y-8">
-      {/* Header Section */}
-      <div className="relative">
-        {/* Cover Image */}
-        <div className="h-48 w-full rounded-2xl bg-gradient-to-r from-primary to-primary-hover relative overflow-hidden">
-          <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&q=80')] bg-cover bg-center opacity-30 mix-blend-overlay" />
-          <div className="absolute inset-0 bg-gradient-to-t from-stem-bg to-transparent" />
-        </div>
-
-        {/* Profile Info */}
-        <div className="px-6 relative -mt-16 flex flex-col md:flex-row items-end md:items-center gap-6">
-          <div className="relative group">
-            <div className="w-32 h-32 rounded-2xl bg-surface border-4 border-stem-bg shadow-xl overflow-hidden relative">
-              {user?.photoURL ? (
-                <img src={user.photoURL} alt="Profile" className="w-full h-full object-cover" />
-              ) : (
-                <div className="w-full h-full flex items-center justify-center bg-surface text-slate-500">
-                  <User size={48} />
+    <div className="min-h-screen bg-background">
+      <div className="p-6 md:p-8 max-w-6xl mx-auto space-y-8 animate-fade-in">
+        {/* Hero */}
+        <div className="relative overflow-hidden rounded-3xl gradient-primary text-white shadow-lg shadow-primary-500/20">
+          <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80')] bg-cover bg-center opacity-20 mix-blend-lighten" />
+          <div className="relative px-8 py-10 flex flex-col lg:flex-row gap-8 lg:items-center">
+            <div className="flex items-center gap-6 flex-1">
+              <div className="relative">
+                <div className="w-32 h-32 rounded-2xl bg-surface/10 border border-white/20 backdrop-blur-xl shadow-2xl flex items-center justify-center overflow-hidden">
+                  {user?.avatar ? (
+                    <img src={user.avatar} alt="Profile" className="w-full h-full object-cover" />
+                  ) : (
+                    <User size={56} className="text-white/70" />
+                  )}
                 </div>
-              )}
-              <button className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
-                <Camera className="text-white" size={24} />
+                <button className="absolute -bottom-2 -right-2 bg-surface text-primary rounded-full p-2 shadow-lg hover:scale-105 transition">
+                  <Camera size={18} />
+                </button>
+              </div>
+              <div className="space-y-3">
+                <div className="flex flex-wrap items-center gap-3">
+                  <h1 className="text-3xl md:text-4xl font-black tracking-tight drop-shadow-sm">{formData.name}</h1>
+                  <span className="px-3 py-1 rounded-full bg-surface/15 border border-white/30 text-sm font-semibold flex items-center gap-1">
+                    <Trophy size={14} />
+                    LV.5
+                  </span>
+                </div>
+                <p className="text-white/80 text-base flex flex-wrap items-center gap-3">
+                  <span className="flex items-center gap-2">
+                    <Code2 size={18} />
+                    Nhà phát triển tương lai
+                  </span>
+                  <span className="h-1 w-1 rounded-full bg-surface/60" />
+                  <span className="flex items-center gap-2">
+                    <Calendar size={16} />
+                    Tham gia T9/2024
+                  </span>
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {['Chinh phục STEM', 'Nhà vô địch tỉnh', 'Top 5 Leaderboard'].map((badge) => (
+                    <span key={badge} className="px-3 py-1 text-xs font-semibold rounded-full bg-surface/10 border border-white/20">
+                      {badge}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+            {!isEditing && (
+              <button
+                onClick={() => setIsEditing(true)}
+                className="self-start lg:self-auto px-6 py-3 bg-surface text-primary font-semibold rounded-2xl shadow-lg hover:shadow-xl transition flex items-center gap-2"
+              >
+                <Edit2 size={18} />
+                Chỉnh sửa hồ sơ
               </button>
-            </div>
-            <div className="absolute -bottom-2 -right-2 bg-primary text-white p-1.5 rounded-lg border-4 border-stem-bg shadow-lg">
-              <Zap size={16} fill="currentColor" />
-            </div>
-          </div>
-
-          <div className="flex-1 mb-2">
-            <h1 className="text-3xl font-bold text-white flex items-center gap-2">
-              {formData.name}
-              <span className="px-2 py-0.5 bg-yellow-500/20 text-yellow-400 text-xs rounded border border-yellow-500/30 font-mono">LV.5</span>
-            </h1>
-            <p className="text-slate-400 flex items-center gap-2 mt-1">
-              <Code2 size={16} className="text-primary" />
-              Nhà Phát Triển Tương Lai
-            </p>
-          </div>
-
-          {!isEditing && (
-            <button onClick={() => setIsEditing(true)} className="btn-primary mb-4">
-              <Edit2 size={16} />
-              Chỉnh Sửa Hồ Sơ
-            </button>
-          )}
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        {/* Left Column: Stats & Badge */}
-        <div className="space-y-6">
-          {/* Tech Badge */}
-          <TechBadge />
-
-          {/* Stats Card */}
-          <div className="bg-surface border border-surface-highlight rounded-xl p-6">
-            <h3 className="font-bold text-white mb-4 flex items-center gap-2">
-              <Trophy className="text-yellow-400" size={20} />
-              Thành Tích
-            </h3>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="bg-background p-3 rounded-lg border border-surface-highlight text-center">
-                <div className="text-2xl font-bold text-white">{stats.examsCompleted}</div>
-                <div className="text-xs text-slate-500 uppercase font-bold">Dự Án</div>
-              </div>
-              <div className="bg-background p-3 rounded-lg border border-surface-highlight text-center">
-                <div className="text-2xl font-bold text-primary">1.2k</div>
-                <div className="text-xs text-slate-500 uppercase font-bold">Điểm XP</div>
-              </div>
-              <div className="bg-background p-3 rounded-lg border border-surface-highlight text-center">
-                <div className="text-2xl font-bold text-emerald-400">{stats.flashcardsLearned}</div>
-                <div className="text-xs text-slate-500 uppercase font-bold">Chứng Chỉ</div>
-              </div>
-              <div className="bg-background p-3 rounded-lg border border-surface-highlight text-center">
-                <div className="text-2xl font-bold text-primary">{formatTime(stats.studyTime)}</div>
-                <div className="text-xs text-slate-500 uppercase font-bold">Giờ Học</div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Right Column: Personal Info */}
-        <div className="md:col-span-2 space-y-6">
-          <div className="bg-surface border border-surface-highlight rounded-xl p-6">
-            <h3 className="font-bold text-white mb-6 flex items-center gap-2">
-              <User className="text-primary" size={20} />
-              Thông Tin Cá Nhân
-            </h3>
-
-            {isEditing ? (
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-bold text-slate-400 mb-1">Họ và Tên</label>
-                  <input
-                    type="text"
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    className="input-stem"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-bold text-slate-400 mb-1">Giới thiệu</label>
-                  <textarea
-                    value={formData.bio}
-                    onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
-                    className="input-stem min-h-[100px]"
-                  />
-                </div>
-                <div className="flex gap-3 pt-4 border-t border-surface-highlight">
-                  <button onClick={handleSave} className="btn-primary flex-1 justify-center">
-                    <Save size={18} /> Lưu Thay Đổi
-                  </button>
-                  <button onClick={() => setIsEditing(false)} className="btn-secondary flex-1 justify-center">
-                    <X size={18} /> Hủy Bỏ
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <label className="text-xs font-bold text-slate-500 uppercase">Họ và Tên</label>
-                  <div className="input-stem flex items-center gap-3">
-                    <User size={18} className="text-slate-500" />
-                    <span>{formData.name}</span>
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <label className="text-xs font-bold text-slate-500 uppercase">Email</label>
-                  <div className="input-stem flex items-center gap-3">
-                    <Mail size={18} className="text-slate-500" />
-                    <span>{formData.email}</span>
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <label className="text-xs font-bold text-slate-500 uppercase">Số Điện Thoại</label>
-                  <div className="input-stem flex items-center gap-3">
-                    <Phone size={18} className="text-slate-500" />
-                    <span>{formData.phone}</span>
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <label className="text-xs font-bold text-slate-500 uppercase">Địa Chỉ</label>
-                  <div className="input-stem flex items-center gap-3">
-                    <MapPin size={18} className="text-slate-500" />
-                    <span>{formData.address}</span>
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <label className="text-xs font-bold text-slate-500 uppercase">Ngày Sinh</label>
-                  <div className="input-stem flex items-center gap-3">
-                    <Calendar size={18} className="text-slate-500" />
-                    <span>{formData.dob}</span>
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <label className="text-xs font-bold text-slate-500 uppercase">Trường Học</label>
-                  <div className="input-stem flex items-center gap-3">
-                    <Shield size={18} className="text-slate-500" />
-                    <span>{formData.school}</span>
-                  </div>
-                </div>
-
-                <div className="col-span-full space-y-2">
-                  <label className="text-xs font-bold text-slate-500 uppercase">Giới thiệu</label>
-                  <div className="p-4 bg-background rounded-lg border border-surface-highlight text-slate-300 italic">
-                    "{formData.bio}"
-                  </div>
-                </div>
-              </div>
             )}
           </div>
+        </div>
 
-          <div className="bg-surface border border-surface-highlight rounded-xl p-6">
-            <h3 className="font-bold text-white mb-4 flex items-center gap-2">
-              <Cpu className="text-primary" size={20} />
-              Sở Thích Công Nghệ
-            </h3>
-            <div className="flex flex-wrap gap-2">
-              {['Lập trình Web', 'Trí tuệ nhân tạo', 'Robotics', 'IoT', 'Thiết kế 3D'].map((tag) => (
-                <span key={tag} className="px-3 py-1 bg-background border border-surface-highlight rounded-full text-sm text-slate-300 hover:border-primary hover:text-primary transition-colors cursor-default">
-                  {tag}
-                </span>
-              ))}
-              <button className="px-3 py-1 border border-dashed border-slate-600 rounded-full text-sm text-slate-500 hover:text-white hover:border-white transition-colors">
-                + Thêm sở thích
-              </button>
+        {/* Stats + Body */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="space-y-6">
+            <div className="rounded-3xl bg-surface shadow-md border border-border p-6">
+              <h3 className="text-slate-800 font-bold text-lg flex items-center gap-2 mb-6">
+                <Trophy className="text-accent-yellow-500" size={22} />
+                Thành tích học tập
+              </h3>
+              <div className="grid grid-cols-2 gap-4">
+                {statCards.map((stat) => (
+                  <div
+                    key={stat.label}
+                    className={`rounded-2xl border border-slate-100 bg-gradient-to-br ${stat.bg} p-4 shadow-sm hover:shadow-md transition`}
+                  >
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="text-xs font-semibold uppercase tracking-wide text-slate-500">{stat.label}</span>
+                      <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-surface/60 text-slate-600">{stat.chip}</span>
+                    </div>
+                    <div className="flex items-end justify-between">
+                      <p className="text-3xl font-black text-slate-900">{stat.value}</p>
+                      <stat.icon size={28} className={`${stat.iconColor}`} />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="rounded-3xl bg-surface border border-slate-100 shadow-[0_20px_45px_rgba(15,23,42,0.06)] p-6">
+              <h3 className="text-slate-800 font-bold text-lg flex items-center gap-3 mb-4">
+                <Cpu className="text-accent-purple-500" size={22} />
+                Sở thích công nghệ
+              </h3>
+              <div className="flex flex-wrap gap-3">
+                {interestTags.map((tag, idx) => (
+                  <span
+                    key={tag}
+                    className={`px-4 py-2 rounded-2xl text-sm font-semibold border transition ${
+                      idx % 2 === 0
+                        ? 'bg-blue-50 text-blue-600 border-blue-100 hover:bg-blue-100'
+                        : 'bg-purple-50 text-purple-600 border-purple-100 hover:bg-purple-100'
+                    }`}
+                  >
+                    {tag}
+                  </span>
+                ))}
+                <button className="px-4 py-2 rounded-2xl border border-dashed border-slate-300 text-sm font-semibold text-slate-500 hover:border-primary hover:text-primary transition flex items-center gap-2">
+                  <Plus size={16} />
+                  Thêm sở thích
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div className="lg:col-span-2 space-y-6">
+            <div className="rounded-3xl bg-surface shadow-md border border-border p-6">
+              <h3 className="text-slate-900 font-bold text-lg flex items-center gap-2 mb-6">
+                <User className="text-primary" size={20} />
+                Thông tin cá nhân
+              </h3>
+
+              {isEditing ? (
+                <div className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {infoFields.map((field) => {
+                      const Icon = field.icon;
+                      const inputType = field.key === 'email' ? 'email' : 'text';
+                      return (
+                        <div key={field.key} className="space-y-2">
+                          <label className="text-xs font-bold text-slate-500 uppercase tracking-wide flex items-center gap-2">
+                            <Icon size={14} /> {field.label}
+                          </label>
+                          <div className="relative">
+                            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
+                              <Icon size={18} />
+                            </div>
+                            <input
+                              type={inputType}
+                              value={formData[field.key]}
+                              onChange={(e) => setFormData({ ...formData, [field.key]: e.target.value })}
+                              className="w-full pl-12 pr-4 py-3 rounded-2xl border border-slate-200 bg-slate-50 text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/40 transition"
+                              placeholder={field.placeholder}
+                            />
+                          </div>
+                        </div>
+                      );
+                    })}
+
+                    <div className="col-span-full space-y-2">
+                      <label className="text-xs font-bold text-slate-500 uppercase tracking-wide flex items-center gap-2">
+                        <Quote size={14} /> Giới thiệu
+                      </label>
+                      <textarea
+                        value={formData.bio}
+                        onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
+                        className="w-full rounded-2xl border border-slate-200 bg-slate-50 text-slate-800 placeholder-slate-400 p-4 min-h-[140px] focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/40 transition resize-none"
+                        placeholder="Viết đôi dòng giới thiệu về bản thân..."
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col md:flex-row gap-4 pt-4 border-t border-slate-100">
+                    <button
+                      onClick={handleSave}
+                      className="flex-1 py-3 rounded-2xl bg-gradient-to-r from-primary to-primary-hover text-white font-semibold shadow-lg shadow-primary/20 hover:shadow-primary/40 transition flex items-center justify-center gap-2"
+                    >
+                      <Save size={20} /> Lưu thay đổi
+                    </button>
+                    <button
+                      onClick={() => setIsEditing(false)}
+                      className="flex-1 py-3 rounded-2xl border border-border text-text-secondary hover:border-neutral-300 hover:text-text-primary transition flex items-center justify-center gap-2 bg-surface"
+                    >
+                      <X size={20} /> Hủy bỏ
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {infoFields.map((field) => {
+                    const Icon = field.icon;
+                    return (
+                      <div key={field.key} className="space-y-2">
+                        <label className="text-xs font-bold text-slate-500 uppercase tracking-wide flex items-center gap-2">
+                          <Icon size={14} /> {field.label}
+                        </label>
+                        <div className="rounded-2xl border border-slate-100 bg-slate-50 px-4 py-3 text-slate-900 font-semibold flex items-center gap-3">
+                          <Icon size={18} className="text-slate-400" />
+                          <span className="truncate">{formData[field.key]}</span>
+                        </div>
+                      </div>
+                    );
+                  })}
+
+                  <div className="col-span-full space-y-2">
+                    <label className="text-xs font-bold text-slate-500 uppercase tracking-wide flex items-center gap-2">
+                      <Code2 size={14} /> Giới thiệu
+                    </label>
+                    <div className="rounded-2xl border border-slate-100 bg-gradient-to-br from-white to-slate-50 p-6 relative overflow-hidden">
+                      <Quote size={60} className="absolute top-4 left-4 text-primary/10 rotate-180" />
+                      <p className="text-slate-600 italic relative z-10 pl-8">"{formData.bio}"</p>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>

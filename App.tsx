@@ -25,16 +25,17 @@ const SmartIDE = React.lazy(() => import('./components/SmartIDE'));
 const Flashcards = React.lazy(() => import('./components/Flashcards'));
 const ExamHistory = React.lazy(() => import('./components/ExamHistory'));
 const Profile = React.lazy(() => import('./components/Profile'));
+const Community = React.lazy(() => import('./components/Community'));
 const PWASettings = React.lazy(() => import('./components/PWASettings'));
 const PrivacyPolicy = React.lazy(() => import('./components/PrivacyPolicy'));
 const TermsOfService = React.lazy(() => import('./components/TermsOfService'));
 const NotFound = React.lazy(() => import('./components/NotFound'));
 
 const LoadingFallback = () => (
-  <div className="min-h-screen flex items-center justify-center bg-gray-50">
+  <div className="min-h-screen flex items-center justify-center bg-background">
     <div className="flex flex-col items-center gap-4 animate-fade-in">
       <Loader2 className="w-12 h-12 text-primary animate-spin" />
-      <p className="text-gray-500 font-medium">Đang tải dữ liệu...</p>
+      <p className="text-text-secondary font-medium">Đang tải dữ liệu...</p>
     </div>
   </div>
 );
@@ -54,8 +55,11 @@ const App: React.FC = () => {
       <Suspense fallback={<LoadingFallback />}>
         <Routes>
           {/* Landing Page (No Layout) */}
-          <Route path="/" element={<LandingPage onStart={() => navigate('/chat')} />} />
+          <Route path="/" element={<LandingPage onStart={() => navigate('/dashboard')} />} />
           <Route path="/login" element={<AuthPage />} />
+          <Route path="/forgot-password" element={<ErrorBoundary componentName="ForgotPassword">
+            {React.createElement(React.lazy(() => import('./components/auth/ForgotPassword')))}
+          </ErrorBoundary>} />
 
           {/* Chat Route (ChatLayout - Full Screen for bare chat) */}
           <Route path="/chat" element={
@@ -88,6 +92,7 @@ const App: React.FC = () => {
                 <Route path="/flashcards" element={<ProtectedRoute><Flashcards /></ProtectedRoute>} />
                 <Route path="/history" element={<ProtectedRoute><ExamHistory /></ProtectedRoute>} />
                 <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+                <Route path="/community" element={<ProtectedRoute><Community /></ProtectedRoute>} />
                 <Route path="/settings" element={<ProtectedRoute><PWASettings /></ProtectedRoute>} />
 
                 {/* Public Pages inside Layout */}

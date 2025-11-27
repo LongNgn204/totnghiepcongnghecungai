@@ -90,7 +90,7 @@ const CodeBlock: React.FC<CodeBlockProps> = ({ code, language = 'javascript' }) 
   const languageLabel = getLanguageLabel(detectedLang);
 
   return (
-    <div className="relative group my-6 rounded-xl overflow-hidden shadow-2xl border border-gray-800 bg-[#1E1E1E] ring-1 ring-white/10">
+    <div className="relative group my-6 rounded-xl overflow-hidden shadow-2xl border border-gray-800 bg-neutral-900 ring-1 ring-white/10">
       {/* Header Bar */}
       <div className="flex items-center justify-between px-4 py-2.5 bg-[#252526] border-b border-gray-800">
         <div className="flex items-center gap-3">

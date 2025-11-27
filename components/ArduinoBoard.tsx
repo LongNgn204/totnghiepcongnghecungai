@@ -28,11 +28,11 @@ const ArduinoBoard: React.FC<ArduinoBoardProps> = ({
   return (
     <div className="flex gap-6 items-center justify-center scale-90">
       {/* ARDUINO UNO BOARD (LEFT) */}
-      <div className="relative w-[300px] h-[420px] bg-[#00979C] rounded-2xl shadow-2xl border-4 border-[#006F73] flex flex-col items-center select-none overflow-hidden transition-transform hover:scale-[1.02] duration-300 z-10">
+      <div className="relative w-[300px] h-[420px] bg-cyan-700 rounded-2xl shadow-2xl border-4 border-cyan-900 flex flex-col items-center select-none overflow-hidden transition-transform hover:scale-[1.02] duration-300 z-10">
         {/* Basic Components (USB, Power, Chip) - Keep as is */}
         <div className="absolute top-0 left-6 w-14 h-10 bg-gray-300 rounded-b-lg border-b-4 border-gray-400 shadow-sm z-10" />
         <div className="absolute bottom-6 left-2 w-12 h-14 bg-black rounded-lg border-2 border-gray-800 shadow-lg" />
-        <div className="absolute top-[45%] left-[30%] w-32 h-10 bg-[#1a1a1a] rounded-sm border border-gray-700 flex items-center justify-center shadow-inner">
+        <div className="absolute top-[45%] left-[30%] w-32 h-10 bg-neutral-900 rounded-sm border border-gray-700 flex items-center justify-center shadow-inner">
           <span className="text-[10px] text-gray-500 font-mono tracking-widest opacity-80 rotate-0">ATMEGA328P</span>
         </div>
         <div className="absolute top-14 right-6 text-white font-bold italic font-sans tracking-wide opacity-90 drop-shadow-md">
@@ -144,7 +144,7 @@ const ArduinoBoard: React.FC<ArduinoBoardProps> = ({
         {/* MODULE: LCD 16x2 */}
         {mode === 'lcd' && (
           <div className="bg-blue-900 p-2 rounded-lg border-4 border-gray-400 shadow-xl w-[280px] flex flex-col items-center">
-             <div className="w-full bg-[#9ACD32] h-24 border-4 border-black p-2 font-mono text-black shadow-inner relative overflow-hidden">
+             <div className="w-full bg-lime-400 h-24 border-4 border-neutral-950 p-2 font-mono text-black shadow-inner relative overflow-hidden">
                 {/* Grid Effect */}
                 <div className="absolute inset-0 opacity-10 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAiIGhlaWdodD0iMTgiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjkiIGhlaWdodD0iMTciIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwMCIgc3Ryb2tlLXdpZHRoPSIwLjUiLz48L3N2Zz4=')] pointer-events-none" />
                 

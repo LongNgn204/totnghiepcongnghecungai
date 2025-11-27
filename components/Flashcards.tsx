@@ -1,12 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {
-  Plus,
-  Search,
-  Book,
-  Brain,
-  Trash2,
-  PlayCircle,
-} from 'lucide-react';
+import { Plus, Search, Book, Brain, Trash2, PlayCircle, Bot } from 'lucide-react';
 import FlashcardGenerator, { GeneratedFlashcard } from './FlashcardGenerator';
 import FlashcardView from './FlashcardView';
 import {
@@ -21,50 +14,35 @@ import {
   Flashcard
 } from '../utils/flashcardStorage';
 import { toast } from 'react-hot-toast';
+import Card from './atoms/Card';
+import Button from './atoms/Button';
+import Modal from './molecules/Modal';
+import { Tabs, TabItem } from './molecules/Tabs';
 
 const Flashcards: React.FC = () => {
   const [decks, setDecks] = useState<FlashcardDeck[]>([]);
-  const [view, setView] = useState<'list' | 'create' | 'study'>('list');
+  const [view, setView] = useState<'list' | 'study'>('list');
   const [selectedDeck, setSelectedDeck] = useState<FlashcardDeck | null>(null);
   const [studyCards, setStudyCards] = useState<Flashcard[]>([]);
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
   const [searchQuery, setSearchQuery] = useState('');
   const [showGenerator, setShowGenerator] = useState(false);
 
-  useEffect(() => {
-    loadDecks();
-  }, []);
+  useEffect(() => { loadDecks(); }, []);
 
-  const loadDecks = () => {
-    setDecks(getAllDecks());
-  };
+  const loadDecks = () => setDecks(getAllDecks());
 
   const handleCreateDeck = (generatedCards: GeneratedFlashcard[]) => {
     try {
-      // Create a new deck
       const timestamp = new Date().toLocaleDateString('vi-VN');
-      const newDeck = createDeck(
-        `Bộ thẻ AI - ${timestamp}`,
-        'Được tạo tự động bởi AI Gemini',
-        'Công nghệ',
-        '12'
-      );
-
-      // Add generated cards
+      const newDeck = createDeck(`Bộ thẻ AI - ${timestamp}`, 'Được tạo tự động bởi AI', 'Công nghệ', '12');
       generatedCards.forEach(card => {
-        addCardToDeck(newDeck.id, {
-          question: card.front,
-          answer: card.back + (card.explanation ? `\n\n💡 ${card.explanation}` : ''),
-          difficulty: 'medium',
-          tags: ['AI', 'Tự động']
-        });
+        addCardToDeck(newDeck.id, { question: card.front, answer: card.back, difficulty: 'medium', tags: ['AI'] });
       });
-
       toast.success(`Đã tạo bộ thẻ mới với ${generatedCards.length} thẻ!`);
       loadDecks();
       setShowGenerator(false);
     } catch (error) {
-      console.error('Error creating deck:', error);
       toast.error('Có lỗi xảy ra khi lưu bộ thẻ.');
     }
   };
@@ -91,10 +69,8 @@ const Flashcards: React.FC = () => {
 
   const handleCardResult = async (correct: boolean) => {
     if (!selectedDeck || !studyCards[currentCardIndex]) return;
-
     const currentCard = studyCards[currentCardIndex];
     await recordReview(selectedDeck.id, currentCard.id, correct);
-
     if (currentCardIndex < studyCards.length - 1) {
       setCurrentCardIndex(prev => prev + 1);
     } else {
@@ -104,109 +80,51 @@ const Flashcards: React.FC = () => {
     }
   };
 
-  // Render List View
   const renderDeckList = () => {
-    const filteredDecks = decks.filter(d =>
-      d.title.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-
+    const filteredDecks = decks.filter(d => d.title.toLowerCase().includes(searchQuery.toLowerCase()));
     return (
       <div className="space-y-6">
-        <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-          <h2 className="text-3xl font-bold text-gray-800 flex items-center gap-3">
-            <Brain className="text-primary w-8 h-8" />
-            Flashcards
-          </h2>
-          <div className="flex gap-3 w-full md:w-auto">
-            <div className="relative flex-1 md:w-64">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
-              <input
-                type="text"
-                placeholder="Tìm kiếm bộ thẻ..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-              />
+        <Card>
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+            <h2 className="text-h4">Bộ thẻ Flashcards</h2>
+            <div className="flex gap-2 w-full md:w-auto">
+              <div className="relative flex-1">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-text-tertiary w-4 h-4" />
+                <input type="text" placeholder="Tìm kiếm..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="input pl-9 w-full" />
+              </div>
+              <Button onClick={() => setShowGenerator(!showGenerator)}><Bot size={16} className="mr-2" />{showGenerator ? 'Đóng AI' : 'Tạo với AI'}</Button>
             </div>
-            <button
-              onClick={() => setShowGenerator(!showGenerator)}
-              className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-hover transition-colors flex items-center gap-2 whitespace-nowrap"
-            >
-              <Plus className="w-4 h-4" />
-              {showGenerator ? 'Đóng AI' : 'Tạo với AI'}
-            </button>
           </div>
-        </div>
+        </Card>
 
-        {showGenerator && (
-          <div className="animate-fade-in">
-            <FlashcardGenerator onGenerate={handleCreateDeck} />
-          </div>
-        )}
+        {showGenerator && <Card><FlashcardGenerator onGenerate={handleCreateDeck} /></Card>}
 
         {filteredDecks.length === 0 ? (
-          <div className="text-center py-12 bg-white rounded-xl border border-dashed border-gray-300">
-            <Book className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-600">Chưa có bộ thẻ nào</h3>
-            <p className="text-gray-500 mb-4">Hãy tạo bộ thẻ đầu tiên để bắt đầu học tập hiệu quả</p>
-            <button
-              onClick={() => setShowGenerator(true)}
-              className="text-primary hover:text-primary font-medium"
-            >
-              Tạo bộ thẻ mới ngay &rarr;
-            </button>
-          </div>
+          <Card className="text-center py-12 border-dashed">
+            <Book className="w-12 h-12 text-text-tertiary mx-auto mb-4" />
+            <h3 className="text-h5">Chưa có bộ thẻ nào</h3>
+            <p className="text-text-secondary mt-2">Hãy tạo bộ thẻ mới để bắt đầu học.</p>
+          </Card>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredDecks.map(deck => {
               const stats = getDeckStats(deck.id);
               return (
-                <div key={deck.id} className="bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md transition-all group">
-                  <div className="flex justify-between items-start mb-3">
-                    <div className="bg-orange-50 p-3 rounded-lg group-hover:bg-orange-100 transition-colors">
-                      <Book className="w-6 h-6 text-primary" />
-                    </div>
-                    <div className="relative">
-                      <button
-                        onClick={() => handleDeleteDeck(deck.id)}
-                        className="text-gray-400 hover:text-red-500 p-1 rounded transition-colors"
-                        title="Xóa bộ thẻ"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
+                <Card key={deck.id} className="flex flex-col">
+                  <div className="flex-1">
+                    <h3 className="font-bold text-h6 truncate">{deck.title}</h3>
+                    <p className="text-sm text-text-secondary mt-1 line-clamp-2 h-10">{deck.description || 'Không có mô tả'}</p>
+                    <div className="grid grid-cols-3 gap-2 text-center text-sm mt-4 p-2 bg-background rounded-lg">
+                        <div><div className="font-bold text-primary-600">{deck.cards.length}</div><div className="text-xs">Thẻ</div></div>
+                        <div><div className="font-bold text-accent-red-500">{stats?.dueCards || 0}</div><div className="text-xs">Cần ôn</div></div>
+                        <div><div className="font-bold text-accent-green-500">{stats?.masteredCards || 0}</div><div className="text-xs">Thuộc</div></div>
                     </div>
                   </div>
-
-                  <h3 className="font-bold text-lg text-gray-800 mb-1 truncate" title={deck.title}>
-                    {deck.title}
-                  </h3>
-                  <p className="text-sm text-gray-500 mb-4 line-clamp-2 h-10">
-                    {deck.description || 'Không có mô tả'}
-                  </p>
-
-                  <div className="flex items-center justify-between text-sm text-gray-600 mb-4 bg-gray-50 p-2 rounded-lg">
-                    <div className="text-center flex-1 border-r border-gray-200">
-                      <div className="font-bold text-primary">{deck.cards.length}</div>
-                      <div className="text-xs">Thẻ</div>
-                    </div>
-                    <div className="text-center flex-1 border-r border-gray-200">
-                      <div className="font-bold text-orange-600">{stats?.dueCards || 0}</div>
-                      <div className="text-xs">Cần ôn</div>
-                    </div>
-                    <div className="text-center flex-1">
-                      <div className="font-bold text-green-600">{stats?.masteredCards || 0}</div>
-                      <div className="text-xs">Thuộc</div>
-                    </div>
+                  <div className="flex gap-2 mt-4 pt-4 border-t border-border">
+                    <Button onClick={() => startStudy(deck)} isFullWidth><PlayCircle size={16} className="mr-2" />Ôn tập</Button>
+                    <Button variant="ghost" onClick={() => handleDeleteDeck(deck.id)}><Trash2 size={16} className="text-accent-red-500" /></Button>
                   </div>
-
-                  <button
-                    onClick={() => startStudy(deck)}
-                    className="w-full bg-primary text-white py-2 rounded-lg hover:bg-primary-hover transition-colors flex items-center justify-center gap-2"
-                  >
-                    <PlayCircle className="w-4 h-4" />
-                    Ôn tập ngay
-                  </button>
-                </div>
+                </Card>
               );
             })}
           </div>
@@ -215,45 +133,26 @@ const Flashcards: React.FC = () => {
     );
   };
 
-  // Render Study View
   const renderStudyView = () => {
     if (!selectedDeck || studyCards.length === 0) return null;
-
-    const currentCard = studyCards[currentCardIndex];
     const progress = Math.round(((currentCardIndex) / studyCards.length) * 100);
-
     return (
-      <div className="max-w-3xl mx-auto space-y-6 animate-fade-in">
-        <div className="flex items-center justify-between">
-          <button
-            onClick={() => setView('list')}
-            className="text-gray-600 hover:text-gray-900 flex items-center gap-2"
-          >
-            &larr; Quay lại danh sách
-          </button>
-          <div className="text-sm text-gray-500">
-            Thẻ {currentCardIndex + 1} / {studyCards.length}
-          </div>
-        </div>
-
-        <div className="w-full bg-gray-200 rounded-full h-2.5">
-          <div className="bg-primary h-2.5 rounded-full transition-all duration-300" style={{ width: `${progress}%` }}></div>
-        </div>
-
-        <FlashcardView
-          card={currentCard}
-          onAnswer={handleCardResult}
-        />
-
-        <div className="text-center text-sm text-gray-500 mt-4">
-          <p>Nhấn vào thẻ để lật • Chọn mức độ ghi nhớ để tiếp tục</p>
-        </div>
+      <div className="max-w-3xl mx-auto space-y-4">
+        <Card>
+            <div className="flex items-center justify-between">
+                <Button variant="secondary" size="sm" onClick={() => setView('list')}>&larr; Quay lại</Button>
+                <p className="text-sm font-semibold">{selectedDeck.title}</p>
+                <p className="text-sm text-text-secondary">{currentCardIndex + 1} / {studyCards.length}</p>
+            </div>
+            <div className="w-full bg-background rounded-full h-2 mt-2 border border-border"><div className="bg-primary-500 h-full rounded-full" style={{ width: `${progress}%` }}></div></div>
+        </Card>
+        <FlashcardView card={studyCards[currentCardIndex]} onAnswer={handleCardResult} />
       </div>
     );
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4 md:p-8">
+    <div className="animate-fade-in">
       {view === 'list' ? renderDeckList() : renderStudyView()}
     </div>
   );

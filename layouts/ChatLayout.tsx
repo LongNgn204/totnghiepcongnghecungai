@@ -15,7 +15,7 @@ const ChatLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const { sidebarOpen, setSidebarOpen } = useChat();
 
     return (
-        <div className="flex h-screen overflow-hidden bg-gradient-to-br from-blue-50 via-white to-purple-50 animate-fade-in transition-colors duration-300">
+        <div className="flex h-screen overflow-hidden bg-background text-text-primary animate-fade-in transition-colors duration-300">
             {/* Chat Sidebar */}
             <ChatSidebar />
 
@@ -26,7 +26,7 @@ const ChatLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                     <div className="md:hidden absolute top-4 left-4 z-30 animate-slide-right">
                         <button
                             onClick={() => setSidebarOpen(true)}
-                            className="p-3 bg-white/90 backdrop-blur-xl rounded-2xl shadow-lg border border-white/50 text-gray-600 hover:bg-white:bg-slate-800 hover:shadow-xl transition-all hover-lift"
+                            className="p-3 bg-surface/80 backdrop-blur-md rounded-2xl shadow-lg border border-border text-text-secondary hover:bg-surface-hover hover:shadow-xl transition-all hover-lift"
                         >
                             <Menu size={20} />
                         </button>
@@ -38,9 +38,7 @@ const ChatLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                     {children}
                 </main>
 
-                {/* Decorative Elements */}
-                <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-blue-400/10 to-purple-400/10 rounded-full blur-3xl pointer-events-none animate-float" />
-                <div className="absolute bottom-0 left-0 w-80 h-80 bg-gradient-to-tr from-pink-400/10 to-orange-400/10 rounded-full blur-3xl pointer-events-none animate-pulse-slow" />
+
             </div>
         </div>
     );

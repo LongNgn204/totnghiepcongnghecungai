@@ -227,3 +227,39 @@ CREATE INDEX IF NOT EXISTS idx_messages_time ON group_messages(timestamp);
 
 -- Leaderboard (computed from study_sessions)
 -- Sẽ tính real-time từ study_sessions và group_members.points
+
+-- ================= Additional Columns & Indexes for Soft Delete and Updates =================
+-- These ALTER statements are idempotent when run on fresh DB (columns won't exist yet on new DB);
+-- On existing DB, they will add required columns.
+
+-- Exams
+ALTER TABLE exams ADD COLUMN IF NOT EXISTS updated_at INTEGER;
+ALTER TABLE exams ADD COLUMN IF NOT EXISTS deleted_at INTEGER;
+CREATE INDEX IF NOT EXISTS idx_exams_deleted ON exams(deleted_at);
+CREATE INDEX IF NOT EXISTS idx_exams_user_date ON exams(user_id, completed_at);
+
+-- Flashcard decks
+ALTER TABLE flashcard_decks ADD COLUMN IF NOT EXISTS deleted_at INTEGER;
+CREATE INDEX IF NOT EXISTS idx_decks_deleted ON flashcard_decks(deleted_at);
+
+-- Flashcards
+ALTER TABLE flashcards ADD COLUMN IF NOT EXISTS updated_at INTEGER;
+ALTER TABLE flashcards ADD COLUMN IF NOT EXISTS deleted_at INTEGER;
+CREATE INDEX IF NOT EXISTS idx_cards_deleted ON flashcards(deleted_at);
+CREATE INDEX IF NOT EXISTS idx_cards_last_reviewed ON flashcards(last_reviewed);
+
+-- Chat sessions
+ALTER TABLE chat_sessions ADD COLUMN IF NOT EXISTS deleted_at INTEGER;
+CREATE INDEX IF NOT EXISTS idx_chats_deleted ON chat_sessions(deleted_at);
+CREATE INDEX IF NOT EXISTS idx_chats_user_date ON chat_sessions(user_id, updated_at);
+
+-- Study sessions
+ALTER TABLE study_sessions ADD COLUMN IF NOT EXISTS updated_at INTEGER;
+ALTER TABLE study_sessions ADD COLUMN IF NOT EXISTS deleted_at INTEGER;
+CREATE INDEX IF NOT EXISTS idx_sessions_deleted ON study_sessions(deleted_at);
+CREATE INDEX IF NOT EXISTS idx_sessions_user_date ON study_sessions(user_id, session_date);
+
+-- Auth users (soft delete)
+ALTER TABLE auth_users ADD COLUMN IF NOT EXISTS deleted_at INTEGER;
+CREATE INDEX IF NOT EXISTS idx_auth_users_username ON auth_users(username);
+CREATE INDEX IF NOT EXISTS idx_auth_users_deleted ON auth_users(deleted_at);

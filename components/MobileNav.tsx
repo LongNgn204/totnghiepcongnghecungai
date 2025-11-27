@@ -15,7 +15,7 @@ const MobileNav: React.FC = () => {
   ];
 
   return (
-    <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-6 py-3 flex justify-between items-center z-50 shadow-lg pb-safe">
+    <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-surface border-t border-border px-6 py-3 flex justify-between items-center z-50 shadow-lg pb-safe">
       {navItems.map((item) => {
         const active = isActive(item.path);
         const Icon = item.icon;
@@ -24,7 +24,7 @@ const MobileNav: React.FC = () => {
             key={item.path}
             to={item.path}
             className={`flex flex-col items-center gap-1 transition-colors ${
-              active ? 'text-primary' : 'text-gray-400 hover:text-gray-600'
+              active ? 'text-primary-600' : 'text-text-secondary hover:text-text-primary'
             }`}
           >
             <Icon size={24} strokeWidth={active ? 2.5 : 2} />

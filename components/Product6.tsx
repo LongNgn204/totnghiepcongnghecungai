@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import {
-  LineChart, Line, BarChart, Bar, PieChart, Pie, Cell,
+  BarChart, Bar,
   XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Area, AreaChart
 } from 'recharts';
 import {
   getStats,
-  getAllActivities,
   getAllGoals,
   saveGoal,
   updateGoal,
@@ -15,6 +14,11 @@ import {
   StudyGoal,
   StudyStats
 } from '../utils/studyProgress';
+import Card from './atoms/Card';
+import Button from './atoms/Button';
+import FormField from './molecules/FormField';
+import Modal from './molecules/Modal';
+import { Plus, Trash2, Check, Target, BarChart2, TrendingUp, Activity, Clock, BookOpen, Zap } from 'lucide-react';
 
 const Product6: React.FC = () => {
   const [stats, setStats] = useState<StudyStats | null>(null);
@@ -29,8 +33,6 @@ const Product6: React.FC = () => {
     description: '',
     type: 'exam-score' as StudyGoal['type'],
     target: 80,
-    current: 0,
-    unit: '%',
     deadline: ''
   });
 
@@ -46,33 +48,20 @@ const Product6: React.FC = () => {
   };
 
   const handleCreateGoal = () => {
-    if (!goalForm.title.trim()) {
-      alert('Vui lòng nhập tên mục tiêu');
-      return;
-    }
-
+    if (!goalForm.title.trim()) return;
     saveGoal({
       title: goalForm.title,
       description: goalForm.description,
       type: goalForm.type,
       target: goalForm.target,
-      unit: goalForm.unit as 'minutes' | 'exams' | 'cards' | 'chats' | 'score' | 'decks',
+      unit: '%', // Simplified for now
       startDate: new Date().toISOString(),
       endDate: goalForm.deadline || new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
       deadline: goalForm.deadline
     });
-
     loadData();
     setShowCreateGoal(false);
-    setGoalForm({
-      title: '',
-      description: '',
-      type: 'exam-score',
-      target: 80,
-      current: 0,
-      unit: '%',
-      deadline: ''
-    });
+    setGoalForm({ title: '', description: '', type: 'exam-score', target: 80, deadline: '' });
   };
 
   const handleToggleGoal = (goal: StudyGoal) => {
@@ -87,120 +76,50 @@ const Product6: React.FC = () => {
     }
   };
 
-  const COLORS = ['#2563eb', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'];
+  const CHART_COLORS = ['#0ea5e9', '#10b981', '#06b6d4', '#8b5cf6'];
 
   if (!stats) {
-    return <div className="flex items-center justify-center h-96">
-      <div className="animate-spin text-primary text-4xl">
-        ⏳
-      </div>
-    </div>;
+    return <div>Loading...</div>;
   }
 
+  const mainStats = [
+    { label: 'Thời gian học', value: `${Math.round(stats.totalStudyTime / 60)}h`, icon: Clock, color: 'text-primary-500' },
+    { label: 'Đề đã làm', value: stats.totalExams, icon: BookOpen, color: 'text-accent-green-500' },
+    { label: 'Điểm TB', value: `${stats.averageScore.toFixed(1)}%`, icon: Zap, color: 'text-primary-500' },
+    { label: 'Chuỗi ngày', value: stats.currentStreak, icon: Activity, color: 'text-accent-red-500' }
+  ];
+
   return (
-    <div className="space-y-8 animate-fade-in">
-      {/* Header */}
-      <div className="bg-white  p-6 rounded-xl shadow-sm border border-primary ">
-        <h2 className="text-3xl font-bold text-center mb-2 text-gray-800  flex items-center justify-center gap-3">
-          📊 Dashboard - Theo Dõi Tiến Độ Học Tập
-        </h2>
-        <p className="text-center text-gray-600 ">
-          Phân tích thống kê, đặt mục tiêu và theo dõi sự tiến bộ của bạn
+    <div className="space-y-6 animate-fade-in">
+      <Card className="text-center">
+        <h2 className="text-h3 md:text-h2">Theo Dõi Tiến Độ Học Tập</h2>
+        <p className="text-text-secondary text-base md:text-lg max-w-2xl mx-auto mt-2">
+          Phân tích thống kê, đặt mục tiêu và theo dõi sự tiến bộ của bạn qua các biểu đồ trực quan.
         </p>
+      </Card>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {mainStats.map(stat => (
+          <Card key={stat.label} className="text-center">
+            <div className={`mx-auto w-12 h-12 rounded-lg flex items-center justify-center bg-primary-50 dark:bg-primary-900/50 ${stat.color}`}>
+              <stat.icon size={24} />
+            </div>
+            <p className="text-3xl font-bold text-text-primary mt-4">{stat.value}</p>
+            <p className="text-sm text-text-secondary font-medium">{stat.label}</p>
+          </Card>
+        ))}
       </div>
 
-      {/* Stats Overview */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
-        <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl p-6 text-white shadow-lg transform hover:scale-105 transition-all">
+      <div className="grid lg:grid-cols-2 gap-6">
+        <Card>
           <div className="flex items-center justify-between mb-4">
-            <span className="text-3xl opacity-75">⏱️</span>
-            <span className="text-xs bg-white/20 px-3 py-1 rounded-full font-medium">Tổng</span>
-          </div>
-          <div className="text-4xl font-bold mb-1">{Math.round(stats.totalStudyTime / 60)}h</div>
-          <div className="text-sm opacity-90 font-medium">Thời gian học</div>
-        </div>
-
-        <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-2xl p-6 text-white shadow-lg transform hover:scale-105 transition-all">
-          <div className="flex items-center justify-between mb-4">
-            <span className="text-3xl opacity-75">📝</span>
-            <span className="text-xs bg-white/20 px-3 py-1 rounded-full font-medium">Đề</span>
-          </div>
-          <div className="text-4xl font-bold mb-1">{stats.totalExams}</div>
-          <div className="text-sm opacity-90 font-medium">Đề thi đã làm</div>
-        </div>
-
-        <div className="bg-gradient-to-br from-yellow-500 to-orange-500 rounded-2xl p-6 text-white shadow-lg transform hover:scale-105 transition-all">
-          <div className="flex items-center justify-between mb-4">
-            <span className="text-3xl opacity-75">⭐</span>
-            <span className="text-xs bg-white/20 px-3 py-1 rounded-full font-medium">TB</span>
-          </div>
-          <div className="text-4xl font-bold mb-1">{stats.averageScore.toFixed(1)}%</div>
-          <div className="text-sm opacity-90 font-medium">Điểm trung bình</div>
-        </div>
-
-        <div className="bg-gradient-to-br from-primary to-primary-hover rounded-2xl p-6 text-white shadow-lg transform hover:scale-105 transition-all">
-          <div className="flex items-center justify-between mb-4">
-            <span className="text-3xl opacity-75">🔥</span>
-            <span className="text-xs bg-white/20 px-3 py-1 rounded-full font-medium">Streak</span>
-          </div>
-          <div className="text-4xl font-bold mb-1">{stats.currentStreak}</div>
-          <div className="text-sm opacity-90 font-medium">Ngày liên tục</div>
-        </div>
-      </div>
-
-      {/* More Stats */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
-        <div className="bg-white  rounded-2xl p-6 shadow-sm border border-gray-200  hover:border-primary :border-primary transition-all">
-          <div className="text-center">
-            <div className="text-4xl mb-3">📂</div>
-            <div className="text-3xl font-bold text-gray-900 ">{stats.flashcardsLearned}</div>
-            <div className="text-sm text-gray-500  font-medium mt-1">Flashcards ôn</div>
-          </div>
-        </div>
-
-        <div className="bg-white  rounded-2xl p-6 shadow-sm border border-gray-200  hover:border-primary :border-primary transition-all">
-          <div className="text-center">
-            <div className="text-4xl mb-3">💬</div>
-            <div className="text-3xl font-bold text-gray-900 ">{stats.chatSessions}</div>
-            <div className="text-sm text-gray-500  font-medium mt-1">Chat sessions</div>
-          </div>
-        </div>
-
-        <div className="bg-white  rounded-2xl p-6 shadow-sm border border-gray-200  hover:border-primary :border-primary transition-all">
-          <div className="text-center">
-            <div className="text-4xl mb-3">📅</div>
-            <div className="text-3xl font-bold text-gray-900 ">{stats.weeklyActiveDays}/7</div>
-            <div className="text-sm text-gray-500  font-medium mt-1">Ngày học/tuần</div>
-          </div>
-        </div>
-
-        <div className="bg-white  rounded-2xl p-6 shadow-sm border border-gray-200  hover:border-primary :border-primary transition-all">
-          <div className="text-center">
-            <div className="text-4xl mb-3">🏆</div>
-            <div className="text-3xl font-bold text-gray-900 ">{stats.longestStreak}</div>
-            <div className="text-sm text-gray-500  font-medium mt-1">Kỷ lục streak</div>
-          </div>
-        </div>
-      </div>
-
-      {/* Charts Section */}
-      <div className="grid lg:grid-cols-2 gap-8">
-        {/* Activity Chart */}
-        <div className="bg-white  rounded-2xl shadow-sm p-8 border border-gray-200 ">
-          <div className="flex items-center justify-between mb-6">
-            <h3 className="text-xl font-bold text-gray-900  flex items-center gap-2">
-              <span className="text-primary">📊</span>
-              Hoạt động học tập
-            </h3>
-            <div className="flex gap-2 bg-gray-100  p-1 rounded-lg">
+            <h3 className="text-h5 flex items-center gap-2"><BarChart2 className="text-primary-500" />Hoạt động học tập</h3>
+            <div className="flex gap-1 bg-background p-1 rounded-lg border border-border">
               {[7, 14, 30].map(days => (
                 <button
                   key={days}
                   onClick={() => setSelectedPeriod(days as any)}
-                  className={`px-3 py-1 rounded-md text-sm font-bold transition-all ${selectedPeriod === days
-                    ? 'bg-white  text-primary  shadow-sm'
-                    : 'text-gray-500  hover:text-gray-700 :text-gray-200'
-                    }`}
+                  className={`px-3 py-1 rounded-md text-sm font-semibold transition-colors ${selectedPeriod === days ? 'bg-surface shadow-sm text-primary-600' : 'text-text-secondary hover:text-text-primary'}`}
                 >
                   {days}d
                 </button>
@@ -209,268 +128,100 @@ const Product6: React.FC = () => {
           </div>
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={activityData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-              <XAxis dataKey="date" stroke="#9ca3af" fontSize={12} />
-              <YAxis stroke="#9ca3af" fontSize={12} />
-              <Tooltip
-                contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)' }}
-                cursor={{ fill: '#f3f4f6' }}
-              />
-              <Legend wrapperStyle={{ paddingTop: '20px' }} />
-              <Bar dataKey="Thi" name="Thi thử" fill="#3b82f6" radius={[4, 4, 0, 0]} />
-              <Bar dataKey="Chat" name="Hỏi AI" fill="#10b981" radius={[4, 4, 0, 0]} />
-              <Bar dataKey="Flashcard" name="Ôn thẻ" fill="#f59e0b" radius={[4, 4, 0, 0]} />
+              <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" />
+              <XAxis dataKey="date" stroke="var(--color-text-tertiary)" fontSize={12} />
+              <YAxis stroke="var(--color-text-tertiary)" fontSize={12} />
+              <Tooltip contentStyle={{ backgroundColor: 'var(--color-surface)', border: '1px solid var(--color-border)', borderRadius: '8px' }} />
+              <Legend />
+              <Bar dataKey="Thi" name="Thi thử" fill={CHART_COLORS[0]} radius={[4, 4, 0, 0]} />
+              <Bar dataKey="Chat" name="Hỏi AI" fill={CHART_COLORS[1]} radius={[4, 4, 0, 0]} />
+              <Bar dataKey="Flashcard" name="Ôn thẻ" fill={CHART_COLORS[2]} radius={[4, 4, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
-        </div>
+        </Card>
 
-        {/* Score Trend */}
-        <div className="bg-white  rounded-2xl shadow-sm p-8 border border-gray-200 ">
-          <h3 className="text-xl font-bold text-gray-900  mb-6 flex items-center gap-2">
-            <span className="text-green-600">📈</span>
-            Xu hướng điểm số
-          </h3>
+        <Card>
+          <h3 className="text-h5 mb-4 flex items-center gap-2"><TrendingUp className="text-accent-green-500" />Xu hướng điểm số</h3>
           <ResponsiveContainer width="100%" height={300}>
             <AreaChart data={scoreTrendData}>
               <defs>
                 <linearGradient id="colorScore" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#10b981" stopOpacity={0.2} />
-                  <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
+                  <stop offset="5%" stopColor={CHART_COLORS[1]} stopOpacity={0.2} />
+                  <stop offset="95%" stopColor={CHART_COLORS[1]} stopOpacity={0} />
                 </linearGradient>
               </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-              <XAxis dataKey="exam" stroke="#9ca3af" fontSize={12} />
-              <YAxis domain={[0, 100]} stroke="#9ca3af" fontSize={12} />
-              <Tooltip
-                contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)' }}
-              />
-              <Area
-                type="monotone"
-                dataKey="score"
-                name="Điểm số"
-                stroke="#10b981"
-                fillOpacity={1}
-                fill="url(#colorScore)"
-                strokeWidth={3}
-              />
+              <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" />
+              <XAxis dataKey="exam" stroke="var(--color-text-tertiary)" fontSize={12} />
+              <YAxis domain={[0, 100]} stroke="var(--color-text-tertiary)" fontSize={12} />
+              <Tooltip contentStyle={{ backgroundColor: 'var(--color-surface)', border: '1px solid var(--color-border)', borderRadius: '8px' }} />
+              <Area type="monotone" dataKey="score" name="Điểm số" stroke={CHART_COLORS[1]} fill="url(#colorScore)" strokeWidth={2} />
             </AreaChart>
           </ResponsiveContainer>
-        </div>
+        </Card>
       </div>
 
-      {/* Goals Section */}
-      <div className="bg-white  rounded-2xl shadow-sm p-8 border border-gray-200 ">
-        <div className="flex items-center justify-between mb-8">
-          <h3 className="text-2xl font-bold text-gray-900  flex items-center gap-3">
-            <span className="text-red-600">🎯</span>
-            Mục tiêu học tập
-          </h3>
-          <button
-            onClick={() => setShowCreateGoal(true)}
-            className="px-6 py-3 bg-primary text-white rounded-xl hover:bg-primary-hover transition-all font-bold shadow-md flex items-center gap-2"
-          >
-            <span className="text-white">➕</span>
-            Tạo mục tiêu mới
-          </button>
+      <Card>
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-h5 flex items-center gap-2"><Target className="text-accent-red-500" />Mục tiêu học tập</h3>
+          <Button onClick={() => setShowCreateGoal(true)}><Plus size={16} className="mr-2" />Tạo mục tiêu</Button>
         </div>
-
         {goals.length === 0 ? (
-          <div className="text-center py-16 bg-gray-50  rounded-2xl border border-dashed border-gray-300 ">
-            <div className="text-6xl mb-4 text-gray-300 ">🎯</div>
-            <p className="text-gray-600  text-lg font-medium">Chưa có mục tiêu nào</p>
-            <p className="text-gray-500  text-sm mt-2">Đặt mục tiêu để theo dõi tiến độ học tập!</p>
+          <div className="text-center py-12 border-2 border-dashed border-border rounded-lg">
+            <p className="text-text-secondary">Chưa có mục tiêu nào. Hãy tạo một mục tiêu mới!</p>
           </div>
         ) : (
-          <div className="grid gap-6">
+          <div className="space-y-4">
             {goals.map(goal => {
               const progress = Math.min((goal.current / goal.target) * 100, 100);
-              const isOverdue = new Date(goal.deadline) < new Date() && !goal.completed;
-
               return (
-                <div
-                  key={goal.id}
-                  className={`p-6 rounded-2xl border transition-all ${goal.completed
-                    ? 'bg-green-50  border-green-200 '
-                    : isOverdue
-                      ? 'bg-red-50  border-red-200 '
-                      : 'bg-white  border-gray-200  hover:border-primary :border-primary hover:shadow-md'
-                    }`}
-                >
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-3 mb-2">
-                        <button
-                          onClick={() => handleToggleGoal(goal)}
-                          className={`w-8 h-8 rounded-full border-2 flex items-center justify-center transition-all ${goal.completed
-                            ? 'bg-green-500 border-green-500'
-                            : 'border-gray-300 hover:border-primary text-transparent hover:text-primary'
-                            }`}
-                        >
-                          {goal.completed && <span className="text-white text-sm">✓</span>}
-                        </button>
-                        <h4 className={`text-lg font-bold ${goal.completed ? 'line-through text-gray-500 ' : 'text-gray-900 '}`}>
-                          {goal.title}
-                        </h4>
-                      </div>
-                      <p className="text-sm text-gray-600  ml-11">{goal.description}</p>
+                <Card key={goal.id} className="p-4">
+                  <div className="flex items-start justify-between">
+                    <div>
+                      <h4 className={`font-bold text-text-primary ${goal.completed ? 'line-through' : ''}`}>{goal.title}</h4>
+                      <p className="text-sm text-text-secondary">{goal.description}</p>
                     </div>
-                    <button
-                      onClick={() => handleDeleteGoal(goal.id)}
-                      className="text-gray-400 hover:text-red-500 transition-all p-2 rounded-lg hover:bg-red-50"
-                    >
-                      🗑️
-                    </button>
-                  </div>
-
-                  <div className="ml-11">
-                    <div className="flex justify-between text-sm mb-2">
-                      <span className="text-gray-600  font-medium">Tiến độ</span>
-                      <span className="font-bold text-gray-900 ">
-                        {goal.current} / {goal.target} {goal.unit}
-                      </span>
-                    </div>
-                    <div className="w-full bg-gray-100 rounded-full h-3 overflow-hidden">
-                      <div
-                        className={`h-full rounded-full transition-all duration-1000 ${goal.completed
-                          ? 'bg-green-500'
-                          : progress >= 80
-                            ? 'bg-primary'
-                            : progress >= 50
-                              ? 'bg-yellow-500'
-                              : 'bg-red-500'
-                          }`}
-                        style={{ width: `${progress}%` }}
-                      ></div>
-                    </div>
-
-                    <div className="flex items-center justify-between mt-3 text-xs">
-                      <span className={`flex items-center gap-1 ${isOverdue ? 'text-red-600  font-bold' : 'text-gray-500 '}`}>
-                        <span>📅</span>
-                        Deadline: {new Date(goal.deadline).toLocaleDateString('vi-VN')}
-                      </span>
-                      <span className="font-bold text-gray-700 ">
-                        {progress.toFixed(0)}% hoàn thành
-                      </span>
+                    <div className="flex items-center gap-2">
+                       <Button size="sm" variant="ghost" onClick={() => handleToggleGoal(goal)}><Check size={16} /></Button>
+                       <Button size="sm" variant="ghost" onClick={() => handleDeleteGoal(goal.id)}><Trash2 size={16} className="text-accent-red-500" /></Button>
                     </div>
                   </div>
-                </div>
+                  <div className="mt-2">
+                    <div className="flex justify-between text-sm mb-1">
+                      <span className="text-text-secondary">Tiến độ</span>
+                      <span className="font-semibold">{goal.current} / {goal.target} {goal.unit}</span>
+                    </div>
+                    <div className="w-full bg-background rounded-full h-2 border border-border"><div className="bg-primary-500 h-full rounded-full" style={{ width: `${progress}%` }}></div></div>
+                  </div>
+                </Card>
               );
             })}
           </div>
         )}
-      </div>
+      </Card>
 
-      {/* Create Goal Modal */}
       {showCreateGoal && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-white  rounded-2xl shadow-2xl max-w-2xl w-full p-8 animate-scale-in max-h-[90vh] overflow-y-auto">
-            <h3 className="text-2xl font-bold mb-6 text-gray-900  flex items-center gap-2">
-              <span className="text-primary">🎯</span>
-              Tạo mục tiêu mới
-            </h3>
-
-            <div className="space-y-5">
-              <div>
-                <label className="block text-sm font-bold text-gray-700  mb-2">
-                  Tên mục tiêu <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  value={goalForm.title}
-                  onChange={(e) => setGoalForm({ ...goalForm, title: e.target.value })}
-                  placeholder="VD: Đạt điểm trung bình 80%"
-                  className="w-full px-4 py-3 border border-gray-300  rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent bg-gray-50  "
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-bold text-gray-700  mb-2">
-                  Mô tả
-                </label>
-                <textarea
-                  value={goalForm.description}
-                  onChange={(e) => setGoalForm({ ...goalForm, description: e.target.value })}
-                  placeholder="Mô tả chi tiết về mục tiêu"
-                  rows={3}
-                  className="w-full px-4 py-3 border border-gray-300  rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent bg-gray-50   resize-none"
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-sm font-bold text-gray-700  mb-2">
-                    Loại mục tiêu
-                  </label>
-                  <select
-                    value={goalForm.type}
-                    onChange={(e) => setGoalForm({ ...goalForm, type: e.target.value as any })}
-                    className="w-full px-4 py-3 border border-gray-300  rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent bg-gray-50  "
-                  >
-                    <option value="exam-score">Điểm thi</option>
-                    <option value="study-time">Thời gian học</option>
-                    <option value="flashcard-mastery">Thành thạo flashcard</option>
-                    <option value="custom">Tùy chỉnh</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-bold text-gray-700  mb-2">
-                    Deadline
-                  </label>
-                  <input
-                    type="date"
-                    value={goalForm.deadline}
-                    onChange={(e) => setGoalForm({ ...goalForm, deadline: e.target.value })}
-                    min={new Date().toISOString().split('T')[0]}
-                    className="w-full px-4 py-3 border border-gray-300  rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent bg-gray-50  "
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-sm font-bold text-gray-700  mb-2">
-                    Mục tiêu
-                  </label>
-                  <input
-                    type="number"
-                    value={goalForm.target}
-                    onChange={(e) => setGoalForm({ ...goalForm, target: Number(e.target.value) })}
-                    className="w-full px-4 py-3 border border-gray-300  rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent bg-gray-50  "
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-bold text-gray-700  mb-2">
-                    Đơn vị
-                  </label>
-                  <input
-                    type="text"
-                    value={goalForm.unit}
-                    onChange={(e) => setGoalForm({ ...goalForm, unit: e.target.value })}
-                    placeholder="%, phút, thẻ..."
-                    className="w-full px-4 py-3 border border-gray-300  rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent bg-gray-50  "
-                  />
-                </div>
-              </div>
+        <Modal isOpen title="Tạo mục tiêu mới" onClose={() => setShowCreateGoal(false)}>
+          <div className="space-y-4">
+            <FormField id="goal-title" label="Tên mục tiêu" required>
+              <input type="text" value={goalForm.title} onChange={e => setGoalForm({ ...goalForm, title: e.target.value })} />
+            </FormField>
+            <FormField id="goal-desc" label="Mô tả">
+              <textarea value={goalForm.description} onChange={e => setGoalForm({ ...goalForm, description: e.target.value })} rows={2} />
+            </FormField>
+            <div className="grid grid-cols-2 gap-4">
+              <FormField id="goal-target" label="Mục tiêu (số)">
+                <input type="number" value={goalForm.target} onChange={e => setGoalForm({ ...goalForm, target: Number(e.target.value) })} />
+              </FormField>
+              <FormField id="goal-deadline" label="Deadline">
+                <input type="date" value={goalForm.deadline} onChange={e => setGoalForm({ ...goalForm, deadline: e.target.value })} />
+              </FormField>
             </div>
-
-            <div className="flex gap-4 mt-8 pt-6 border-t border-gray-100 ">
-              <button
-                onClick={() => setShowCreateGoal(false)}
-                className="flex-1 px-6 py-3 bg-white  text-gray-700  border border-gray-300  rounded-xl hover:bg-gray-50 :bg-slate-700 transition-all font-bold"
-              >
-                Hủy
-              </button>
-              <button
-                onClick={handleCreateGoal}
-                className="flex-1 px-6 py-3 bg-primary text-white rounded-xl hover:bg-primary-hover transition-all font-bold shadow-md flex items-center justify-center gap-2"
-              >
-                ✅ Tạo mục tiêu
-              </button>
+            <div className="flex justify-end gap-2 pt-2">
+              <Button variant="secondary" onClick={() => setShowCreateGoal(false)}>Hủy</Button>
+              <Button onClick={handleCreateGoal}>Tạo</Button>
             </div>
           </div>
-        </div>
+        </Modal>
       )}
     </div>
   );

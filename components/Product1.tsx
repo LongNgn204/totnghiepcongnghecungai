@@ -1,155 +1,163 @@
 import React from 'react';
 import ChatInterface from './ChatInterface';
 import ChatSidebar from './ChatSidebar';
-import { MessageSquare, FileText, Clock, Search, Download, CornerDownLeft, Lightbulb, CheckCircle, HelpCircle, FileQuestion, Zap, Scale } from 'lucide-react';
+import LearningContextPanel from './LearningContextPanel';
+import Card from './atoms/Card';
+import {
+  MessageSquare,
+  FileText,
+  Clock,
+  Search,
+  Download,
+  CornerDownLeft,
+  Lightbulb,
+  HelpCircle,
+  FileQuestion,
+  Zap,
+  Scale,
+} from 'lucide-react';
+
+const instructionItems = [
+  {
+    icon: MessageSquare,
+    title: 'Chat mới',
+    description: 'Nhấn “Cuộc trò chuyện mới” ở sidebar để tách việc học theo từng chủ đề.',
+  },
+  {
+    icon: FileText,
+    title: 'Upload tài liệu',
+    description: 'Dùng icon 📎 ngay tại ô nhập để đính kèm PDF, DOCX hoặc hình ảnh cần phân tích.',
+  },
+  {
+    icon: Clock,
+    title: 'Lịch sử tự lưu',
+    description: 'Sidebar hiển thị tất cả phiên chat, có thể tìm kiếm hoặc xóa bất kỳ lúc nào.',
+  },
+  {
+    icon: Search,
+    title: 'Tra cứu nhanh',
+    description: 'Ô tìm kiếm giúp bạn lọc lại các đoạn chat cũ chỉ trong vài giây.',
+  },
+  {
+    icon: Download,
+    title: 'Xuất file',
+    description: 'Nhấn nút “Xuất nội dung” để tải toàn bộ hội thoại thành tập tin TXT.',
+  },
+  {
+    icon: CornerDownLeft,
+    title: 'Phím tắt',
+    description: 'Enter để gửi tin nhắn, Shift + Enter để xuống dòng khi soạn câu dài.',
+  },
+];
+
+const examplePrompts = [
+  {
+    icon: FileQuestion,
+    label: 'Lý thuyết',
+    text: 'Giải thích nguyên lý hoạt động của máy biến áp ba pha trong hệ thống điện.',
+  },
+  {
+    icon: Zap,
+    label: 'Bài tập',
+    text: 'Giải bài tập mạch điện ba pha với công suất P = 10kW và cosφ = 0.8.',
+  },
+  {
+    icon: FileText,
+    label: 'Phân tích file',
+    text: 'Phân tích đề thi trong file PDF và đưa ra hướng giải từng câu hỏi.',
+  },
+  {
+    icon: Scale,
+    label: 'So sánh',
+    text: 'So sánh điốt và transistor về cấu tạo, nguyên lý và ứng dụng.',
+  },
+];
 
 const Product1: React.FC = () => {
   return (
-    <div className="space-y-8 animate-fade-in">
+    <div className="space-y-6 md:space-y-8 animate-fade-in">
       {/* Header Section */}
-      <div className="bg-white p-8 rounded-2xl shadow-lg border border-gray-200 relative overflow-hidden">
-        <div className="absolute top-0 right-0 opacity-5 transform translate-x-1/4 -translate-y-1/4">
-          <span className="text-9xl">🤖</span>
-        </div>
-        <div className="relative z-10">
-          <h2 className="text-3xl font-bold text-center mb-3 flex items-center justify-center gap-3 text-gray-900">
-            <span>🤖</span>
-            Sản phẩm học tập số 1: Trò chuyện với AI
-          </h2>
-          <p className="text-center text-gray-600 max-w-2xl mx-auto text-lg">
-            Hỏi AI bất kỳ câu hỏi nào về Công nghệ (SGK KNTT & Cánh Diều) - Upload file để phân tích - Lịch sử chat được lưu tự động
+      <Card className="relative overflow-hidden">
+        <div className="absolute inset-y-0 right-0 w-1/3 bg-gradient-to-l from-primary/10 to-transparent pointer-events-none" />
+        <div className="relative z-10 text-center space-y-4">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary-50 text-primary-700 text-sm font-semibold">
+            🤖 Trợ lý Công nghệ AI
+          </div>
+          <h2 className="text-h3 md:text-h2">Trò chuyện với AI</h2>
+          <p className="text-text-secondary text-base md:text-lg max-w-2xl mx-auto">
+            Đặt câu hỏi về Công nghệ (SGK Kết Nối Tri Thức & Cánh Diều), đính kèm tài liệu để AI phân tích và lưu trữ mọi cuộc hội thoại tự động.
           </p>
         </div>
-      </div>
+      </Card>
 
       {/* Chat Area with Sidebar */}
-      <div className="flex gap-4 h-[600px]">
-        {/* ChatSidebar */}
-        <ChatSidebar />
-
-        {/* ChatInterface */}
-        <div className="flex-1">
-          <ChatInterface />
+      <div className="grid gap-4 md:grid-cols-[320px,1fr]">
+        <div className="hidden md:block h-full">
+          <Card noPadding className="h-full overflow-hidden">
+            <ChatSidebar />
+          </Card>
+        </div>
+        <div className="min-h-[600px]">
+          <Card noPadding className="h-full overflow-hidden">
+            <ChatInterface />
+          </Card>
         </div>
       </div>
+      {/* Mobile sidebar instance */}
+      <div className="lg:hidden">
+        <ChatSidebar />
+      </div>
+
+      {/* AI Knowledge Context */}
+      <Card noPadding>
+        <LearningContextPanel grade="10" subject="Công nghệ" topic="AI" />
+      </Card>
 
       {/* Instructions Section */}
-      <div className="bg-white  border border-gray-200  p-8 rounded-2xl shadow-sm">
-        <h3 className="text-xl font-bold mb-6 text-gray-900  flex items-center gap-2">
-          <Lightbulb className="w-6 h-6 text-yellow-500" />
-          Hướng dẫn sử dụng hiệu quả
-        </h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <div className="flex items-start gap-3 p-4 bg-gray-50  rounded-xl border border-gray-100 ">
-            <div className="p-2 bg-orange-100  text-primary  rounded-lg shrink-0">
-              <MessageSquare size={20} />
-            </div>
-            <div>
-              <p className="font-semibold text-gray-900 ">Chat mới</p>
-              <p className="text-sm text-gray-600  mt-1">Click nút "Chat mới" ở sidebar để bắt đầu hội thoại mới.</p>
-            </div>
-          </div>
-
-          <div className="flex items-start gap-3 p-4 bg-gray-50  rounded-xl border border-gray-100 ">
-            <div className="p-2 bg-orange-100  text-primary  rounded-lg shrink-0">
-              <FileText size={20} />
-            </div>
-            <div>
-              <p className="font-semibold text-gray-900 ">Upload file</p>
-              <p className="text-sm text-gray-600  mt-1">Click icon 📎 để đính kèm PDF, DOCX, hình ảnh cần phân tích.</p>
-            </div>
-          </div>
-
-          <div className="flex items-start gap-3 p-4 bg-gray-50  rounded-xl border border-gray-100 ">
-            <div className="p-2 bg-orange-100  text-primary  rounded-lg shrink-0">
-              <Clock size={20} />
-            </div>
-            <div>
-              <p className="font-semibold text-gray-900 ">Lịch sử</p>
-              <p className="text-sm text-gray-600  mt-1">Tất cả chat được lưu tự động, click vào sidebar để xem lại.</p>
-            </div>
-          </div>
-
-          <div className="flex items-start gap-3 p-4 bg-gray-50  rounded-xl border border-gray-100 ">
-            <div className="p-2 bg-orange-100  text-primary  rounded-lg shrink-0">
-              <Search size={20} />
-            </div>
-            <div>
-              <p className="font-semibold text-gray-900 ">Tìm kiếm</p>
-              <p className="text-sm text-gray-600  mt-1">Dùng ô search để tìm lại các đoạn chat cũ nhanh chóng.</p>
-            </div>
-          </div>
-
-          <div className="flex items-start gap-3 p-4 bg-gray-50  rounded-xl border border-gray-100 ">
-            <div className="p-2 bg-orange-100  text-primary  rounded-lg shrink-0">
-              <Download size={20} />
-            </div>
-            <div>
-              <p className="font-semibold text-gray-900 ">Xuất file</p>
-              <p className="text-sm text-gray-600  mt-1">Click "Xuất file" để tải nội dung chat về máy dạng text.</p>
-            </div>
-          </div>
-
-          <div className="flex items-start gap-3 p-4 bg-gray-50  rounded-xl border border-gray-100 ">
-            <div className="p-2 bg-orange-100  text-primary  rounded-lg shrink-0">
-              <CornerDownLeft size={20} />
-            </div>
-            <div>
-              <p className="font-semibold text-gray-900 ">Phím tắt</p>
-              <p className="text-sm text-gray-600  mt-1">Enter để gửi, Shift+Enter để xuống dòng.</p>
-            </div>
-          </div>
+      <Card>
+        <div className="flex items-center gap-2 mb-6">
+          <Lightbulb className="w-5 h-5 text-primary-600" />
+          <h3 className="text-h5">Hướng dẫn sử dụng hiệu quả</h3>
         </div>
-      </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {instructionItems.map((item) => (
+            <div key={item.title} className="flex items-start gap-3 p-4 bg-neutral-50 dark:bg-neutral-900/40 rounded-xl border border-border/60">
+              <div className="p-2 rounded-lg bg-primary-50 text-primary-600">
+                <item.icon size={18} />
+              </div>
+              <div>
+                <p className="font-semibold text-text-primary">{item.title}</p>
+                <p className="text-sm text-text-secondary mt-1">{item.description}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </Card>
 
       {/* Examples Section */}
-      <div className="bg-white  border border-gray-200  p-8 rounded-2xl shadow-sm">
-        <h3 className="text-xl font-bold mb-6 text-gray-900  flex items-center gap-2">
-          <HelpCircle className="w-6 h-6 text-primary" />
-          Ví dụ câu hỏi hay
-        </h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="p-5 bg-orange-50  rounded-xl border border-primary  hover:shadow-md transition-shadow cursor-pointer group">
-            <div className="flex items-center gap-2 mb-2">
-              <FileQuestion className="w-5 h-5 text-primary " />
-              <p className="text-sm font-bold text-primary ">Lý thuyết</p>
-            </div>
-            <p className="text-gray-700  group-hover:text-primary :text-primary transition-colors">
-              "Giải thích nguyên lý hoạt động của máy biến áp ba pha trong hệ thống điện"
-            </p>
-          </div>
-
-          <div className="p-5 bg-orange-50  rounded-xl border border-primary  hover:shadow-md transition-shadow cursor-pointer group">
-            <div className="flex items-center gap-2 mb-2">
-              <Zap className="w-5 h-5 text-primary " />
-              <p className="text-sm font-bold text-primary ">Bài tập</p>
-            </div>
-            <p className="text-gray-700  group-hover:text-primary :text-primary transition-colors">
-              "Giải bài tập về mạch điện ba pha, công suất P = 10kW, cosφ = 0.8"
-            </p>
-          </div>
-
-          <div className="p-5 bg-orange-50  rounded-xl border border-primary  hover:shadow-md transition-shadow cursor-pointer group">
-            <div className="flex items-center gap-2 mb-2">
-              <FileText className="w-5 h-5 text-primary " />
-              <p className="text-sm font-bold text-primary ">Phân tích file</p>
-            </div>
-            <p className="text-gray-700  group-hover:text-primary :text-primary transition-colors">
-              "Phân tích đề thi trong file PDF và đưa ra hướng giải chi tiết"
-            </p>
-          </div>
-
-          <div className="p-5 bg-orange-50  rounded-xl border border-primary  hover:shadow-md transition-shadow cursor-pointer group">
-            <div className="flex items-center gap-2 mb-2">
-              <Scale className="w-5 h-5 text-primary " />
-              <p className="text-sm font-bold text-primary ">So sánh</p>
-            </div>
-            <p className="text-gray-700  group-hover:text-primary :text-primary transition-colors">
-              "So sánh điốt và transistor về cấu tạo, nguyên lý và ứng dụng"
-            </p>
-          </div>
+      <Card>
+        <div className="flex items-center gap-2 mb-6">
+          <HelpCircle className="w-5 h-5 text-primary-600" />
+          <h3 className="text-h5">Ví dụ câu hỏi hay</h3>
         </div>
-      </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {examplePrompts.map((item) => (
+            <button
+              key={item.text}
+              type="button"
+              className="text-left p-5 rounded-xl border border-primary/30 bg-primary-50 hover:bg-primary-100 transition-all group"
+            >
+              <div className="flex items-center gap-2 mb-2 text-primary-700 font-semibold text-sm">
+                <item.icon size={18} />
+                {item.label}
+              </div>
+              <p className="text-text-secondary group-hover:text-primary-800 transition-colors">
+                “{item.text}”
+              </p>
+            </button>
+          ))}
+        </div>
+      </Card>
     </div>
   );
 };

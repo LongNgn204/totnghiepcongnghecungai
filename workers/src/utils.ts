@@ -25,6 +25,9 @@ export function errorResponse(message: string, status = 500): Response {
 
   return jsonResponse(
     {
+      success: false,
+      data: null,
+      message,
       error: message,
       status,
       timestamp: Date.now(),
@@ -37,7 +40,8 @@ export function successResponse(data: any, message?: string): Response {
   return jsonResponse({
     success: true,
     data,
-    message,
+    message: message || 'Success',
+    error: null,
     timestamp: Date.now(),
   });
 }

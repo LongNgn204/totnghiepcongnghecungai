@@ -9,8 +9,8 @@ const TechBadge: React.FC = () => {
         <div className="absolute right-0 bottom-0 bg-stem-sidebar/90 backdrop-blur-xl rounded-2xl shadow-[0_0_30px_rgba(59,130,246,0.2)] border border-stem-primary/30 p-1.5 w-14 h-14 group-hover:w-72 group-hover:h-auto group-hover:p-5 overflow-hidden transition-all duration-500 cubic-bezier(0.34, 1.56, 0.64, 1) origin-bottom-right">
           <div className="w-64 opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-100">
             <h4 className="font-bold text-sm mb-4 text-white flex items-center gap-2 border-b border-slate-700 pb-2">
-              <Atom className="w-4 h-4 text-stem-primary animate-spin-slow" />
-              <span className="bg-gradient-to-r from-stem-primary to-stem-accent bg-clip-text text-transparent font-extrabold tracking-widest uppercase">
+              <Atom className="w-5 h-5 text-blue-500 animate-spin-slow" />
+              <span className="text-blue-500 font-black tracking-widest uppercase drop-shadow-sm text-base">
                 HỆ THỐNG LÕI
               </span>
             </h4>

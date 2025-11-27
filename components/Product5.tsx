@@ -17,9 +17,15 @@ import {
   syncDecksFromBackend
 } from '../utils/flashcardStorage';
 import syncManager from '../utils/syncManager';
+import Card from './atoms/Card';
+import Button from './atoms/Button';
+import FormField from './molecules/FormField';
+import { Tabs, TabItem } from './molecules/Tabs';
+import Modal from './molecules/Modal';
+import { Folder, BrainCircuit, Plus, Eye, Trash2, Brain } from 'lucide-react';
 
 const Product5: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'decks' | 'study' | 'create' | 'ai'>('decks');
+  const [activeTab, setActiveTab] = useState('decks');
   const [decks, setDecks] = useState<FlashcardDeck[]>([]);
   const [selectedDeck, setSelectedDeck] = useState<FlashcardDeck | null>(null);
   const [studyCards, setStudyCards] = useState<Flashcard[]>([]);
@@ -29,120 +35,36 @@ const Product5: React.FC = () => {
   const [generatedCards, setGeneratedCards] = useState<GeneratedFlashcard[]>([]);
   const [loading, setLoading] = useState(false);
 
-  // Form states
-  const [deckForm, setDeckForm] = useState({
-    title: '',
-    description: '',
-    category: 'Công nghiệp',
-    grade: '12'
-  });
-
-  const [cardForm, setCardForm] = useState({
-    question: '',
-    answer: '',
-    difficulty: 'medium' as 'easy' | 'medium' | 'hard',
-    tags: [] as string[],
-    tagInput: ''
-  });
-
-  useEffect(() => {
-    loadDecks();
-  }, []);
+  useEffect(() => { loadDecks(); }, []);
 
   const loadDecks = async () => {
     setLoading(true);
-    // Load local first for immediate UI
-    setDecks(getAllDecks());
-    // Then sync
     const syncedDecks = await syncDecksFromBackend();
     setDecks(syncedDecks);
     setLoading(false);
   };
 
-  const handleCreateDeck = () => {
-    if (!deckForm.title.trim()) {
-      alert('Vui lòng nhập tên bộ thẻ');
-      return;
-    }
-
-    const newDeck = createDeck(
-      deckForm.title,
-      deckForm.description,
-      deckForm.category,
-      deckForm.grade
-    );
-
+  const handleCreateDeck = (title: string, description: string) => {
+    const newDeck = createDeck(title, description, 'General', '12');
     saveDeck(newDeck);
     syncManager.syncFlashcards();
     loadDecks();
     setShowCreateDeck(false);
-    setDeckForm({ title: '', description: '', category: 'Công nghiệp', grade: '12' });
   };
 
-  const handleDeleteDeck = (deckId: string) => {
-    if (confirm('Bạn có chắc muốn xóa bộ thẻ này?')) {
-      deleteDeck(deckId);
-      syncManager.syncFlashcards();
-      loadDecks();
-      if (selectedDeck?.id === deckId) {
-        setSelectedDeck(null);
-      }
-    }
-  };
-
-  const handleCreateCard = () => {
+  const handleCreateCard = (question: string, answer: string) => {
     if (!selectedDeck) return;
-    if (!cardForm.question.trim() || !cardForm.answer.trim()) {
-      alert('Vui lòng nhập đầy đủ câu hỏi và đáp án');
-      return;
-    }
-
-    addCardToDeck(selectedDeck.id, {
-      question: cardForm.question,
-      answer: cardForm.answer,
-      difficulty: cardForm.difficulty,
-      tags: cardForm.tags
-    });
+    addCardToDeck(selectedDeck.id, { question, answer, difficulty: 'medium', tags: [] });
     syncManager.syncFlashcards();
-
     const updatedDeck = getDeck(selectedDeck.id);
-    if (updatedDeck) {
-      setSelectedDeck(updatedDeck);
-    }
+    if (updatedDeck) setSelectedDeck(updatedDeck);
     loadDecks();
     setShowCreateCard(false);
-    setCardForm({
-      question: '',
-      answer: '',
-      difficulty: 'medium',
-      tags: [],
-      tagInput: ''
-    });
-  };
-
-  const handleAddTag = () => {
-    if (cardForm.tagInput.trim() && !cardForm.tags.includes(cardForm.tagInput.trim())) {
-      setCardForm({
-        ...cardForm,
-        tags: [...cardForm.tags, cardForm.tagInput.trim()],
-        tagInput: ''
-      });
-    }
-  };
-
-  const handleRemoveTag = (tag: string) => {
-    setCardForm({
-      ...cardForm,
-      tags: cardForm.tags.filter(t => t !== tag)
-    });
   };
 
   const startStudySession = (deck: FlashcardDeck) => {
     const dueCards = getCardsForReview(deck.id);
-    if (dueCards.length === 0) {
-      alert('Không có thẻ nào cần ôn tập!');
-      return;
-    }
+    if (dueCards.length === 0) { alert('Không có thẻ nào cần ôn tập!'); return; }
     setSelectedDeck(deck);
     setStudyCards(dueCards);
     setCurrentCardIndex(0);
@@ -151,541 +73,132 @@ const Product5: React.FC = () => {
 
   const handleAnswer = (correct: boolean) => {
     if (!selectedDeck || !studyCards[currentCardIndex]) return;
-
     recordReview(selectedDeck.id, studyCards[currentCardIndex].id, correct);
     syncManager.syncFlashcards();
-
     if (currentCardIndex < studyCards.length - 1) {
       setCurrentCardIndex(currentCardIndex + 1);
     } else {
-      // Session complete
-      alert(`Hoàn thành! Bạn đã ôn ${studyCards.length} thẻ.`);
+      alert('Hoàn thành phiên ôn tập!');
       setActiveTab('decks');
       loadDecks();
     }
   };
 
+  const tabItems: TabItem[] = [
+    { key: 'decks', label: <div className="flex items-center gap-2"><Folder size={16} /><span>Bộ thẻ ({decks.length})</span></div>, content: <DecksView /> },
+    { key: 'ai', label: <div className="flex items-center gap-2"><BrainCircuit size={16} /><span>AI Tạo thẻ</span></div>, content: <AIGeneratorView /> },
+    { key: 'study', label: <div className="flex items-center gap-2"><Brain size={16} /><span>Ôn tập</span></div>, content: <StudyView />, disabled: !selectedDeck || studyCards.length === 0 },
+  ];
+
+  function DecksView() {
+    return (
+      <div className="space-y-4">
+        <div className="text-right">
+          <Button onClick={() => setShowCreateDeck(true)}><Plus size={16} className="mr-2" />Tạo bộ thẻ mới</Button>
+        </div>
+        {decks.length === 0 ? (
+          <Card className="text-center py-12">
+            <h3 className="text-h5">Chưa có bộ thẻ nào</h3>
+            <p className="text-text-secondary mt-2">Tạo bộ thẻ đầu tiên để bắt đầu học!</p>
+          </Card>
+        ) : (
+          decks.map(deck => {
+            const stats = getDeckStats(deck.id);
+            return (
+              <Card key={deck.id}>
+                <h3 className="text-h5">{deck.title}</h3>
+                <p className="text-text-secondary text-sm mt-1">{deck.description}</p>
+                <div className="flex items-center gap-4 mt-4 text-sm text-text-secondary">
+                  <span>Tổng: <strong>{stats.totalCards}</strong></span>
+                  <span>Cần ôn: <strong className="text-accent-red-500">{stats.dueCards}</strong></span>
+                </div>
+                <div className="flex gap-2 mt-4 pt-4 border-t border-border">
+                  <Button onClick={() => startStudySession(deck)} disabled={stats.dueCards === 0}>Ôn tập ngay ({stats.dueCards})</Button>
+                  <Button variant="secondary" onClick={() => { setSelectedDeck(deck); setShowCreateCard(true); }}>Thêm thẻ</Button>
+                  <Button variant="ghost" className="text-accent-red-500 hover:bg-accent-red-50"><Trash2 size={16} /></Button>
+                </div>
+              </Card>
+            );
+          })
+        )}
+      </div>
+    );
+  }
+
+  function AIGeneratorView() {
+    return <FlashcardGenerator onGenerate={setGeneratedCards} />;
+  }
+
+  function StudyView() {
+    if (!selectedDeck || studyCards.length === 0) return <Card className="text-center py-8 text-text-secondary">Không có thẻ nào để ôn tập.</Card>;
+    return (
+      <div className="space-y-4">
+        <Card>
+          <p className="text-sm font-bold">Đang ôn tập: {selectedDeck.title}</p>
+          <p className="text-sm text-text-secondary">Thẻ {currentCardIndex + 1} / {studyCards.length}</p>
+        </Card>
+        <FlashcardView card={studyCards[currentCardIndex]} onAnswer={handleAnswer} showButtons />
+      </div>
+    );
+  }
+
   return (
-    <div className="space-y-8 animate-fade-in">
-      {/* Header */}
-      <div className="bg-white  p-6 rounded-xl shadow-sm border border-primary ">
-        <h2 className="text-3xl font-bold text-center mb-2 text-gray-800  flex items-center justify-center gap-3">
-          🧠 Sản Phẩm 5: Flashcards - Học Thông Minh
-        </h2>
-        <p className="text-center text-gray-600 ">
-          Tạo flashcards, ôn tập theo phương pháp spaced repetition, theo dõi tiến độ học tập
+    <div className="space-y-6 animate-fade-in">
+      <Card className="text-center">
+        <h2 className="text-h3 md:text-h2">Flashcards - Học Thông Minh</h2>
+        <p className="text-text-secondary text-base md:text-lg max-w-2xl mx-auto mt-2">
+          Tạo flashcards, ôn tập theo phương pháp lặp lại ngắt quãng (spaced repetition) và theo dõi tiến độ.
         </p>
-      </div>
+      </Card>
 
-      {/* Tabs */}
-      <div className="flex gap-2 bg-white  rounded-lg shadow-sm p-2 border border-gray-200  overflow-x-auto">
-        <button
-          onClick={() => setActiveTab('decks')}
-          className={`flex-1 px-6 py-3 rounded-lg font-semibold transition-all whitespace-nowrap flex items-center justify-center gap-2 ${activeTab === 'decks'
-            ? 'bg-primary text-white shadow-md'
-            : 'text-gray-600 hover:bg-gray-50'
-            }`}
-        >
-          📂 Bộ thẻ ({decks.length})
-        </button>
-        <button
-          onClick={() => setActiveTab('ai')}
-          className={`flex-1 px-6 py-3 rounded-lg font-semibold transition-all whitespace-nowrap flex items-center justify-center gap-2 ${activeTab === 'ai'
-            ? 'bg-primary text-white shadow-md'
-            : 'text-gray-600 hover:bg-gray-50'
-            }`}
-        >
-          ✨ AI tạo thẻ
-        </button>
-        <button
-          onClick={() => setActiveTab('study')}
-          disabled={!selectedDeck}
-          className={`flex-1 px-6 py-3 rounded-lg font-semibold transition-all whitespace-nowrap flex items-center justify-center gap-2 ${activeTab === 'study' && selectedDeck
-            ? 'bg-primary text-white shadow-md'
-            : 'text-gray-600 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed'
-            }`}
-        >
-          🧠 Ôn tập
-        </button>
-        <button
-          onClick={() => {
-            setShowCreateDeck(true);
-            setActiveTab('create');
-          }}
-          className={`flex-1 px-6 py-3 rounded-lg font-semibold transition-all whitespace-nowrap flex items-center justify-center gap-2 ${activeTab === 'create'
-            ? 'bg-primary text-white shadow-md'
-            : 'text-gray-600  hover:bg-gray-50 :bg-slate-800'
-            }`}
-        >
-          ➕ Tạo bộ thẻ mới
-        </button>
-      </div>
+      <Tabs items={tabItems} value={activeTab} onChange={setActiveTab} />
 
-      {/* AI Tab */}
-      {activeTab === 'ai' && (
-        <div>
-          <FlashcardGenerator
-            onGenerate={(cards) => {
-              setGeneratedCards(cards);
-            }}
-          />
-
-          {generatedCards.length > 0 && (
-            <div className="bg-white  rounded-2xl shadow-sm border border-gray-200  p-6 mt-6">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-xl font-bold text-gray-800  flex items-center gap-2">
-                  ✅ Đã tạo {generatedCards.length} flashcards
-                </h3>
-                <button
-                  onClick={() => setGeneratedCards([])}
-                  className="text-gray-500 hover:text-red-500 transition-colors"
-                >
-                  ❌
-                </button>
-              </div>
-
-              {/* Preview cards */}
-              <div className="space-y-3 mb-6 max-h-96 overflow-y-auto pr-2 custom-scrollbar">
-                {generatedCards.map((card, index) => (
-                  <div key={index} className="border border-gray-200  rounded-xl p-4 hover:border-primary transition-all bg-gray-50 ">
-                    <div className="flex items-start gap-3">
-                      <div className="bg-orange-100  rounded-full w-8 h-8 flex items-center justify-center flex-shrink-0 text-primary  font-bold text-sm">
-                        {index + 1}
-                      </div>
-                      <div className="flex-1">
-                        <p className="font-semibold text-gray-800  mb-2 flex items-start gap-2">
-                          <span className="text-primary mt-1 shrink-0">❓</span>
-                          {card.front}
-                        </p>
-                        <p className="text-gray-600  text-sm mb-2 flex items-start gap-2">
-                          <span className="text-green-500 mt-1 shrink-0">💡</span>
-                          {card.back}
-                        </p>
-                        {card.explanation && (
-                          <p className="text-gray-500 text-xs italic flex items-start gap-2 mt-2 pt-2 border-t border-gray-200">
-                            <span className="text-gray-400 mt-0.5 shrink-0">📖</span>
-                            {card.explanation}
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              {/* Save to deck */}
-              <div className="border-t border-gray-200  pt-6">
-                <p className="text-sm text-gray-600  mb-3 flex items-center gap-2">
-                  💾 Lưu vào bộ thẻ nào?
-                </p>
-                <div className="flex gap-3">
-                  <select
-                    className="flex-1 px-4 py-3 border border-gray-300  rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent bg-white  "
-                    id="saveDeckSelect"
-                  >
-                    <option value="">-- Tạo bộ thẻ mới --</option>
-                    {decks.map(deck => (
-                      <option key={deck.id} value={deck.id}>{deck.title}</option>
-                    ))}
-                  </select>
-                  <button
-                    onClick={() => {
-                      const selectEl = document.getElementById('saveDeckSelect') as HTMLSelectElement;
-                      const deckId = selectEl.value;
-
-                      if (!deckId) {
-                        // Create new deck
-                        const deckTitle = prompt('Tên bộ thẻ mới:', 'Flashcards AI');
-                        if (!deckTitle) return;
-
-                        const newDeck = createDeck(
-                          deckTitle,
-                          'Tạo bởi AI',
-                          'AI Generated',
-                          '10'
-                        );
-
-                        // Add all cards
-                        generatedCards.forEach(card => {
-                          addCardToDeck(newDeck.id, {
-                            question: card.front,
-                            answer: card.back + (card.explanation ? `\n\n${card.explanation}` : ''),
-                            difficulty: 'medium',
-                            tags: ['AI']
-                          });
-                        });
-
-                        alert(`Đã tạo bộ thẻ "${deckTitle}" với ${generatedCards.length} thẻ!`);
-                      } else {
-                        // Add to existing deck
-                        generatedCards.forEach(card => {
-                          addCardToDeck(deckId, {
-                            question: card.front,
-                            answer: card.back + (card.explanation ? `\n\n${card.explanation}` : ''),
-                            difficulty: 'medium',
-                            tags: ['AI']
-                          });
-                        });
-
-                        const deck = getDeck(deckId);
-                        alert(`Đã thêm ${generatedCards.length} thẻ vào "${deck?.title}"!`);
-                      }
-
-                      setGeneratedCards([]);
-                      loadDecks();
-                      setActiveTab('decks');
-                    }}
-                    className="px-6 py-3 bg-primary text-white rounded-xl hover:bg-primary-hover transition-all font-bold shadow-md flex items-center gap-2"
-                  >
-                    💾 Lưu
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* Decks Tab */}
-      {activeTab === 'decks' && (
-        <div className="grid gap-6">
-          {decks.length === 0 ? (
-            <div className="bg-white  rounded-2xl shadow-sm border border-gray-200  p-16 text-center">
-              <div className="bg-gray-50  w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
-                <span className="text-4xl">📂</span>
-              </div>
-              <h3 className="text-xl font-bold text-gray-900  mb-2">Chưa có bộ thẻ nào</h3>
-              <p className="text-gray-500  mb-8">Tạo bộ thẻ đầu tiên để bắt đầu học!</p>
-              <button
-                onClick={() => {
-                  setShowCreateDeck(true);
-                  setActiveTab('create');
-                }}
-                className="px-8 py-4 bg-primary text-white rounded-xl hover:bg-primary-hover transition-all flex items-center mx-auto gap-2 font-bold shadow-lg"
-              >
-                ➕ Tạo bộ thẻ mới
-              </button>
-            </div>
-          ) : (
-            decks.map(deck => {
-              const stats = getDeckStats(deck.id);
-              return (
-                <div
-                  key={deck.id}
-                  className="bg-white  rounded-2xl shadow-sm p-6 hover:shadow-md transition-all border border-gray-200  hover:border-primary :border-primary group"
-                >
-                  <div className="flex justify-between items-start mb-6">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-3 mb-3">
-                        <h3 className="text-2xl font-bold text-gray-900  group-hover:text-primary :text-primary transition-colors">{deck.title}</h3>
-                        <span className="px-3 py-1 bg-orange-100  text-primary  rounded-full text-xs font-bold">
-                          {deck.category}
-                        </span>
-                        <span className="px-3 py-1 bg-gray-100  text-gray-800  rounded-full text-xs font-bold">
-                          Lớp {deck.grade}
-                        </span>
-                      </div>
-                      <p className="text-gray-600  mb-6">{deck.description}</p>
-
-                      {stats && (
-                        <div className="grid grid-cols-5 gap-4 bg-gray-50  p-4 rounded-xl border border-gray-100 ">
-                          <div className="text-center">
-                            <div className="text-2xl font-bold text-primary">{stats.totalCards}</div>
-                            <div className="text-xs text-gray-500 font-medium mt-1">Tổng thẻ</div>
-                          </div>
-                          <div className="text-center">
-                            <div className="text-2xl font-bold text-green-600">{stats.masteredCards}</div>
-                            <div className="text-xs text-gray-500 font-medium mt-1">Thành thạo</div>
-                          </div>
-                          <div className="text-center">
-                            <div className="text-2xl font-bold text-yellow-600">{stats.learningCards}</div>
-                            <div className="text-xs text-gray-500 font-medium mt-1">Đang học</div>
-                          </div>
-                          <div className="text-center">
-                            <div className="text-2xl font-bold text-gray-600">{stats.newCards}</div>
-                            <div className="text-xs text-gray-500 font-medium mt-1">Mới</div>
-                          </div>
-                          <div className="text-center">
-                            <div className="text-2xl font-bold text-red-600">{stats.dueCards}</div>
-                            <div className="text-xs text-gray-500 font-medium mt-1">Cần ôn</div>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-
-                  <div className="flex gap-3 pt-4 border-t border-gray-100 ">
-                    <button
-                      onClick={() => startStudySession(deck)}
-                      disabled={stats?.dueCards === 0}
-                      className="flex-1 bg-primary text-white px-4 py-3 rounded-xl hover:bg-primary-hover transition-all font-bold shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-                    >
-                      🧠 Ôn tập ngay ({stats?.dueCards || 0})
-                    </button>
-                    <button
-                      onClick={() => {
-                        setSelectedDeck(deck);
-                        setShowCreateCard(true);
-                      }}
-                      className="px-6 py-3 bg-white  text-primary  border border-primary  rounded-xl hover:bg-orange-50 :bg-blue-900/20 transition-all font-bold flex items-center justify-center"
-                      title="Thêm thẻ"
-                    >
-                      ➕
-                    </button>
-                    <button
-                      onClick={() => handleDeleteDeck(deck.id)}
-                      className="px-6 py-3 bg-white  text-red-600  border border-red-200  rounded-xl hover:bg-red-50 :bg-red-900/20 transition-all font-bold flex items-center justify-center"
-                      title="Xóa bộ thẻ"
-                    >
-                      🗑️
-                    </button>
-                  </div>
-                </div>
-              );
-            })
-          )}
-        </div>
-      )}
-
-      {/* Study Tab */}
-      {activeTab === 'study' && selectedDeck && studyCards.length > 0 && (
-        <div className="space-y-6">
-          {/* Progress */}
-          <div className="bg-white  rounded-2xl shadow-sm border border-gray-200  p-6">
-            <div className="flex justify-between items-center mb-3">
-              <span className="text-sm font-bold text-gray-700  flex items-center gap-2">
-                <span className="text-primary">📂</span>
-                Thẻ {currentCardIndex + 1} / {studyCards.length}
-              </span>
-              <span className="text-sm font-medium text-gray-500 ">
-                {selectedDeck.title}
-              </span>
-            </div>
-            <div className="w-full bg-gray-100  rounded-full h-3 overflow-hidden">
-              <div
-                className="bg-primary h-3 rounded-full transition-all duration-500"
-                style={{ width: `${((currentCardIndex + 1) / studyCards.length) * 100}%` }}
-              ></div>
-            </div>
-          </div>
-
-          {/* Current Card */}
-          <FlashcardView
-            card={studyCards[currentCardIndex]}
-            onAnswer={handleAnswer}
-            showButtons={true}
-          />
-        </div>
-      )}
-
-      {/* Create Deck Modal */}
-      {showCreateDeck && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-white  rounded-2xl shadow-2xl max-w-2xl w-full p-8 animate-scale-in">
-            <h3 className="text-2xl font-bold mb-6 text-gray-900  flex items-center gap-2">
-              <span className="text-primary">➕</span>
-              Tạo bộ thẻ mới
-            </h3>
-
-            <div className="space-y-5">
-              <div>
-                <label className="block text-sm font-bold text-gray-700  mb-2">
-                  Tên bộ thẻ <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  value={deckForm.title}
-                  onChange={(e) => setDeckForm({ ...deckForm, title: e.target.value })}
-                  placeholder="VD: Mạch điện ba pha"
-                  className="w-full px-4 py-3 border border-gray-300  rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent bg-gray-50  "
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-bold text-gray-700  mb-2">
-                  Mô tả
-                </label>
-                <textarea
-                  value={deckForm.description}
-                  onChange={(e) => setDeckForm({ ...deckForm, description: e.target.value })}
-                  placeholder="Mô tả ngắn gọn về nội dung bộ thẻ"
-                  rows={3}
-                  className="w-full px-4 py-3 border border-gray-300  rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent bg-gray-50   resize-none"
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-sm font-bold text-gray-700  mb-2">
-                    Danh mục
-                  </label>
-                  <select
-                    value={deckForm.category}
-                    onChange={(e) => setDeckForm({ ...deckForm, category: e.target.value })}
-                    className="w-full px-4 py-3 border border-gray-300  rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent bg-gray-50  "
-                  >
-                    <option value="Công nghiệp">Công nghiệp</option>
-                    <option value="Nông nghiệp">Nông nghiệp</option>
-                    <option value="Chung">Chung</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-sm font-bold text-gray-700  mb-2">
-                    Lớp
-                  </label>
-                  <select
-                    value={deckForm.grade}
-                    onChange={(e) => setDeckForm({ ...deckForm, grade: e.target.value })}
-                    className="w-full px-4 py-3 border border-gray-300  rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent bg-gray-50  "
-                  >
-                    {['6', '7', '8', '9', '10', '11', '12'].map(g => (
-                      <option key={g} value={g}>Lớp {g}</option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-            </div>
-
-            <div className="flex gap-4 mt-8 pt-6 border-t border-gray-100 ">
-              <button
-                onClick={() => {
-                  setShowCreateDeck(false);
-                  setActiveTab('decks');
-                }}
-                className="flex-1 px-6 py-3 bg-white  text-gray-700  border border-gray-300  rounded-xl hover:bg-gray-50 :bg-slate-700 transition-all font-bold"
-              >
-                Hủy
-              </button>
-              <button
-                onClick={handleCreateDeck}
-                className="flex-1 px-6 py-3 bg-primary text-white rounded-xl hover:bg-primary-hover transition-all font-bold shadow-md flex items-center justify-center gap-2"
-              >
-                ✅ Tạo bộ thẻ
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Create Card Modal */}
-      {showCreateCard && selectedDeck && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-white  rounded-2xl shadow-2xl max-w-2xl w-full p-8 animate-scale-in max-h-[90vh] overflow-y-auto">
-            <h3 className="text-2xl font-bold mb-6 text-gray-900  flex items-center gap-2">
-              <span className="text-primary">➕</span>
-              Thêm thẻ vào: <span className="text-primary">{selectedDeck.title}</span>
-            </h3>
-
-            <div className="space-y-5">
-              <div>
-                <label className="block text-sm font-bold text-gray-700  mb-2">
-                  Câu hỏi <span className="text-red-500">*</span>
-                </label>
-                <textarea
-                  value={cardForm.question}
-                  onChange={(e) => setCardForm({ ...cardForm, question: e.target.value })}
-                  placeholder="VD: Công thức tính công suất trong mạch điện ba pha là gì?"
-                  rows={3}
-                  className="w-full px-4 py-3 border border-gray-300  rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent bg-gray-50   resize-none"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-bold text-gray-700  mb-2">
-                  Đáp án <span className="text-red-500">*</span>
-                </label>
-                <textarea
-                  value={cardForm.answer}
-                  onChange={(e) => setCardForm({ ...cardForm, answer: e.target.value })}
-                  placeholder="VD: P = √3 × U × I × cosφ"
-                  rows={3}
-                  className="w-full px-4 py-3 border border-gray-300  rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent bg-gray-50   resize-none"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-bold text-gray-700  mb-2">
-                  Độ khó
-                </label>
-                <div className="flex gap-3">
-                  {(['easy', 'medium', 'hard'] as const).map(diff => (
-                    <button
-                      key={diff}
-                      onClick={() => setCardForm({ ...cardForm, difficulty: diff })}
-                      className={`flex-1 px-4 py-3 rounded-xl font-bold transition-all ${cardForm.difficulty === diff
-                        ? diff === 'easy' ? 'bg-green-500 text-white shadow-md'
-                          : diff === 'medium' ? 'bg-yellow-500 text-white shadow-md'
-                            : 'bg-red-500 text-white shadow-md'
-                        : 'bg-gray-100  text-gray-600  hover:bg-gray-200 :bg-slate-700'
-                        }`}
-                    >
-                      {diff === 'easy' ? 'Dễ' : diff === 'medium' ? 'Trung bình' : 'Khó'}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-sm font-bold text-gray-700  mb-2">
-                  Tags (nhãn)
-                </label>
-                <div className="flex gap-2 mb-3">
-                  <input
-                    type="text"
-                    value={cardForm.tagInput}
-                    onChange={(e) => setCardForm({ ...cardForm, tagInput: e.target.value })}
-                    onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), handleAddTag())}
-                    placeholder="Thêm tag và nhấn Enter"
-                    className="flex-1 px-4 py-3 border border-gray-300  rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent bg-gray-50  "
-                  />
-                  <button
-                    onClick={handleAddTag}
-                    className="px-4 py-3 bg-orange-100  text-primary  rounded-xl hover:bg-blue-200 :bg-blue-900/50 transition-all font-bold"
-                  >
-                    ➕
-                  </button>
-                </div>
-                {cardForm.tags.length > 0 && (
-                  <div className="flex flex-wrap gap-2">
-                    {cardForm.tags.map(tag => (
-                      <span
-                        key={tag}
-                        className="px-3 py-1 bg-orange-50  text-primary  rounded-lg text-sm font-medium flex items-center gap-2 border border-primary "
-                      >
-                        <span className="text-xs">🏷️</span>
-                        {tag}
-                        <button
-                          onClick={() => handleRemoveTag(tag)}
-                          className="text-primary hover:text-primary"
-                        >
-                          ❌
-                        </button>
-                      </span>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </div>
-
-            <div className="flex gap-4 mt-8 pt-6 border-t border-gray-100 ">
-              <button
-                onClick={() => setShowCreateCard(false)}
-                className="flex-1 px-6 py-3 bg-white  text-gray-700  border border-gray-300  rounded-xl hover:bg-gray-50 :bg-slate-700 transition-all font-bold"
-              >
-                Hủy
-              </button>
-              <button
-                onClick={handleCreateCard}
-                className="flex-1 px-6 py-3 bg-primary text-white rounded-xl hover:bg-primary-hover transition-all font-bold shadow-md flex items-center justify-center gap-2"
-              >
-                ✅ Thêm thẻ
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      {showCreateDeck && <CreateDeckModal onClose={() => setShowCreateDeck(false)} onCreate={handleCreateDeck} />}
+      {showCreateCard && selectedDeck && <CreateCardModal deck={selectedDeck} onClose={() => setShowCreateCard(false)} onCreate={handleCreateCard} />}
     </div>
   );
 };
+
+function CreateDeckModal({ onClose, onCreate }: { onClose: () => void, onCreate: (title: string, desc: string) => void }) {
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  return (
+    <Modal isOpen title="Tạo bộ thẻ mới" onClose={onClose}>
+      <div className="space-y-4">
+        <FormField id="deck-title" label="Tên bộ thẻ" required>
+          <input type="text" value={title} onChange={e => setTitle(e.target.value)} placeholder="VD: Mạch điện ba pha" />
+        </FormField>
+        <FormField id="deck-desc" label="Mô tả">
+          <textarea value={description} onChange={e => setDescription(e.target.value)} placeholder="Mô tả ngắn gọn nội dung..." rows={3} />
+        </FormField>
+        <div className="flex justify-end gap-2 pt-2">
+          <Button variant="secondary" onClick={onClose}>Hủy</Button>
+          <Button onClick={() => onCreate(title, description)}>Tạo</Button>
+        </div>
+      </div>
+    </Modal>
+  );
+}
+
+function CreateCardModal({ deck, onClose, onCreate }: { deck: FlashcardDeck, onClose: () => void, onCreate: (q: string, a: string) => void }) {
+  const [question, setQuestion] = useState('');
+  const [answer, setAnswer] = useState('');
+  return (
+    <Modal isOpen title={`Thêm thẻ vào: ${deck.title}`} onClose={onClose} size="lg">
+      <div className="space-y-4">
+        <FormField id="card-q" label="Câu hỏi (Mặt trước)" required>
+          <textarea value={question} onChange={e => setQuestion(e.target.value)} rows={4} />
+        </FormField>
+        <FormField id="card-a" label="Đáp án (Mặt sau)" required>
+          <textarea value={answer} onChange={e => setAnswer(e.target.value)} rows={4} />
+        </FormField>
+        <div className="flex justify-end gap-2 pt-2">
+          <Button variant="secondary" onClick={onClose}>Hủy</Button>
+          <Button onClick={() => onCreate(question, answer)}>Thêm thẻ</Button>
+        </div>
+      </div>
+    </Modal>
+  );
+}
 
 export default Product5;

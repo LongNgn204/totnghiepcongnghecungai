@@ -3,50 +3,73 @@ import { useNavigate } from 'react-router-dom';
 
 const API_URL = import.meta.env.VITE_API_URL || '';
 
+type Mode = 'request' | 'reset';
+
 const ForgotPassword: React.FC = () => {
   const navigate = useNavigate();
+  const [mode, setMode] = useState<Mode>('request');
+
   const [email, setEmail] = useState('');
+  const [code, setCode] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
+
+  const handleRequestCode = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+    setMessage('');
+
+    try {
+      setLoading(true);
+      const res = await fetch(`${API_URL}/api/users/request-password-reset`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email })
+      });
+      const result = await res.json();
+      if (!res.ok || result?.success === false) {
+        throw new Error(result?.error || 'Không thể gửi mã xác thực');
+      }
+      setMessage(result?.data?.message || 'Mã xác thực đã được gửi đến email (hoặc hiển thị ở dev mode).');
+      setMode('reset');
+    } catch (err: any) {
+      setError(err.message || 'Đã có lỗi xảy ra');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleResetPassword = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     setMessage('');
-    setLoading(true);
 
     if (newPassword !== confirmPassword) {
       setError('Mật khẩu xác nhận không khớp');
-      setLoading(false);
       return;
     }
-
-    if (newPassword.length < 6) {
-      setError('Mật khẩu phải có ít nhất 6 ký tự');
-      setLoading(false);
+    if (newPassword.length < 8) {
+      setError('Mật khẩu phải có ít nhất 8 ký tự');
       return;
     }
 
     try {
-      const response = await fetch(`${API_URL}/api/auth/forgot-password`, {
+      setLoading(true);
+      const res = await fetch(`${API_URL}/api/users/reset-password`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, newPassword })
+        body: JSON.stringify({ email, token: code, newPassword })
       });
-
-      const result = await response.json();
-
-      if (!result.success) {
-        throw new Error(result.error || 'Không thể reset mật khẩu');
+      const result = await res.json();
+      if (!res.ok || result?.success === false) {
+        throw new Error(result?.error || 'Không thể đổi mật khẩu');
       }
-
-      setMessage(result.data?.message || 'Mật khẩu đã được cập nhật thành công! Đang chuyển đến trang đăng nhập...');
-      setTimeout(() => {
-        navigate('/login');
-      }, 2000);
+      setMessage(result?.data?.message || 'Mật khẩu đã được cập nhật. Đang chuyển về trang đăng nhập...');
+      setTimeout(() => navigate('/login'), 2000);
     } catch (err: any) {
       setError(err.message || 'Đã có lỗi xảy ra');
     } finally {
@@ -64,7 +87,9 @@ const ForgotPassword: React.FC = () => {
               <i className="fas fa-key text-3xl text-white"></i>
             </div>
             <h2 className="text-3xl font-bold text-gray-800 mb-2">Quên mật khẩu</h2>
-            <p className="text-gray-600">Nhập email và mật khẩu mới để đổi mật khẩu ngay lập tức</p>
+            <p className="text-gray-600">
+              {mode === 'request' ? 'Nhập email để nhận mã xác thực' : 'Nhập mã xác thực và mật khẩu mới'}
+            </p>
           </div>
 
           {/* Error */}
@@ -83,76 +108,140 @@ const ForgotPassword: React.FC = () => {
             </div>
           )}
 
-          {/* Form */}
-          <form onSubmit={handleResetPassword} className="space-y-5">
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
-                <i className="fas fa-envelope text-primary"></i>
-                Email
-              </label>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
-                placeholder="email@example.com"
-                required
-                disabled={loading}
-              />
-            </div>
+          {mode === 'request' ? (
+            <form onSubmit={handleRequestCode} className="space-y-5">
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
+                  <i className="fas fa-envelope text-primary"></i>
+                  Email
+                </label>
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
+                  placeholder="email@example.com"
+                  required
+                  disabled={loading}
+                />
+              </div>
 
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
-                <i className="fas fa-lock text-pink-500"></i>
-                Mật khẩu mới
-              </label>
-              <input
-                type="password"
-                value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
-                placeholder="Ít nhất 6 ký tự"
-                minLength={6}
-                required
+              <button
+                type="submit"
                 disabled={loading}
-              />
-            </div>
+                className="w-full bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500 text-white py-4 rounded-xl font-bold text-lg shadow-xl hover:shadow-2xl hover:scale-[1.02] transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none"
+              >
+                {loading ? (
+                  <>
+                    <i className="fas fa-spinner fa-spin mr-2"></i>
+                    Đang gửi mã...
+                  </>
+                ) : (
+                  <>
+                    <i className="fas fa-paper-plane mr-2"></i>
+                    Gửi mã xác thực
+                  </>
+                )}
+              </button>
+            </form>
+          ) : (
+            <form onSubmit={handleResetPassword} className="space-y-5">
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
+                  <i className="fas fa-envelope text-primary"></i>
+                  Email
+                </label>
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
+                  placeholder="email@example.com"
+                  required
+                  disabled
+                />
+              </div>
 
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
-                <i className="fas fa-lock text-orange-500"></i>
-                Xác nhận mật khẩu
-              </label>
-              <input
-                type="password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
-                placeholder="Nhập lại mật khẩu mới"
-                minLength={6}
-                required
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
+                  <i className="fas fa-shield-alt text-indigo-500"></i>
+                  Mã xác thực
+                </label>
+                <input
+                  type="text"
+                  value={code}
+                  onChange={(e) => setCode(e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all tracking-widest"
+                  placeholder="Nhập mã 6 chữ số"
+                  minLength={4}
+                  required
+                  disabled={loading}
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
+                  <i className="fas fa-lock text-pink-500"></i>
+                  Mật khẩu mới
+                </label>
+                <input
+                  type="password"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
+                  placeholder="Ít nhất 8 ký tự, có số & chữ"
+                  minLength={8}
+                  required
+                  disabled={loading}
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
+                  <i className="fas fa-lock text-orange-500"></i>
+                  Xác nhận mật khẩu
+                </label>
+                <input
+                  type="password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
+                  placeholder="Nhập lại mật khẩu mới"
+                  minLength={8}
+                  required
+                  disabled={loading}
+                />
+              </div>
+
+              <button
+                type="submit"
                 disabled={loading}
-              />
-            </div>
+                className="w-full bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500 text-white py-4 rounded-xl font-bold text-lg shadow-xl hover:shadow-2xl hover:scale-[1.02] transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none"
+              >
+                {loading ? (
+                  <>
+                    <i className="fas fa-spinner fa-spin mr-2"></i>
+                    Đang cập nhật...
+                  </>
+                ) : (
+                  <>
+                    <i className="fas fa-magic mr-2"></i>
+                    Đổi mật khẩu ngay
+                  </>
+                )}
+              </button>
 
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500 text-white py-4 rounded-xl font-bold text-lg shadow-xl hover:shadow-2xl hover:scale-[1.02] transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none"
-            >
-              {loading ? (
-                <>
-                  <i className="fas fa-spinner fa-spin mr-2"></i>
-                  Đang cập nhật...
-                </>
-              ) : (
-                <>
-                  <i className="fas fa-magic mr-2"></i>
-                  Đổi mật khẩu ngay
-                </>
-              )}
-            </button>
-          </form>
+              <div className="text-center">
+                <button
+                  type="button"
+                  className="text-sm text-primary underline"
+                  onClick={() => setMode('request')}
+                >
+                  Gửi lại mã?
+                </button>
+              </div>
+            </form>
+          )}
 
           <div className="mt-8 text-center pt-6 border-t border-gray-200">
             <button

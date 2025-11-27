@@ -35,21 +35,33 @@ async function fetchAPI(endpoint: string, options: RequestInit = {}) {
     },
   });
 
-  if (!response.ok) {
-    const error = await response.json().catch(() => ({ error: 'Network error' }));
-    throw new Error(error.error || `API Error: ${response.status}`);
+  const result = await response.json().catch(() => ({}));
+
+  if (!response.ok || result?.success === false) {
+    const message = result?.error || result?.message || `API Error: ${response.status}`;
+    throw new Error(message);
   }
 
-  return response.json();
+  // Normalize to return the data payload when present
+  return typeof result?.data !== 'undefined' ? result.data : result;
 }
 
 // ============= USERS API =============
 
 export const usersAPI = {
-  register: async (name?: string) => {
+  register: async (payload: { username?: string; email: string; password: string; displayName: string }) => {
     return fetchAPI('/api/users/register', {
       method: 'POST',
-      body: JSON.stringify({ name }),
+      body: JSON.stringify(payload),
+    });
+  },
+
+  login: async (identifier: string, password: string) => {
+    const isEmail = identifier.includes('@');
+    const body = isEmail ? { email: identifier, password } : { username: identifier, password };
+    return fetchAPI('/api/users/login', {
+      method: 'POST',
+      body: JSON.stringify(body),
     });
   },
 
@@ -57,10 +69,35 @@ export const usersAPI = {
     return fetchAPI('/api/users/me');
   },
 
-  updateProfile: async (data: { name?: string; email?: string; avatar?: string }) => {
-    return fetchAPI('/api/users/me', {
+  updateProfile: async (data: { displayName?: string; avatar?: string; bio?: string }) => {
+    return fetchAPI('/api/users/profile', {
       method: 'PUT',
       body: JSON.stringify(data),
+    });
+  },
+
+  changePassword: async (oldPassword: string, newPassword: string) => {
+    return fetchAPI('/api/users/change-password', {
+      method: 'POST',
+      body: JSON.stringify({ oldPassword, newPassword }),
+    });
+  },
+
+  logout: async () => {
+    return fetchAPI('/api/users/logout', { method: 'POST' });
+  },
+
+  requestPasswordReset: async (email: string) => {
+    return fetchAPI('/api/users/request-password-reset', {
+      method: 'POST',
+      body: JSON.stringify({ email }),
+    });
+  },
+
+  resetPassword: async (email: string, token: string, newPassword: string) => {
+    return fetchAPI('/api/users/reset-password', {
+      method: 'POST',
+      body: JSON.stringify({ email, token, newPassword }),
     });
   },
 };
@@ -194,6 +231,32 @@ export const leaderboardAPI = {
   },
 };
 
+// ============= KNOWLEDGE API =============
+
+export const knowledgeAPI = {
+  getResources: async (params: { grade?: string; subject?: string; topic?: string; limit?: number } = {}) => {
+    const search = new URLSearchParams();
+    if (params.grade) search.set('grade', params.grade);
+    if (params.subject) search.set('subject', params.subject);
+    if (params.topic) search.set('topic', params.topic);
+    if (params.limit) search.set('limit', String(params.limit));
+    return fetchAPI(`/api/knowledge/resources?${search.toString()}`);
+  },
+  getContext: async (params: { grade?: string; subject?: string; topic?: string } = {}) => {
+    const search = new URLSearchParams();
+    if (params.grade) search.set('grade', params.grade);
+    if (params.subject) search.set('subject', params.subject);
+    if (params.topic) search.set('topic', params.topic);
+    return fetchAPI(`/api/ai/context?${search.toString()}`);
+  },
+  upsertResources: async (resources: any[]) => {
+    return fetchAPI('/api/knowledge/resources', {
+      method: 'POST',
+      body: JSON.stringify(resources),
+    });
+  },
+};
+
 // ============= ADMIN API =============
 
 export const adminAPI = {
@@ -232,6 +295,11 @@ export const api = {
   leaderboard: leaderboardAPI,
   dashboard: dashboardAPI,
   admin: adminAPI,
+  knowledge: knowledgeAPI,
+  sync: {
+    getChanges: async (since: number, limit: number = 100) => fetchAPI(`/api/sync/changes?since=${since}&limit=${limit}`),
+    batch: async (payload: any) => fetchAPI('/api/sync', { method: 'POST', body: JSON.stringify(payload) }),
+  },
 };
 
 export default api;

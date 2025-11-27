@@ -37,7 +37,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ code, onChange, language, readO
   };
 
   return (
-    <div className="relative w-full h-full min-h-[400px] bg-[#1E1E1E] rounded-xl overflow-hidden font-mono text-sm border border-slate-700">
+    <div className="relative w-full h-full min-h-[400px] bg-neutral-900 rounded-xl overflow-hidden font-mono text-sm border border-slate-700">
       {/* Highlight Layer (Behind) */}
       <div 
         ref={preRef as any}
