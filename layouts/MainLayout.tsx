@@ -33,7 +33,9 @@ const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
                 {/* Page Content */}
                 <div className="min-h-full p-4 md:p-6 pb-20 md:pb-6">
-                    {children}
+                    <div className="container-responsive">
+                      {children}
+                    </div>
                 </div>
 
                 {/* Mobile Bottom Navigation */}

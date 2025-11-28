@@ -64,7 +64,16 @@ class SyncManager {
       console.log('[Sync] Syncing exams...');
       const localExams = getExamHistory();
       const serverResponse = await api.exams.getAll(100, 0);
-      const serverExams = serverResponse.data.exams;
+      
+      // Handle different response formats
+      let serverExams: any[] = [];
+      if (Array.isArray(serverResponse)) {
+        serverExams = serverResponse;
+      } else if (serverResponse?.exams) {
+        serverExams = serverResponse.exams;
+      } else if (serverResponse?.data?.exams) {
+        serverExams = serverResponse.data.exams;
+      }
 
       const toUpload = localExams.filter(local => !serverExams.some(server => server.id === local.id));
       for (const exam of toUpload) {
@@ -99,7 +108,16 @@ class SyncManager {
       console.log('[Sync] Syncing flashcards...');
       const localDecks = getAllDecks();
       const serverResponse = await api.flashcards.decks.getAll();
-      const serverDecks = serverResponse.data.decks;
+      
+      // Handle different response formats
+      let serverDecks: any[] = [];
+      if (Array.isArray(serverResponse)) {
+        serverDecks = serverResponse;
+      } else if (serverResponse?.decks) {
+        serverDecks = serverResponse.decks;
+      } else if (serverResponse?.data?.decks) {
+        serverDecks = serverResponse.data.decks;
+      }
 
       const toUpload = localDecks.filter(local => !serverDecks.some(server => server.id === local.id));
       for (const deck of toUpload) {
@@ -143,7 +161,16 @@ class SyncManager {
         console.warn('[Sync] localChats is not an array, resetting to empty array');
       }
       const serverResponse = await api.chat.getAll();
-      const serverChats = serverResponse.data.sessions;
+      
+      // Handle different response formats
+      let serverChats: any[] = [];
+      if (Array.isArray(serverResponse)) {
+        serverChats = serverResponse;
+      } else if (serverResponse?.sessions) {
+        serverChats = serverResponse.sessions;
+      } else if (serverResponse?.data?.sessions) {
+        serverChats = serverResponse.data.sessions;
+      }
 
       const toUpload = localChats.filter(local => !serverChats.some(server => server.id === local.id));
       for (const chat of toUpload) {
@@ -190,10 +217,14 @@ class SyncManager {
       window.dispatchEvent(new CustomEvent('sync-completed', { detail: { lastSyncTime: this.lastSyncTime } }));
     } catch (error) {
       console.error('[Sync] Failed:', error);
-      if ((error as any).status === 401) {
+      
+      // Check if error is 401 Unauthorized
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      if (errorMessage.includes('401') || errorMessage.includes('UNAUTHORIZED') || errorMessage.includes('Unauthorized')) {
         console.warn('[Sync] 401 detected, pausing auto-sync');
         this.pauseSync();
       }
+      
       window.dispatchEvent(new CustomEvent('sync-error', { detail: { error } }));
     } finally {
       this.syncInProgress = false;

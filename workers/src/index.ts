@@ -461,13 +461,13 @@ router.get('/api/exams/stats', async (request, env: Env) => {
       `SELECT 
         COUNT(*) as total_exams,
         AVG(score) as avg_score,
-        SUM(duration) as total_duration
+        SUM(COALESCE(duration, 0)) as total_duration
        FROM exams WHERE user_id = ?`
     ).bind(userId).first();
 
     return successResponse({
       totalExams: stats?.total_exams || 0,
-      avgScore: stats?.avg_score || 0,
+      avgScore: parseFloat((stats?.avg_score || 0).toFixed(1)),
       totalDuration: stats?.total_duration || 0
     });
   } catch (error: any) {
@@ -621,8 +621,20 @@ router.post('/api/flashcards/decks/:deckId/cards', async (request, env: Env) => 
 
 router.put('/api/flashcards/cards/:id', async (request, env: Env) => {
   try {
+    const userId = await requireAuth(request, env.DB);
     const { id } = request.params;
     const body: any = await request.json();
+
+    // Verify card belongs to user's deck - SECURITY CHECK
+    const card = await env.DB.prepare(
+      `SELECT f.* FROM flashcards f
+       JOIN flashcard_decks d ON f.deck_id = d.id
+       WHERE f.id = ? AND d.user_id = ?`
+    ).bind(id, userId).first();
+
+    if (!card) {
+      return unauthorizedResponse('Card not found or access denied');
+    }
 
     const {
       ease_factor,
@@ -638,7 +650,8 @@ router.put('/api/flashcards/cards/:id', async (request, env: Env) => {
     await env.DB.prepare(
       `UPDATE flashcards SET 
         ease_factor = ?, interval = ?, repetitions = ?, mastery_level = ?,
-        review_count = ?, correct_count = ?, next_review = ?, last_reviewed = ?
+        review_count = ?, correct_count = ?, next_review = ?, last_reviewed = ?,
+        updated_at = ?
        WHERE id = ?`
     )
       .bind(
@@ -650,6 +663,7 @@ router.put('/api/flashcards/cards/:id', async (request, env: Env) => {
         correct_count,
         next_review,
         last_reviewed,
+        Date.now(),
         id
       )
       .run();
@@ -979,12 +993,10 @@ router.get('/api/leaderboard', async (request, env: Env) => {
         SUM(s.duration) as study_time,
         (COUNT(DISTINCT CASE WHEN s.activity = 'exam' THEN s.id END) * 10 +
          SUM(CASE WHEN s.activity = 'flashcard' THEN s.cards_studied ELSE 0 END) +
-         SUM(s.duration) / 60) as points,
-        ROW_NUMBER() OVER (ORDER BY points DESC) as rank
+         SUM(s.duration) / 60) as points
       FROM auth_users au
       LEFT JOIN study_sessions s ON au.id = s.user_id ${timeFilter}
       GROUP BY au.id
-      HAVING points > 0
       ORDER BY points DESC
       LIMIT ${limit}`
     )
@@ -993,7 +1005,7 @@ router.get('/api/leaderboard', async (request, env: Env) => {
     return successResponse({
       leaderboard: leaderboard.results.map((row: any, index: number) => ({
         ...row,
-        rank: row.rank || index + 1
+        rank: index + 1
       })),
       period,
       total: leaderboard.results.length

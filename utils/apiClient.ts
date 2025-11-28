@@ -1,6 +1,6 @@
 // API Client for backend communication
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://ai-hoc-tap-api.your-account.workers.dev';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8787';
 
 function getHeaders(): HeadersInit {
   const headers: HeadersInit = {
@@ -37,13 +37,24 @@ async function fetchAPI(endpoint: string, options: RequestInit = {}) {
 
   const result = await response.json().catch(() => ({}));
 
-  if (!response.ok || result?.success === false) {
+  if (!response.ok) {
     const message = result?.error || result?.message || `API Error: ${response.status}`;
     throw new Error(message);
   }
 
+  if (result?.success === false) {
+    const message = result?.error || result?.message || 'Request failed';
+    throw new Error(message);
+  }
+
   // Normalize to return the data payload when present
-  return typeof result?.data !== 'undefined' ? result.data : result;
+  // Handle multiple response formats
+  if (result?.data !== undefined) {
+    return result.data;
+  }
+  
+  // If no data wrapper, return the result as-is
+  return result;
 }
 
 // ============= USERS API =============

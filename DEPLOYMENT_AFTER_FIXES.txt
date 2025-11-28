@@ -1,0 +1,362 @@
+================================================================================
+DEPLOYMENT GUIDE - AFTER ALL FIXES APPLIED
+================================================================================
+
+Date: 2025-11-27
+Status: Ready for deployment after migration
+All 8 critical issues: FIXED ✅
+
+================================================================================
+STEP 1: RUN DATABASE MIGRATION
+================================================================================
+
+Option A: Using Wrangler CLI (Recommended)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Command:
+  wrangler d1 execute ai-hoc-tap-db --file=workers/migrations/001_add_deleted_at_columns.sql
+
+Expected output:
+  ✓ Executed migration successfully
+
+Option B: Manual SQL Execution
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Run each SQL command in D1:
+
+  ALTER TABLE exams ADD COLUMN deleted_at INTEGER;
+  ALTER TABLE exams ADD COLUMN updated_at INTEGER;
+  ALTER TABLE flashcard_decks ADD COLUMN deleted_at INTEGER;
+  ALTER TABLE flashcards ADD COLUMN deleted_at INTEGER;
+  ALTER TABLE chat_sessions ADD COLUMN deleted_at INTEGER;
+  ALTER TABLE study_sessions ADD COLUMN deleted_at INTEGER;
+  ALTER TABLE study_sessions ADD COLUMN updated_at INTEGER;
+
+  CREATE INDEX IF NOT EXISTS idx_exams_deleted ON exams(deleted_at);
+  CREATE INDEX IF NOT EXISTS idx_flashcard_decks_deleted ON flashcard_decks(deleted_at);
+  CREATE INDEX IF NOT EXISTS idx_flashcards_deleted ON flashcards(deleted_at);
+  CREATE INDEX IF NOT EXISTS idx_chat_sessions_deleted ON chat_sessions(deleted_at);
+  CREATE INDEX IF NOT EXISTS idx_study_sessions_deleted ON study_sessions(deleted_at);
+
+
+================================================================================
+STEP 2: LOCAL TESTING
+================================================================================
+
+1. Start Backend
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   Command: wrangler dev
+   Expected: Server running on http://localhost:8787
+
+2. Start Frontend
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   Command: npm run dev
+   Expected: Server running on http://localhost:3000
+
+3. Test Features
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   
+   Test Authentication:
+     [ ] Register new account
+     [ ] Login with credentials
+     [ ] Check localStorage for token
+     [ ] Logout
+   
+   Test Exams:
+     [ ] Create exam
+     [ ] Get exam history
+     [ ] Get exam stats
+     [ ] Delete exam
+   
+   Test Flashcards:
+     [ ] Create deck
+     [ ] Add card to deck
+     [ ] Update card (as owner - should work)
+     [ ] Try update as different user (should fail)
+     [ ] Delete card
+   
+   Test Chat:
+     [ ] Create chat session
+     [ ] Get chat history
+     [ ] Update chat
+     [ ] Delete chat
+   
+   Test Sync:
+     [ ] Create data offline
+     [ ] Go online
+     [ ] Check sync happens
+     [ ] Verify data in backend
+   
+   Test Leaderboard:
+     [ ] Access leaderboard
+     [ ] Check rankings display
+     [ ] No SQL errors in console
+   
+   Test Token Expiration:
+     [ ] Login
+     [ ] Manually delete auth_token from localStorage
+     [ ] Try to make API call
+     [ ] Should redirect to login
+
+4. Check Console
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   [ ] No red errors
+   [ ] No 404 errors
+   [ ] API calls successful
+   [ ] No undefined values
+
+
+================================================================================
+STEP 3: BUILD FOR PRODUCTION
+================================================================================
+
+Build Frontend
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Command: npm run build
+
+Expected output:
+  ✓ dist/ folder created
+  ✓ No errors
+  ✓ Build successful
+
+Check build output:
+  [ ] dist/index.html exists
+  [ ] dist/assets/ folder exists
+  [ ] No console errors
+
+
+================================================================================
+STEP 4: DEPLOY BACKEND
+================================================================================
+
+Deploy to Cloudflare Workers
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Command: wrangler deploy
+
+Expected output:
+  ✓ Deployed to https://ai-hoc-tap-api.your-account.workers.dev
+  ✓ Deployment successful
+
+Verify deployment:
+  [ ] Visit https://ai-hoc-tap-api.your-account.workers.dev/api/health
+  [ ] Should return: { "status": "ok", "version": "2.0.0" }
+
+
+================================================================================
+STEP 5: DEPLOY FRONTEND
+================================================================================
+
+Option A: Deploy to Vercel
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+1. Push to GitHub
+2. Vercel auto-deploys
+3. Set environment variables:
+   VITE_API_URL=https://ai-hoc-tap-api.your-account.workers.dev
+   VITE_GEMINI_API_KEY=your_key
+
+Option B: Deploy to Netlify
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+1. Connect GitHub repo
+2. Build command: npm run build
+3. Publish directory: dist
+4. Set environment variables:
+   VITE_API_URL=https://ai-hoc-tap-api.your-account.workers.dev
+   VITE_GEMINI_API_KEY=your_key
+
+Option C: Deploy to Custom Server
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+1. Build: npm run build
+2. Upload dist/ folder to server
+3. Configure web server to serve dist/index.html for all routes
+
+
+================================================================================
+STEP 6: PRODUCTION TESTING
+================================================================================
+
+Test Production Environment
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Test Frontend URL
+   [ ] Visit production URL
+   [ ] Page loads without errors
+   [ ] Check console for errors
+
+2. Test API Connection
+   [ ] Login should work
+   [ ] API calls should work
+   [ ] Check network tab for requests
+
+3. Test All Features
+   [ ] Authentication (register, login, logout)
+   [ ] Exams (create, view, delete)
+   [ ] Flashcards (create, update, delete)
+   [ ] Chat (create, update, delete)
+   [ ] Sync (offline/online)
+   [ ] Leaderboard
+   [ ] Dashboard stats
+
+4. Monitor for Errors
+   [ ] Check browser console
+   [ ] Check backend logs
+   [ ] Check error tracking service
+
+
+================================================================================
+STEP 7: CONFIGURE ENVIRONMENT VARIABLES
+================================================================================
+
+Backend (wrangler.toml)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[env.production]
+vars = { ENVIRONMENT = "production" }
+
+[env.production.d1_databases]
+DB = { binding = "DB", database_name = "ai-hoc-tap-db", database_id = "your-id" }
+
+[env.production.env]
+RESEND_API_KEY = "your_resend_key"
+EMAIL_FROM = "noreply@yourdomain.com"
+EMAIL_FROM_NAME = "AI Học Tập"
+GEMINI_API_KEY = "your_gemini_key"
+
+Frontend (.env.production)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+VITE_API_URL=https://ai-hoc-tap-api.your-account.workers.dev
+VITE_GEMINI_API_KEY=your_gemini_key
+
+
+================================================================================
+STEP 8: MONITORING & MAINTENANCE
+================================================================================
+
+Set Up Monitoring
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[ ] Error tracking (Sentry, LogRocket, etc.)
+[ ] Performance monitoring (Datadog, New Relic, etc.)
+[ ] Uptime monitoring (Pingdom, UptimeRobot, etc.)
+[ ] Analytics (Google Analytics, Mixpanel, etc.)
+
+Regular Maintenance
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[ ] Check error logs daily
+[ ] Monitor performance metrics
+[ ] Update dependencies monthly
+[ ] Security patches immediately
+[ ] Database backups daily
+
+
+================================================================================
+ROLLBACK PLAN
+================================================================================
+
+If something goes wrong:
+
+1. Revert Backend
+   Command: wrangler rollback
+
+2. Revert Frontend
+   - Redeploy previous version
+   - Or use version control to rollback
+
+3. Revert Database
+   - Restore from backup
+   - Or manually remove added columns (if needed)
+
+4. Check Logs
+   - Backend logs: wrangler tail
+   - Frontend logs: Browser console
+   - Database logs: D1 dashboard
+
+
+================================================================================
+TROUBLESHOOTING
+================================================================================
+
+Issue: API calls fail
+Solution:
+  1. Check VITE_API_URL is correct
+  2. Check backend is running
+  3. Check CORS headers
+  4. Check network tab for 404/500 errors
+
+Issue: Login doesn't work
+Solution:
+  1. Check database migration ran
+  2. Check auth_users table exists
+  3. Check password hashing works
+  4. Check token generation works
+
+Issue: Sync fails
+Solution:
+  1. Check deleted_at columns exist
+  2. Check response format is correct
+  3. Check error logs
+  4. Check network connectivity
+
+Issue: Leaderboard shows error
+Solution:
+  1. Check SQL query (no ROW_NUMBER)
+  2. Check study_sessions table has data
+  3. Check indexes created
+  4. Check database migration ran
+
+Issue: Token expiration not working
+Solution:
+  1. Check logout logic is uncommented
+  2. Check 401 error detection works
+  3. Check localStorage is cleared
+  4. Check redirect to login works
+
+
+================================================================================
+FINAL CHECKLIST
+================================================================================
+
+Before considering deployment complete:
+
+[ ] Database migration ran successfully
+[ ] All local tests passed
+[ ] Build completed without errors
+[ ] Backend deployed successfully
+[ ] Frontend deployed successfully
+[ ] Production environment tested
+[ ] All features working
+[ ] No console errors
+[ ] No API errors
+[ ] Monitoring configured
+[ ] Backup strategy in place
+[ ] Documentation updated
+[ ] Team notified
+
+If all checked: ✅ DEPLOYMENT COMPLETE
+
+
+================================================================================
+SUMMARY
+================================================================================
+
+All 8 critical issues have been fixed:
+  ✅ API_BASE_URL fixed
+  ✅ Response format improved
+  ✅ Flashcard security fixed
+  ✅ Database schema ready for migration
+  ✅ Sync manager fixed
+  ✅ Leaderboard fixed
+  ✅ Sync response handling fixed
+  ✅ Token expiration fixed
+
+Next steps:
+  1. Run database migration
+  2. Test locally
+  3. Deploy backend
+  4. Deploy frontend
+  5. Test production
+  6. Monitor
+
+Estimated time: 2-3 hours (including testing)
+
+Status: READY FOR DEPLOYMENT ✅
+
+================================================================================
+

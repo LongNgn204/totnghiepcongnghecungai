@@ -65,16 +65,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             setUser(userData);
             localStorage.setItem('user_data', JSON.stringify(userData));
           } else if (response.status === 401) {
-            // Only logout if explicitly unauthorized (token expired/invalid)
+            // Token expired or invalid - logout user
             console.warn('Token expired or invalid (Server returned 401)');
-            // TEMPORARY FIX: Do not auto-logout on refresh to keep local state
-            // localStorage.removeItem('auth_token');
-            // localStorage.removeItem('user_data');
-            // localStorage.removeItem('user_id');
-            // syncManager.pauseSync();
-            // setUser(null);
-            // setToken(null);
-            // toast.error('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.');
+            localStorage.removeItem('auth_token');
+            localStorage.removeItem('user_data');
+            localStorage.removeItem('user_id');
+            syncManager.pauseSync();
+            setUser(null);
+            setToken(null);
+            toast.error('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.');
+            // Redirect to login
+            window.location.href = '/login';
           }
           // If other error (500, network), keep the local user state (optimistic)
         } catch (error) {

@@ -136,20 +136,20 @@ export default {
 
         // BACKGROUND & SURFACE
         background: 'rgb(var(--color-background) / <alpha-value>)',
-        surface: 'hsl(var(--color-surface) / <alpha-value>)',
-        'surface-hover': 'hsl(var(--color-surface-hover) / <alpha-value>)',
-        border: 'hsl(var(--color-border) / <alpha-value>)',
+        surface: 'rgb(var(--color-surface) / <alpha-value>)',
+        'surface-hover': 'rgb(var(--color-surface-hover) / <alpha-value>)',
+        border: 'rgb(var(--color-border) / <alpha-value>)',
 
         // TEXT COLORS
         text: {
-          primary: 'hsl(var(--color-text-primary) / <alpha-value>)',
-          secondary: 'hsl(var(--color-text-secondary) / <alpha-value>)',
-          tertiary: 'hsl(var(--color-text-tertiary) / <alpha-value>)',
-          inverse: 'hsl(var(--color-text-inverse) / <alpha-value>)',
+          primary: 'rgb(var(--color-text-primary) / <alpha-value>)',
+          secondary: 'rgb(var(--color-text-secondary) / <alpha-value>)',
+          tertiary: 'rgb(var(--color-text-tertiary) / <alpha-value>)',
+          inverse: 'rgb(var(--color-text-inverse) / <alpha-value>)',
           // Backward-compatible aliases
-          main: 'hsl(var(--color-text-primary) / <alpha-value>)',
-          heading: 'hsl(var(--color-text-primary) / <alpha-value>)',
-          sub: 'hsl(var(--color-text-secondary) / <alpha-value>)',
+          main: 'rgb(var(--color-text-primary) / <alpha-value>)',
+          heading: 'rgb(var(--color-text-primary) / <alpha-value>)',
+          sub: 'rgb(var(--color-text-secondary) / <alpha-value>)',
         },
       },
 

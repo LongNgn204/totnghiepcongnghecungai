@@ -7,27 +7,27 @@
    ============================================ */
 @layer base {
   :root {
-    /* Light Mode - New Palette */
+    /* Light Mode - Classic High Contrast */
     --color-background: 255 255 255;      /* White */
-    --color-surface: 249 250 251;         /* Gray 50 */
-    --color-surface-hover: 243 244 246;   /* Gray 100 */
+    --color-surface: 255 255 255;         /* White */
+    --color-surface-hover: 245 245 245;   /* Light Gray */
     --color-border: 229 231 235;          /* Gray 200 */
-    --color-text-primary: 12 12 13;       /* Custom Dark Gray */
-    --color-text-secondary: 80 82 85;     /* Custom Medium Gray */
-    --color-text-tertiary: 107 114 128;    /* Gray 500 */
-    --color-text-inverse: 255 255 255;     /* White */
+    --color-text-primary: 0 0 0;          /* Black */
+    --color-text-secondary: 0 0 0;        /* Black (full text) */
+    --color-text-tertiary: 34 34 34;      /* Near black for subtle */
+    --color-text-inverse: 255 255 255;    /* White */
   }
 
   .dark {
-    /* Dark Mode - New Palette */
-    --color-background: 18 18 18;         /* Custom Near Black */
-    --color-surface: 28 28 30;            /* Custom Dark Surface */
-    --color-surface-hover: 44 44 46;      /* Custom Dark Hover */
-    --color-border: 55 65 81;             /* Gray 700 */
-    --color-text-primary: 244 244 245;    /* Custom Off-white (Zinc 100) */
-    --color-text-secondary: 160 163 167;  /* Custom Light Gray */
-    --color-text-tertiary: 156 163 175;   /* Gray 400 */
-    --color-text-inverse: 18 18 18;       /* Custom Near Black */
+    /* Dark Mode - Classic High Contrast */
+    --color-background: 0 0 0;            /* Black */
+    --color-surface: 0 0 0;               /* Black */
+    --color-surface-hover: 20 20 20;      /* Very dark gray */
+    --color-border: 45 45 45;             /* Dark border */
+    --color-text-primary: 255 255 255;    /* White */
+    --color-text-secondary: 255 255 255;  /* White (full text) */
+    --color-text-tertiary: 240 240 240;   /* Off white */
+    --color-text-inverse: 0 0 0;          /* Black */
   }
 
   html {
@@ -113,7 +113,7 @@
   }
 
   pre {
-    @apply bg-neutral-900 dark:bg-neutral-950 text-neutral-100 p-4 rounded-lg overflow-x-auto;
+    @apply bg-neutral-100 dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 p-4 rounded-lg overflow-x-auto;
   }
 }
 

@@ -31,7 +31,7 @@ const ThemeToggle: React.FC<{ compact?: boolean } & React.HTMLAttributes<HTMLDiv
             aria-pressed={theme === 'light'}
           >
             <Sun size={16} className="inline mr-1" />
-            Light
+            Sáng
           </button>
           <button
             onClick={() => setTheme('system')}
